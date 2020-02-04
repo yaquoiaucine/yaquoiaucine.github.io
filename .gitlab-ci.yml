@@ -1,0 +1,11 @@
+image: node
+
+before_script:
+  - npm install surge
+
+main:
+  stage: deploy
+  script:
+    - chmod +x ./assets/sh/data.sh
+    - bash ./assets/sh/data.sh
+    - node_modules/.bin/surge .
