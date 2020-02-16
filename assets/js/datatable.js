@@ -1,5 +1,5 @@
 function format(data) {
-    text = '<table cellpadding="5" cellspacing="0" border="0">' +
+    var text = '<table cellpadding="5" cellspacing="0" border="0">' +
         '<tr role="row">' +
         '<td><img id="td_picture" src="' + data.picture + '"></td>' +
         '<td>Informations du film :' +
@@ -31,29 +31,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    const telerama = row.telerama;
-                    switch (telerama) {
-                        case "Chef-d&#039;oeuvre":
-                            row.telerama = "5.0";
-                            break;
-                        case "Tr&egrave;s bien":
-                            row.telerama = "4.0";
-                            break;
-                        case "Pas mal":
-                            row.telerama = "3.0";
-                            break;
-                        case "Pas terrible":
-                            row.telerama = "2.0";
-                            break;
-                        case "Tr&egrave;s mauvais":
-                            row.telerama = "1.0";
-                            break;
-                        default:
-                            row.telerama = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                            break;
-                    }
+                    if (row.telerama == "") var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    if (row.telerama != "") var res = parseFloat(row.telerama).toFixed(1);
 
-                    return row.telerama;
+                    return res;
                 }
             },
             {
@@ -65,9 +46,9 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row.critic == "") res = parseFloat(row.user);
-                    if (row.user == "") res = parseFloat(row.critic);
-                    if ((row.critic != "") && (row.user != "")) res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
+                    if (row.critic == "") var res = parseFloat(row.user);
+                    if (row.user == "") var res = parseFloat(row.critic);
+                    if ((row.critic != "") && (row.user != "")) var res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
 
                     return res.toFixed(2);
                 }

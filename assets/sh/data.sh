@@ -71,9 +71,28 @@ do
     mainActors=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR % 3 == 1' | sed '1d' | sed 's/$/,/' | tr '\n' ' ' | sed 's/..$//')
     echo "\"mainActors\": \"$mainActors\"," >> ./assets/js/data.js
 
-    # Extract Télérama rating
+    # Extract Télérama rating and convert it to number
     telerama=$(cat temp2 | grep -m1 "Télérama" | cut -d'"' -f6)
-    echo "\"telerama\": \"$telerama\"" >> ./assets/js/data.js
+    case $telerama in
+      "Chef-d&#039;oeuvre")
+        echo "\"telerama\": \"5\"" >> ./assets/js/data.js
+        ;;
+      "Tr&egrave;s bien")
+        echo "\"telerama\": \"4\"" >> ./assets/js/data.js
+        ;;
+      "Pas mal")
+        echo "\"telerama\": \"3\"" >> ./assets/js/data.js
+        ;;
+      "Pas terrible")
+        echo "\"telerama\": \"2\"" >> ./assets/js/data.js
+        ;;
+      "Tr&egrave;s mauvais")
+        echo "\"telerama\": \"1\"" >> ./assets/js/data.js
+        ;;
+      *)
+        echo "\"telerama\": \"\"" >> ./assets/js/data.js
+        ;;
+    esac
 
     # Add },{ after every keys
     echo "},{" >> ./assets/js/data.js
