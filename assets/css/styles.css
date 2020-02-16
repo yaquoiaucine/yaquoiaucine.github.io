@@ -33,8 +33,13 @@ table.dataTable tr.shown td.details:before {
     max-width: 685px;
 }
 
-.td_picture {
+#td_picture {
     width: 150px;
+}
+
+#telerama {
+    width: 24px;
+    height: 14px;
 }
 
 .fa,

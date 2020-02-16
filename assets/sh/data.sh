@@ -69,7 +69,11 @@ do
 
     # Extract main actors
     mainActors=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR % 3 == 1' | sed '1d' | sed 's/$/,/' | tr '\n' ' ' | sed 's/..$//')
-    echo "\"mainActors\": \"$mainActors\"" >> ./assets/js/data.js
+    echo "\"mainActors\": \"$mainActors\"," >> ./assets/js/data.js
+
+    # Extract Télérama rating
+    telerama=$(cat temp2 | grep -m1 "Télérama" | cut -d'"' -f6)
+    echo "\"telerama\": \"$telerama\"" >> ./assets/js/data.js
 
     # Add },{ after every keys
     echo "},{" >> ./assets/js/data.js
