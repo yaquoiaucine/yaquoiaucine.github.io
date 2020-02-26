@@ -17,7 +17,7 @@ function format(data) {
 }
 
 $(document).ready(function() {
-    var table = $('#table').DataTable({
+    var data = {
         "ajax": "https://yaquoiaucine.fr/assets/js/data.js",
         "columns": [{
                 "className": 'details',
@@ -46,9 +46,14 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row.critic == "") var res = parseFloat(row.user);
-                    if (row.user == "") var res = parseFloat(row.critic);
-                    if ((row.critic != "") && (row.user != "")) var res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
+                    var checkBox = document.getElementById("Telerama");
+
+                    if (checkBox.checked == true) {
+                        var res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
+                    } else {
+                        if (row.telerama == "") var res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
+                        if (row.telerama != "") var res = (parseFloat(row.telerama) + parseFloat(row.critic) + parseFloat(row.user)) / 3;
+                    }
 
                     return res.toFixed(2);
                 }
@@ -58,7 +63,9 @@ $(document).ready(function() {
         "order": [5, 'desc'],
         "paging": false,
         "info": false
-    });
+    }
+
+    var table = $('#table').DataTable(data);
 
     $('#table tbody').on('click', 'td.details', function() {
         var tr = $(this).closest('tr');
@@ -70,6 +77,20 @@ $(document).ready(function() {
         } else {
             row.child(format(row.data())).show();
             tr.addClass('shown');
+        }
+    });
+
+    $('input[type=checkbox]').on('click', function() {
+        table.destroy();
+        table = $('#table').DataTable(data);
+
+        var checkBox = document.getElementById("Telerama");
+        var columnNum = table.column($(this).attr('data-column'));
+
+        if (checkBox.checked == true) {
+            table.column(columnNum).visible(true);
+        } else {
+            table.column(columnNum).visible(false);
         }
     });
 });
