@@ -36,19 +36,83 @@ do
     echo "\"url\": \"$url\"," >> ./assets/js/data.js
 
     # Extract movie title
-    title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/g')
+    title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/')
     echo "\"title\": \"$title\"," >> ./assets/js/data.js
 
     # Extract critic rating number
-    critic=$(cat temp2 | grep -m1 "<span class=\"stareval-note\">" | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./g')
+    critic=$(cat temp2 | grep -m1 "<span class=\"stareval-note\">" | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./')
     echo "\"critic\": \"$critic\"," >> ./assets/js/data.js
 
+    # Extract critic rating and convert it to number
+    for criticName in \
+    "20 Minutes" \
+    "aVoir-aLire.com" \
+    "Bande à part" \
+    "Cahiers du Cinéma" \
+    "CinemaTeaser" \
+    "Culturebox - France Télévisions" \
+    "Culturopoing.com" \
+    "Dernières Nouvelles d'Alsace" \
+    "Ecran Large" \
+    "La Septième Obsession" \
+    "La Voix du Nord" \
+    "LCI" \
+    "Le Journal du Dimanche" \
+    "Le Nouvel Observateur" \
+    "Le Parisien" \
+    "Le Point" \
+    "Les Fiches du Cinéma" \
+    "L'Humanité" \
+    "Libération" \
+    "Marianne" \
+    "Ouest France" \
+    "Paris Match" \
+    "Positif" \
+    "Première" \
+    "Sud Ouest" \
+    "Télé Loisirs" \
+    "Télérama" \
+    "Transfuge" \
+    "Voici" \
+    "CNews" \
+    "La Croix" \
+    "Le Figaro" \
+    "Le Monde" \
+    "Les Inrockuptibles" \
+    "Mad Movies" \
+    "Rolling Stone" \
+    "Critikat.com"; do
+      criticRating=$(cat temp2 | grep -m1 "$criticName" | cut -d'"' -f6)
+      criticNameToLower=$(echo $criticName | tr '[:upper:]' '[:lower:]' | sed 's/é/e/g' | sed 's/è/e/g' | sed 's/à/a/g' | tr -d -c '[:alpha:]')
+
+      case $criticRating in
+        "Chef-d&#039;oeuvre")
+          echo "\"$criticNameToLower\": \"5\"," >> ./assets/js/data.js
+          ;;
+        "Tr&egrave;s bien")
+          echo "\"$criticNameToLower\": \"4\"," >> ./assets/js/data.js
+          ;;
+        "Pas mal")
+          echo "\"$criticNameToLower\": \"3\"," >> ./assets/js/data.js
+          ;;
+        "Pas terrible")
+          echo "\"$criticNameToLower\": \"2\"," >> ./assets/js/data.js
+          ;;
+        "Tr&egrave;s mauvais")
+          echo "\"$criticNameToLower\": \"1\"," >> ./assets/js/data.js
+          ;;
+        *)
+          echo "\"$criticNameToLower\": \"\"," >> ./assets/js/data.js
+          ;;
+      esac
+    done
+
     # Extract user rating number
-    user=$(cat temp2 | grep -m2 "<span class=\"stareval-note\">" | tail -1 | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./g')
+    user=$(cat temp2 | grep -m2 "<span class=\"stareval-note\">" | tail -1 | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./')
     echo "\"user\": \"$user\"," >> ./assets/js/data.js
 
     # Extract movie picture
-    picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4)
+    picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4 | sed 's/http/https/')
     echo "\"picture\": \"$picture\"," >> ./assets/js/data.js
 
     # Extract movie date
@@ -69,30 +133,7 @@ do
 
     # Extract main actors
     mainActors=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR % 3 == 1' | sed '1d' | sed 's/$/,/' | tr '\n' ' ' | sed 's/..$//')
-    echo "\"mainActors\": \"$mainActors\"," >> ./assets/js/data.js
-
-    # Extract Télérama rating and convert it to number
-    telerama=$(cat temp2 | grep -m1 "Télérama" | cut -d'"' -f6)
-    case $telerama in
-      "Chef-d&#039;oeuvre")
-        echo "\"telerama\": \"5\"" >> ./assets/js/data.js
-        ;;
-      "Tr&egrave;s bien")
-        echo "\"telerama\": \"4\"" >> ./assets/js/data.js
-        ;;
-      "Pas mal")
-        echo "\"telerama\": \"3\"" >> ./assets/js/data.js
-        ;;
-      "Pas terrible")
-        echo "\"telerama\": \"2\"" >> ./assets/js/data.js
-        ;;
-      "Tr&egrave;s mauvais")
-        echo "\"telerama\": \"1\"" >> ./assets/js/data.js
-        ;;
-      *)
-        echo "\"telerama\": \"\"" >> ./assets/js/data.js
-        ;;
-    esac
+    echo "\"mainActors\": \"$mainActors\"" >> ./assets/js/data.js
 
     # Add },{ after every keys
     echo "},{" >> ./assets/js/data.js

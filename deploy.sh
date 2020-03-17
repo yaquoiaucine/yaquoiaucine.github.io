@@ -3,7 +3,7 @@ commit=$1
 
 # Beautify files
 js-beautify -r --type css assets/css/styles.css
-js-beautify -r --type js assets/js/datatable.js
+js-beautify -r --type js assets/js/datatables.js
 js-beautify -r --type html ./index.html
 
 # Deploy to GitLab

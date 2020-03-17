@@ -8,12 +8,17 @@ a {
 }
 
 h1,
-p.description {
+#checkbox-container {
     margin-inline-start: 10px;
-    max-width: 675px;
+    max-width: 1100px;
 }
 
-p.description {
+#table_wrapper,
+#table {
+    max-width: 1400px;
+}
+
+p {
     font-size: 14px;
 }
 
@@ -29,17 +34,31 @@ table.dataTable tr.shown td.details:before {
     color: #fff;
 }
 
-#table_wrapper {
-    max-width: 685px;
+.checkbox-grid li {
+    display: block;
+    float: left;
+    width: 25%;
+}
+
+ul {
+    padding-inline-start: 0px;
+}
+
+ul li:last-child {
+    margin-bottom: 10px;
 }
 
 #td_picture {
     width: 150px;
 }
 
-#telerama {
+#icon {
     width: 24px;
     height: 14px;
+}
+
+.hide {
+    display: none !important;
 }
 
 .fa,
