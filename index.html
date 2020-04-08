@@ -15,97 +15,65 @@
     <meta property="og:title" content="Y'a quoi au ciné ?" />
     <meta property="og:description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
 
-    <link rel="stylesheet" type="text/css" href="./assets/css/styles.css">
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 
 <body>
     <h1>Y'a quoi au ciné ?</h1>
     <p class="description"><i>"T'as vu quoi récemment ?", "C'est quoi le meilleur film au ciné ?", "Tu me recommandes quoi en ce moment ?"<br /></i> - Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma.<p>
-            <div id="checkbox-container">
-                <p>Presse à afficher <i>(15 éléments maximum) : </i></p>
-                <ul class="checkbox-grid">
-                    <li><input type="checkbox" id="20Minutes" data-column="2"> 20 Minutes</li>
-                    <li><input type="checkbox" id="aVoiraLirecom" data-column="3"> aVoir-aLire.com</li>
-                    <li><input type="checkbox" id="Bandeapart" data-column="4"> Bande à part</li>
-                    <li><input type="checkbox" id="CultureboxFranceTelevisions" data-column="5"> Culturebox - France Télévisions</li>
-                    <li><input type="checkbox" id="CahiersduCinema" data-column="6"> Cahiers du Cinéma</li>
-                    <li><input type="checkbox" id="CinemaTeaser" data-column="7"> CinemaTeaser</li>
-                    <li><input type="checkbox" id="Culturopoingcom" data-column="8"> Culturopoing.com</li>
-                    <li><input type="checkbox" id="DernieresNouvellesdAlsace" data-column="9"> Dernières Nouvelles d'Alsace</li>
-                    <li><input type="checkbox" id="EcranLarge" data-column="10"> Ecran Large</li>
-                    <li><input type="checkbox" id="LaSeptiemeObsession" data-column="11"> La Septième Obsession</li>
-                    <li><input type="checkbox" id="LaVoixduNord" data-column="12"> La Voix du Nord</li>
-                    <li><input type="checkbox" id="LCI" data-column="13"> LCI</li>
-                    <li><input type="checkbox" id="LeJournalduDimanche" data-column="14"> Le Journal du Dimanche</li>
-                    <li><input type="checkbox" id="LeNouvelObservateur" data-column="15"> Le Nouvel Observateur</li>
-                    <li><input type="checkbox" id="LeParisien" data-column="16"> Le Parisien</li>
-                    <li><input type="checkbox" id="LePoint" data-column="17"> Le Point</li>
-                    <li><input type="checkbox" id="LesFichesduCinema" data-column="18"> Les Fiches du Cinéma</li>
-                    <li><input type="checkbox" id="LHumanite" data-column="19"> L'Humanité</li>
-                    <li><input type="checkbox" id="Liberation" data-column="20"> Libération</li>
-                    <li><input type="checkbox" id="Marianne" data-column="21"> Marianne</li>
-                    <li><input type="checkbox" id="OuestFrance" data-column="22"> Ouest France</li>
-                    <li><input type="checkbox" id="ParisMatch" data-column="23"> Paris Match</li>
-                    <li><input type="checkbox" id="Positif" data-column="24"> Positif</li>
-                    <li><input type="checkbox" id="Premiere" data-column="25"> Première</li>
-                    <li><input type="checkbox" id="SudOuest" data-column="26"> Sud Ouest</li>
-                    <li><input type="checkbox" id="TeleLoisirs" data-column="27"> Télé Loisirs</li>
-                    <li><input type="checkbox" id="Telerama" data-column="28"> Télérama</li>
-                    <li><input type="checkbox" id="Transfuge" data-column="29"> Transfuge</li>
-                    <li><input type="checkbox" id="Voici" data-column="30"> Voici</li>
-                    <li><input type="checkbox" id="CNews" data-column="31"> CNews</li>
-                    <li><input type="checkbox" id="LaCroix" data-column="32"> La Croix</li>
-                    <li><input type="checkbox" id="LeFigaro" data-column="33"> Le Figaro</li>
-                    <li><input type="checkbox" id="LeMonde" data-column="34"> Le Monde</li>
-                    <li><input type="checkbox" id="LesInrockuptibles" data-column="35"> Les Inrockuptibles</li>
-                    <li><input type="checkbox" id="MadMovies" data-column="36"> Mad Movies</li>
-                    <li><input type="checkbox" id="RollingStone" data-column="37"> Rolling Stone</li>
-                    <li><input type="checkbox" id="Critikatcom" data-column="38"> Critikat.com</li>
-                </ul>
-            </div>
-            <table id="table" class="display">
+            <table id="table" class="display" style="width:100%">
                 <thead>
                     <tr>
                         <th></th>
                         <th>Titre du film</th>
                         <th title="Note de 20 Minutes">20.</th>
-                        <th title="Note d'aVoir-aLire.com">VL.</th>
+                        <th title="Note de BIBA">BI.</th>
                         <th title="Note de Bande à part">BA.</th>
-                        <th title="Note de Culturebox - France Télévisions">FT.</th>
+                        <th title="Note de CNews">CN.</th>
                         <th title="Note des Cahiers du Cinéma">CC.</th>
+                        <th title="Note de Charlie Hebdo">CH.</th>
                         <th title="Note de CinemaTeaser">CT.</th>
+                        <th title="Note de Closer">Cl.</th>
+                        <th title="Note de Critikat.com">Cr.</th>
+                        <th title="Note de Culturebox - France Télévisions">FT.</th>
                         <th title="Note de Culturopoing.com">Cu.</th>
                         <th title="Note des Dernières Nouvelles d'Alsace">DN.</th>
-                        <th title="Note d'Ecran Large">EL.</th>
+                        <th title="Note d'Ecran Large">EC.</th>
+                        <th title="Note d'Elle">EL.</th>
+                        <th title="Note de Femme Actuelle">FA.</th>
+                        <th title="Note de L'Express">LE.</th>
+                        <th title="Note de L'Humanité">LH.</th>
+                        <th title="Note de LCI">LCI.</th>
+                        <th title="Note de La Croix">LC.</th>
                         <th title="Note de La Septième Obsession">LS.</th>
                         <th title="Note de La Voix du Nord">VN.</th>
-                        <th title="Note de LCI">LCI.</th>
+                        <th title="Note du Dauphiné Libéré">DL.</th>
+                        <th title="Note du Figaro">LF.</th>
                         <th title="Note du Journal du Dimanche">JD.</th>
+                        <th title="Note du Monde">LM.</th>
                         <th title="Note du Nouvel Observateur">NO.</th>
                         <th title="Note du Parisien">Pa.</th>
                         <th title="Note du Point">LP.</th>
                         <th title="Note des Fiches du Cinéma">FC.</th>
-                        <th title="Note de L'Humanité">LH.</th>
+                        <th title="Note des Inrockuptibles">LI.</th>
                         <th title="Note de Libération">Li.</th>
+                        <th title="Note de Mad Movies">MM.</th>
                         <th title="Note de Marianne">Ma.</th>
+                        <th title="Note de Marie Claire">MC.</th>
                         <th title="Note de Ouest France">OF.</th>
                         <th title="Note de Paris Match">PM.</th>
                         <th title="Note de Positif">Po.</th>
                         <th title="Note de Première">Pr.</th>
+                        <th title="Note de Rolling Stone">RS.</th>
                         <th title="Note de Sud Ouest">SO.</th>
+                        <th title="Note de Transfuge">Tr.</th>
+                        <th title="Note de Télé 7 Jours">TJ.</th>
                         <th title="Note de Télé Loisirs">TL.</th>
                         <th title="Note de Télérama">Té.</th>
-                        <th title="Note de Transfuge">Tr.</th>
                         <th title="Note de Voici">Vo.</th>
-                        <th title="Note de CNews">CN.</th>
-                        <th title="Note de La Croix">LC.</th>
-                        <th title="Note du Figaro">LF.</th>
-                        <th title="Note du Monde">LM.</th>
-                        <th title="Note des Inrockuptibles">LI.</th>
-                        <th title="Note de Mad Movies">MM.</th>
-                        <th title="Note de Rolling Stone">RS.</th>
-                        <th title="Note de Critikat.com">Cr.</th>
+                        <th title="Note d'aVoir-aLire.com">VL.</th>
                         <th><i class="far fa-newspaper" title="Note de la presse"></i></th>
                         <th><i class="fas fa-users" title="Note des spectateurs"></i></th>
                         <th><i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i></th>
@@ -113,9 +81,23 @@
                 </thead>
             </table>
 
+            <p id="credits">
+                <a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiaucine,cinéma,films,actuellementensalles">Tweet</a>
+                <span> / </span>
+                <a href="https://toucheradiostation.com/" target="_blank">Mon blog musical</a>
+                <span> / </span>
+                <a href="https://github.com/pierrevano/yaquoiaucine" target="_blank">Github</a>
+            </p>
+
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
             <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+            <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.colVis.min.js"></script>
+            <script src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
+
             <script src="./assets/js/datatables.js"></script>
+
             <script src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
 
             <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160321234-1"></script>

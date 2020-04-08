@@ -8,14 +8,8 @@ a {
 }
 
 h1,
-#checkbox-container {
-    margin-inline-start: 10px;
-    max-width: 1100px;
-}
-
-#table_wrapper,
-#table {
-    max-width: 1400px;
+p {
+    margin-inline-start: 8px;
 }
 
 p {
@@ -34,31 +28,87 @@ table.dataTable tr.shown td.details:before {
     color: #fff;
 }
 
-.checkbox-grid li {
-    display: block;
+table.DTFC_Cloned thead,
+table.DTFC_Cloned tfoot {
+    background-color: transparent;
+}
+
+table.DTFC_Cloned tr,
+.DTFC_RightHeadWrapper,
+.DTFC_RightBodyWrapper {
+    background-color: rgba(25, 25, 25, 1);
+}
+
+.DTFC_RightHeadWrapper,
+.DTFC_RightBodyWrapper {
+    border-left: 2px solid rgba(100, 100, 100, 1)
+}
+
+.dataTables_scrollBody thead {
+    visibility: hidden;
+}
+
+.dataTables_scrollBody {
+    height: 530px;
+}
+
+@media (min-width:768px) {
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+}
+
+button,
+.customButton,
+.customButtonDisplay,
+.customButtonHide {
+    padding: 2px;
+    line-height: 1.2;
+    border-radius: 4px;
+    border: 3px solid transparent;
+    background: #444857;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    font-family: Helvetica;
+    font-size: 14px;
+    box-shadow: none;
+    margin-bottom: 5px;
+}
+
+div[role=menu]>button.active {
+    background: #28a745;
+}
+
+div[role=menu] {
+    margin-bottom: 5px;
+}
+
+.dt-buttons {
+    padding: 8px;
     float: left;
-    width: 25%;
-}
-
-ul {
-    padding-inline-start: 0px;
-}
-
-ul li:last-child {
-    margin-bottom: 10px;
 }
 
 #td_picture {
     width: 150px;
 }
 
-#icon {
-    width: 24px;
-    height: 14px;
+#credits {
+    position: fixed;
+    bottom: 0px;
+    margin: 0px 0px 8px 8px;
 }
 
-.hide {
-    display: none !important;
+@media (max-width:767px) {
+    #credits {
+        background-color: black;
+        margin: 0px;
+        padding: 8px;
+        width: 100%;
+    }
 }
 
 .fa,
@@ -658,6 +708,13 @@ table.dataTable td {
 }
 
 @media screen and (max-width:767px) {
+    div.dt-button-collection.four-column {
+        width: 80%;
+    }
+
+    div.dt-button-collection.fixed.four-column {
+        margin-left: -40%;
+    }
 
     .dataTables_wrapper .dataTables_info,
     .dataTables_wrapper .dataTables_paginate,
@@ -888,7 +945,7 @@ div.dtr-modal div.dtr-modal-background {
     color: rgba(255, 255, 255, .8);
     width: auto;
     height: auto;
-    margin: 0 0 12px;
+    margin: 0px 0px 8px 8px;
     padding: 0;
     display: block;
     position: relative;
@@ -1038,10 +1095,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role=row]>td:first-child:before {
 
 table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before {
     background: rgba(100, 100, 100, 1)
-}
-
-table.dataTable.no-footer {
-    border-bottom: 1px solid rgba(100, 100, 100, 1)
 }
 
 .dataTables_wrapper .dataTables_length,

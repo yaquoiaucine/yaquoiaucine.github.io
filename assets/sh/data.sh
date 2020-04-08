@@ -4,23 +4,43 @@ rm -f ./assets/js/data.js
 # Add {"data":[{ at beginning of file
 echo "{\"data\":[{" > ./assets/js/data.js
 
-# Define Allociné info
+# Define Allociné Top baseUrl
 baseUrl=http://www.allocine.fr/film/aucinema/top/
-pagesNumber=3
+
+# Define Allociné first movies number
+curl -s $baseUrl > temp
+moviesNumber=$(cat temp | grep "label-text label-sm label-primary-full label-ranking" | tail -1 | cut -d'>' -f2 | cut -d'<' -f1)
+if [ -z "$moviesNumber" ]; then
+  # Define Allociné new baseUrl
+  baseUrl=http://www.allocine.fr/film/aucinema/
+  curl -s $baseUrl > temp
+
+  # Get Allociné new baseUrl pages number
+  pagesNumber=$(cat temp | grep "button button-md item" | cut -d'>' -f40 | cut -d'<' -f1)
+
+  # Define movies number to 15
+  moviesNumber=15
+elif [ $moviesNumber -gt 0 ] && [ $moviesNumber -lt 15 ]; then
+  # Define Allociné Top baseUrl pages number to 1
+  pagesNumber=1
+else
+  # Get Allociné baseUrl pages number if movies number is 15
+  pagesNumber=$(cat temp | grep "button button-md item" | cut -d'>' -f40 | cut -d'<' -f1)
+fi
 
 # Loop through all Allociné pages
 for i in $( eval echo {1..$pagesNumber} )
 do
   # Get Allociné first page
   if [ $i -eq 1 ]; then
-    id=1 moviesNumber=15
+    id=1
     curl -s $baseUrl > temp
   # Get Allociné second until second to last page
   elif [ $i -lt $pagesNumber ]; then
-    curl -s $baseUrl?page=$i > temp
+    curl -s $baseUrl\?page\=$i > temp
   # Get Allociné last page
   elif [ $i -eq $pagesNumber ]; then
-    curl -s $baseUrl?page=$i > temp
+    curl -s $baseUrl\?page\=$i > temp
     moviesNumber=$(cat temp | grep -A1 "<a class=\"meta-title-link\"" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR == 1 || NR % 3 == 1' | wc -l | awk '{print $1}')
   fi
 
@@ -46,65 +66,85 @@ do
     # Extract critic rating and convert it to number
     for criticName in \
     "20 Minutes" \
-    "aVoir-aLire.com" \
+    "BIBA" \
     "Bande à part" \
+    "CNews" \
     "Cahiers du Cinéma" \
+    "Charlie Hebdo" \
     "CinemaTeaser" \
+    "Closer" \
+    "Critikat.com" \
     "Culturebox - France Télévisions" \
     "Culturopoing.com" \
-    "Dernières Nouvelles d'Alsace" \
+    "Dernières Nouvelles d&#039;Alsace" \
     "Ecran Large" \
+    "Elle" \
+    "Femme Actuelle" \
+    "L&#039;Express" \
+    "L&#039;Humanité" \
+    "LCI" \
+    "La Croix" \
     "La Septième Obsession" \
     "La Voix du Nord" \
-    "LCI" \
+    "Le Dauphiné Libéré" \
+    "Le Figaro" \
     "Le Journal du Dimanche" \
+    "Le Monde" \
     "Le Nouvel Observateur" \
     "Le Parisien" \
     "Le Point" \
     "Les Fiches du Cinéma" \
-    "L'Humanité" \
+    "Les Inrockuptibles" \
     "Libération" \
+    "Mad Movies" \
     "Marianne" \
+    "Marie Claire" \
     "Ouest France" \
     "Paris Match" \
     "Positif" \
     "Première" \
+    "Rolling Stone" \
     "Sud Ouest" \
+    "Transfuge" \
+    "Télé 7 Jours" \
     "Télé Loisirs" \
     "Télérama" \
-    "Transfuge" \
     "Voici" \
-    "CNews" \
-    "La Croix" \
-    "Le Figaro" \
-    "Le Monde" \
-    "Les Inrockuptibles" \
-    "Mad Movies" \
-    "Rolling Stone" \
-    "Critikat.com"; do
-      criticRating=$(cat temp2 | grep -m1 "$criticName" | cut -d'"' -f6)
-      criticNameToLower=$(echo $criticName | tr '[:upper:]' '[:lower:]' | sed 's/é/e/g' | sed 's/è/e/g' | sed 's/à/a/g' | tr -d -c '[:alpha:]')
+    "aVoir-aLire.com"; do
 
-      case $criticRating in
-        "Chef-d&#039;oeuvre")
-          echo "\"$criticNameToLower\": \"5\"," >> ./assets/js/data.js
-          ;;
-        "Tr&egrave;s bien")
-          echo "\"$criticNameToLower\": \"4\"," >> ./assets/js/data.js
-          ;;
-        "Pas mal")
-          echo "\"$criticNameToLower\": \"3\"," >> ./assets/js/data.js
-          ;;
-        "Pas terrible")
-          echo "\"$criticNameToLower\": \"2\"," >> ./assets/js/data.js
-          ;;
-        "Tr&egrave;s mauvais")
-          echo "\"$criticNameToLower\": \"1\"," >> ./assets/js/data.js
-          ;;
-        *)
-          echo "\"$criticNameToLower\": \"\"," >> ./assets/js/data.js
-          ;;
-      esac
+      criticRatingNumber=$(cat temp2 | grep "link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
+
+      if [ $criticRatingNumber -gt 0 ]; then
+        for k in $( eval echo {1..$criticRatingNumber} )
+        do
+        criticRating=$(cat temp2 | grep -m$k "link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
+        criticNameToLower=$(echo $criticName | sed 's/&#039;/'"'"'/')
+        if [ $k -gt 1 ]; then
+          criticNameToLower="$criticNameToLower$k"
+        fi
+
+          case $criticRating in
+            "Chef-d&#039;oeuvre")
+              echo "\"$criticNameToLower\": \"5\"," >> ./assets/js/data.js
+              ;;
+            "Tr&egrave;s bien")
+              echo "\"$criticNameToLower\": \"4\"," >> ./assets/js/data.js
+              ;;
+            "Pas mal")
+              echo "\"$criticNameToLower\": \"3\"," >> ./assets/js/data.js
+              ;;
+            "Pas terrible")
+              echo "\"$criticNameToLower\": \"2\"," >> ./assets/js/data.js
+              ;;
+            "Tr&egrave;s mauvais")
+              echo "\"$criticNameToLower\": \"1\"," >> ./assets/js/data.js
+              ;;
+            *)
+              echo "\"$criticNameToLower\": \"\"," >> ./assets/js/data.js
+              ;;
+          esac
+        done
+      fi
     done
 
     # Extract user rating number
@@ -121,7 +161,11 @@ do
 
     # Extract movie duration
     duration=$(cat temp2 | grep -m1 "[0-9]h " | sed 's/^ *//')
-    echo "\"duration\": \"$duration\"," >> ./assets/js/data.js
+    if [[ $duration != *"div"* ]]; then
+      echo "\"duration\": \"$duration\"," >> ./assets/js/data.js
+    else
+      echo "\"duration\": \"\"," >> ./assets/js/data.js
+    fi
 
     # Extract movie genre
     genre=$(cat temp2 | grep -m3 "<span class=\"ACrL2ZACrpbG1zL2d" | sed -e 's/.\{45\}\==">\(.*\)<\/span>/\1/' | sed 's/^ *//' | tr '\n' ' ' | sed 's/.$//')
