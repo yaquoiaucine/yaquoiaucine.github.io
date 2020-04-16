@@ -1,3 +1,15 @@
+// Define indexes prototype of same values between two arrays
+Array.prototype.multiIndexOf = function(element) {
+    var indexes = [];
+    for (var i = this.length - 1; i >= 0; i--) {
+        if (this[i] === element) {
+            indexes.unshift(i);
+        }
+    }
+
+    return indexes;
+};
+
 // Display extra information for every movie
 function format(data) {
     var text = "<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
@@ -7,8 +19,8 @@ function format(data) {
         "<br /><br /><a href=\"http://www.allocine.fr" + data.url + "\" target=\"_blank\">Fiche Allociné</a>" +
         "<br /><br />" + data.date + " / " + data.duration + " / " + data.genre;
 
-    if (data.director != "") text += "<br /><br />De " + data.director;
-    if (data.mainActors != "") text += "<span><br /><br />Avec " + data.mainActors + "</span>";
+    if (data.director !== "") text += "<br /><br />De " + data.director;
+    if (data.mainActors !== "") text += "<span><br /><br />Avec " + data.mainActors + "</span>";
 
     text += "</td>" +
         "</tr>" +
@@ -17,15 +29,25 @@ function format(data) {
     return text;
 }
 
-$(document).ready(function() {
+// Main table function
+function tableMain() {
     // Get window width
     var width = $(window).width();
 
     // Get window height
     var height = $(window).height();
 
+    // Get table localStorage object
+    var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
+
+    // If datatablesData get datatablesData columns
+    if (datatablesData) {
+        var columns = datatablesData.columns;
+    }
+
+    // Define columns critic names
     var columnsVisibleState = [],
-        columnsKeyName = [
+        columnsKeyNameDynamic = [
             "20 Minutes",
             "BIBA",
             "Bande à part",
@@ -37,12 +59,16 @@ $(document).ready(function() {
             "Critikat.com",
             "Culturebox - France Télévisions",
             "Culturopoing.com",
-            "Dernières Nouvelles d'Alsace",
+            "Dernières Nouvelles d&#039;Alsace",
             "Ecran Large",
             "Elle",
             "Femme Actuelle",
-            "L'Express",
-            "L'Humanité",
+            "Filmsactu",
+            "GQ",
+            "L&#039;Ecran Fantastique",
+            "L&#039;Express",
+            "L&#039;Express2",
+            "L&#039;Humanité",
             "LCI",
             "La Croix",
             "La Septième Obsession",
@@ -50,6 +76,8 @@ $(document).ready(function() {
             "Le Dauphiné Libéré",
             "Le Figaro",
             "Le Journal du Dimanche",
+            "Le Journal du Dimanche2",
+            "Le Journal du Geek",
             "Le Monde",
             "Le Nouvel Observateur",
             "Le Parisien",
@@ -72,11 +100,31 @@ $(document).ready(function() {
             "Télérama",
             "Voici",
             "aVoir-aLire.com"
-        ];
+        ],
+        columnsKeyName = columnsKeyNameDynamic.slice();
 
-    // Set columns number
-    var columnNumberOrder = columnsKeyName.length + 4,
-        columnNumber = columnNumberOrder - 3;
+    // Define total columns number
+    var columnNumberOrder = columnsKeyNameDynamic.length + 4;
+
+    // Define last critic column number
+    var columnNumber = columnNumberOrder - 3;
+
+    // Get columns visible state array
+    for (var column in columns) {
+        if (columns.hasOwnProperty(column)) {
+            if (column >= 2 && column <= columnNumber) {
+                columnsVisibleState.push(columns[column].visible);
+            }
+        }
+    }
+
+    // Get columns not visible indexes
+    columnsNotVisibleIndexes = columnsVisibleState.multiIndexOf(false);
+
+    // Get new array with only visible critic
+    for (var i = columnsNotVisibleIndexes.length - 1; i >= 0; i--) {
+        columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
+    }
 
     // If width > 767, fix the last 3 columns and add visibility buttons
     if (width > 767) {
@@ -88,42 +136,13 @@ $(document).ready(function() {
         var scrollX = false,
             leftColumns = 0,
             rightColumns = 0,
-            dom = "frtip";
-    }
-
-    if (columns != null) {
-        var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table")),
-            columns = datatablesData.columns;
-    }
-
-    Array.prototype.multiIndexOf = function(element) {
-        var indexes = [];
-        for (var i = this.length - 1; i >= 0; i--) {
-            if (this[i] === element) {
-                indexes.unshift(i);
-            }
-        }
-
-        return indexes;
-    };
-
-    for (var column in columns) {
-        if (columns.hasOwnProperty(column)) {
-            if (column >= 2 && column <= columnNumber) {
-                columnsVisibleState.push(columns[column].visible);
-            }
-        }
-    }
-
-    columnsNotVisibleIndexes = columnsVisibleState.multiIndexOf(false);
-
-    for (var i = columnsNotVisibleIndexes.length - 1; i >= 0; i--) {
-        columnsKeyName.splice(columnsNotVisibleIndexes[i], 1);
+            dom = "frtip",
+            columnsKeyNameDynamic = columnsKeyName;
     }
 
     // Set datatables data
     var data = {
-        "ajax": "https://yaquoiaucine.fr/assets/js/data.js",
+        "ajax": "https://yaquoiaucine.fr/assets/js/data.json",
         "columns": [{
                 "className": "details",
                 "orderable": false,
@@ -136,8 +155,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[0]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[0]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[0]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -148,8 +169,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[1]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[1]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[1]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -160,8 +183,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[2]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[2]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[2]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -172,8 +197,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[3]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[3]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[3]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -184,8 +211,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[4]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[4]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[4]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -196,8 +225,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[5]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[5]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[5]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -208,8 +239,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[6]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[6]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[6]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -220,8 +253,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[7]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[7]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[7]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -232,8 +267,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[8]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[8]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[8]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -244,8 +281,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[9]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[9]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[9]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -256,8 +295,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[10]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[10]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[10]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -268,8 +309,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[11]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[11]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[11]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -280,8 +323,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[12]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[12]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[12]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -292,8 +337,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[13]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[13]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[13]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -304,8 +351,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[14]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[14]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[14]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -316,8 +365,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[15]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[15]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[15]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -328,8 +379,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[16]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[16]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[16]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -340,8 +393,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[17]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[17]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[17]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -352,8 +407,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[18]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[18]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[18]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -364,8 +421,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[19]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[19]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[19]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -376,8 +435,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[20]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[20]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[20]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -388,8 +449,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[21]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[21]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[21]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -400,8 +463,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[22]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[22]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[22]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -412,8 +477,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[23]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[23]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[23]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -424,8 +491,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[24]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[24]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[24]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -436,8 +505,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[25]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[25]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[25]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -448,8 +519,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[26]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[26]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[26]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -460,8 +533,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[27]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[27]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[27]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -472,8 +547,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[28]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[28]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[28]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -484,8 +561,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[29]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[29]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[29]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -496,8 +575,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[30]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[30]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[30]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -508,8 +589,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[31]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[31]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[31]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -520,8 +603,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[32]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[32]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[32]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -532,8 +617,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[33]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[33]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[33]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -544,8 +631,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[34]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[34]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[34]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -556,8 +645,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[35]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[35]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[35]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -568,8 +659,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[36]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[36]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[36]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -580,8 +673,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[37]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[37]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[37]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -592,8 +687,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[38]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[38]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[38]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -604,8 +701,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[39]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[39]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[39]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -616,8 +715,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[40]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[40]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[40]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -628,8 +729,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[41]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[41]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[41]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -640,8 +743,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[42]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[42]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[42]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -652,8 +757,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[43]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[43]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[43]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -664,8 +771,10 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[44]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[44]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[44]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -676,8 +785,94 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row[columnsKeyName[45]] != undefined) {
-                        var res = parseFloat(row[columnsKeyName[45]]).toFixed(1);
+                    var rowcolumnsKeyName = row[columnsKeyName[45]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[46]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[47]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[48]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[49]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[50]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row[columnsKeyName[51]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
                     }
@@ -691,9 +886,9 @@ $(document).ready(function() {
                     var res = 0,
                         columnsKeyNameLength = 0;
 
-                    for (var i = 0; i < columnsKeyName.length; i++) {
-                        if (row[columnsKeyName[i]] != undefined) {
-                            res += parseFloat(row[columnsKeyName[i]]);
+                    for (var i = 0; i < columnsKeyNameDynamic.length; i++) {
+                        if (row[columnsKeyNameDynamic[i]] !== undefined && row[columnsKeyNameDynamic[i]] !== "") {
+                            res += parseFloat(row[columnsKeyNameDynamic[i]]);
                             columnsKeyNameLength += 1;
                         }
                     }
@@ -710,7 +905,7 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row.user != undefined && row.user != "") {
+                    if (row.user !== undefined && row.user !== "") {
                         var res = parseFloat(row.user).toFixed(2);
                     } else {
                         var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
@@ -722,20 +917,31 @@ $(document).ready(function() {
             {
                 "data": null,
                 "render": function(data, type, row) {
-                    if (row.user != undefined && row.user != "" && row.critic != undefined && row.critic != "") {
-                        var res = (parseFloat(row.critic) + parseFloat(row.user)) / 2;
-                        return res.toFixed(2);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                        return res;
+                    var resBis = 0,
+                        columnsKeyNameLengthBis = 0;
+
+                    for (var i = 0; i < columnsKeyNameDynamic.length; i++) {
+                        if (row[columnsKeyNameDynamic[i]] !== undefined && row[columnsKeyNameDynamic[i]] !== "") {
+                            resBis += parseFloat(row[columnsKeyNameDynamic[i]]);
+                            columnsKeyNameLengthBis += 1;
+                        }
                     }
+
+                    if (resBis == 0) {
+                        var resTotal = parseFloat(row.user);
+                    } else {
+                        var resCritic = resBis / columnsKeyNameLengthBis,
+                            resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
+                    }
+
+                    return resTotal.toFixed(2);
                 }
             }
         ],
         "dom": dom,
         "stateSave": true,
         "stateSaveCallback": function(settings, data) {
-            localStorage.setItem('DataTables_' + settings.sInstance, JSON.stringify(data))
+            localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
         },
         "stateLoadCallback": function(settings) {
             return JSON.parse(localStorage.getItem("DataTables_" + settings.sInstance))
@@ -747,11 +953,20 @@ $(document).ready(function() {
         "buttons": [{
                 "extend": "colvis",
                 "columnText": function(dt, idx, title) {
-                    return columnsKeyName[idx - 2];
+                    var columnsKeyNameButton = [];
+
+                    for (var i = 0; i < columnsKeyName.length; i++) {
+                        columnsKeyNameButton[i] = columnsKeyName[i]
+                            .replace(/L&#039;Express2/g, "L&#039;Express Contre")
+                            .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
+                            .replace(/&#039;/g, "'");
+                    }
+
+                    return columnsKeyNameButton[idx - 2];
                 },
                 "columns": ":not(.noVis)",
                 "collectionLayout": "four-column",
-                "text": "Choisir les critiques",
+                "text": "Afficher la/les critiques",
                 "className": "customButton"
             },
             {
@@ -776,35 +991,64 @@ $(document).ready(function() {
         "paging": false,
         "pageLength": 100,
         "info": false,
+        "destroy": true,
         "language": {
             "search": "<i class=\"fas fa-search\"></i>",
             "searchPlaceholder": "Rechercher un film"
+        },
+        "initComplete": function(data) {
+            // If width < 767 hide all critic columns
+            if (width < 767) {
+                for (var i = 2; i <= columnNumber; i++) {
+                    table.column(i).visible(false, false);
+                }
+            }
+
+            // Hide columns with no data
+            table.columns().every(function(index) {
+                if (index <= columnNumber - 2) {
+                    var data = this.data(),
+                        res = 0;
+
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i][columnsKeyName[index]] !== undefined) {
+                            res += parseFloat(data[i][columnsKeyName[index]]);
+                        }
+                    }
+
+                    if (res == 0) {
+                        table.column(index + 2).visible(false, false);
+                    }
+                }
+            });
+
+            // Adjust column sizing and redraw
+            table.columns.adjust().draw(false);
         }
     }
 
+    // Display table
     var table = $("#table").DataTable(data);
 
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();
 
-    // Display movie details
-    $("#table tbody").on("click", "td.details", function() {
-        var tr = $(this).closest("tr");
-        var row = table.row(tr);
+    // Set height for Y scroll body and hide x scrollbar
+    var h1Height = $("h1").height(),
+        descriptionHeight = $("p.description").height(),
+        descriptionHeightBis = $("p.description").closest("p").height(),
+        dtButtonsHeight = $("div.dt-buttons").height(),
+        creditsHeight = $("p#credits").height(),
+        newHeight = height - (h1Height + descriptionHeight + descriptionHeightBis + dtButtonsHeight + creditsHeight);
 
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass("shown");
-        } else {
-            row.child(format(row.data())).show();
-            tr.addClass("shown");
-        }
-    });
+    $("div.dataTables_scroll").height(newHeight);
 
+    // Select critic buttons
     var elements = document.querySelectorAll("button.customButton");
 
+    // Add margin top and remove extra buttons for original state
     for (var i = 0; i < elements.length; i++) {
-        elements[i].addEventListener('click', function(event) {
+        elements[i].addEventListener("click", function(event) {
             $(".dt-button-collection.four-column").css("margin-top", "5px");
             setTimeout(function() {
                 if (document.querySelector('[role="menu"]') == null) {
@@ -818,11 +1062,35 @@ $(document).ready(function() {
 
         });
     }
+}
 
-    // If width < 767 hide all critic columns
-    if (width < 767) {
-        for (var i = 2; i <= columnNumber; i++) {
-            table.column(i).visible(false, false);
+$(document).ready(function() {
+    // Display movie details
+    $("#table").on("click", "td.details", function() {
+        setTimeout(function() {
+            var dataTables_scrollBody = $("div.dataTables_scrollBody").height();
+            $("div.DTFC_RightBodyWrapper").height(dataTables_scrollBody);
+        }, 100);
+
+        // Get DataTable API instance
+        var table = $("#table").DataTable();
+
+        var tr = $(this).closest("tr");
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            row.child.hide();
+            tr.removeClass("shown");
+        } else {
+            row.child(format(row.data())).show();
+            tr.addClass("shown");
         }
-    }
+    });
+
+    tableMain();
+});
+
+$(document).on("click", "button", function() {
+    // On filter click destroy and reload data
+    tableMain();
 });

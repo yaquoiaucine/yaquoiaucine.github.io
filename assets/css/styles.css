@@ -16,6 +16,11 @@ p {
     font-size: 14px;
 }
 
+#table,
+#table_wrapper {
+    max-width: 900px;
+}
+
 table.dataTable td.details:before {
     content: "\f055";
     font-family: FontAwesome;
@@ -44,12 +49,14 @@ table.DTFC_Cloned tr,
     border-left: 2px solid rgba(100, 100, 100, 1)
 }
 
+/* Hide first row scroll icons */
 .dataTables_scrollBody thead {
     visibility: hidden;
 }
 
+.dataTables_scroll,
 .dataTables_scrollBody {
-    height: 530px;
+    background-color: rgba(25, 25, 25, .8);
 }
 
 @media (min-width:768px) {
@@ -79,12 +86,13 @@ button,
     margin-bottom: 5px;
 }
 
-div[role=menu]>button.active {
-    background: #28a745;
+div[role=menu] {
+    max-width: 800px;
+    margin-bottom: 5px;
 }
 
-div[role=menu] {
-    margin-bottom: 5px;
+div[role=menu]>button.active {
+    background: #28a745;
 }
 
 .dt-buttons {
@@ -97,18 +105,12 @@ div[role=menu] {
 }
 
 #credits {
+    background-color: black;
     position: fixed;
-    bottom: 0px;
-    margin: 0px 0px 8px 8px;
-}
-
-@media (max-width:767px) {
-    #credits {
-        background-color: black;
-        margin: 0px;
-        padding: 8px;
-        width: 100%;
-    }
+    padding: 8px;
+    width: 100%;
+    bottom: 0;
+    margin: 0;
 }
 
 .fa,
@@ -945,18 +947,23 @@ div.dtr-modal div.dtr-modal-background {
     color: rgba(255, 255, 255, .8);
     width: auto;
     height: auto;
-    margin: 0px 0px 8px 8px;
+    margin: 0 0 32px 8px;
     padding: 0;
     display: block;
     position: relative;
     font-size: 14px;
     font-style: normal;
     text-align: left;
-    background: rgba(25, 25, 25, .8);
     box-sizing: border-box;
     font-family: "Helvetica";
     font-weight: 400;
     line-height: normal
+}
+
+@media (max-width: 767px) {
+    .dataTables_wrapper {
+        background-color: rgba(25, 25, 25, .8);
+    }
 }
 
 table.dataTable tbody tr,
@@ -1166,7 +1173,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before {
 }
 
 .dataTables_wrapper .dataTables_filter input {
-    width: 180px;
+    width: 170px;
     line-height: 20px;
     margin-left: 8px
 }
