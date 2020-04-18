@@ -16,6 +16,24 @@ p {
     font-size: 14px;
 }
 
+button {
+    padding: 4px;
+    line-height: 1.2;
+    border-radius: 4px;
+    border: 1px solid #191919;
+    background: #2b2b2b;
+    box-shadow: 0px 2px 0 #161616, 2px 4px 6px #1e1e1e;
+    transition: all 150ms linear;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    font-family: Helvetica;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
 #table,
 #table_wrapper {
     max-width: 900px;
@@ -60,30 +78,43 @@ table.DTFC_Cloned tr,
 }
 
 @media (min-width:768px) {
+    #container {
+        display: table;
+        width: 100%;
+    }
+
+    #container>div {
+        display: table-cell;
+    }
+
+    p {
+        margin-inline-end: 8px;
+    }
 
     th,
     td {
         white-space: nowrap;
     }
-}
 
-button,
-.customButton,
-.customButtonDisplay,
-.customButtonHide {
-    padding: 2px;
-    line-height: 1.2;
-    border-radius: 4px;
-    border: 3px solid transparent;
-    background: #444857;
-    color: white;
-    cursor: pointer;
-    white-space: nowrap;
-    text-align: center;
-    font-family: Helvetica;
-    font-size: 14px;
-    box-shadow: none;
-    margin-bottom: 5px;
+    #quotes {
+        padding: 0 50px 0 50px;
+        text-align: center;
+        vertical-align: middle;
+        font-family: Futura;
+        font-weight: bold;
+    }
+
+    #quotes>#border>p {
+        font-size: 18px;
+    }
+
+    #movieandyear {
+        display: block;
+        text-align: right;
+        margin: 20px 8px 0 0;
+        font-style: italic;
+        font-weight: normal;
+    }
 }
 
 div[role=menu] {
@@ -91,8 +122,24 @@ div[role=menu] {
     margin-bottom: 5px;
 }
 
+div[role=menu]>button {
+    color: rgba(255, 255, 255, 0.5);
+}
+
 div[role=menu]>button.active {
-    background: #28a745;
+    color: #3ee7ad;
+}
+
+button:hover,
+div[role=menu]>button:hover,
+div[role=menu]>button.active:hover {
+    background: #1f1f1f;
+    border: 1px solid rgba(0, 0, 0, .05);
+    box-shadow: 1px 1px 2px rgba(255, 255, 255, .2);
+    color: #515151;
+    text-decoration: none;
+    text-shadow: -1px -1px 0 #0b0b0b;
+    transition: all 250ms linear;
 }
 
 .dt-buttons {

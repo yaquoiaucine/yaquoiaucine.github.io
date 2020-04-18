@@ -10,6 +10,9 @@ Array.prototype.multiIndexOf = function(element) {
     return indexes;
 };
 
+// Get window width
+var width = $(window).width();
+
 // Display extra information for every movie
 function format(data) {
     var text = "<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
@@ -31,9 +34,6 @@ function format(data) {
 
 // Main table function
 function tableMain() {
-    // Get window width
-    var width = $(window).width();
-
     // Get window height
     var height = $(window).height();
 
@@ -966,18 +966,18 @@ function tableMain() {
                 },
                 "columns": ":not(.noVis)",
                 "collectionLayout": "four-column",
-                "text": "Afficher la/les critiques",
+                "text": "Sélectionner les notes",
                 "className": "customButton"
             },
             {
                 "extend": "columnVisibility",
-                "text": "Afficher toutes les critiques",
+                "text": "Afficher toutes les notes",
                 "className": "customButtonDisplay",
                 "visibility": true
             },
             {
                 "extend": "columnVisibility",
-                "text": "Masquer toutes les critiques",
+                "text": "Masquer toutes les notes",
                 "className": "customButtonHide",
                 "columns": ":not(.noVis)",
                 "visibility": false
@@ -1088,6 +1088,13 @@ $(document).ready(function() {
     });
 
     tableMain();
+
+    var random = randomQuotes.quotes[Math.floor(Math.random() * randomQuotes.quotes.length)],
+        randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + "&nbsp<i class=\"fas fa-fw fa-quote-right\"></i>",
+        randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>";
+
+    $("#quotes").css("width", width - 900);
+    document.getElementById("quotes").innerHTML = "<div id=\"border\">" + randomQuotesTitle + randomQuotesMovieandYear + "</div>";
 });
 
 $(document).on("click", "button", function() {
