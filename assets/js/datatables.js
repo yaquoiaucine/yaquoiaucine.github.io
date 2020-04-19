@@ -1091,11 +1091,11 @@ $(document).ready(function() {
 
     if (width > 767) {
         var random = randomQuotes.quotes[Math.floor(Math.random() * randomQuotes.quotes.length)],
-            randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + "&nbsp<i class=\"fas fa-fw fa-quote-right\"></i>",
+            randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + " <i class=\"fas fa-fw fa-quote-right\"></i>",
             randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>";
 
         $("#quotes").css("width", width - 900);
-        document.getElementById("quotes").innerHTML = "<div id=\"border\">" + randomQuotesTitle + randomQuotesMovieandYear + "</div>";
+        document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear;
     }
 });
 
