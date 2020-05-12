@@ -1,50 +1,73 @@
-20 Minutes
-BIBA
-Bande à part
-CNews
-Cahiers du Cinéma
-Charlie Hebdo
-CinemaTeaser
-Closer
-Critikat.com
-Culturebox - France Télévisions
-Culturopoing.com
-Dernières Nouvelles d&#039;Alsace
-Ecran Large
-Elle
-Femme Actuelle
-Filmsactu
-GQ
-L&#039;Ecran Fantastique
-L&#039;Express
-L&#039;Humanité
-LCI
-La Croix
-La Septième Obsession
-La Voix du Nord
-Le Dauphiné Libéré
-Le Figaro
-Le Journal du Dimanche
-Le Journal du Geek
-Le Monde
-Le Nouvel Observateur
-Le Parisien
-Le Point
-Les Fiches du Cinéma
-Les Inrockuptibles
-Libération
-Mad Movies
-Marianne
-Marie Claire
-Ouest France
-Paris Match
-Positif
-Première
-Rolling Stone
-Sud Ouest
-Transfuge
-Télé 7 Jours
-Télé Loisirs
-Télérama
-Voici
-aVoir-aLire.com
+20 Minutes,de 20 Minutes,20
+Aden,d'Aden,Ad
+BIBA,de BIBA,BI
+Bande à part,de Bande à part,BA
+Brazil,de Brazil,Br
+CNews,de CNews,CN
+Cahiers du Cinéma,des Cahiers du Cinéma,CC
+Charlie Hebdo,de Charlie Hebdo,CH
+Chronic&#039;art.com,de Chronic'art.com,Ca
+CinemaTeaser,de CinemaTeaser,CT
+Cinopsis.com,de Cinopsis.com,Ci
+Ciné Live,de Ciné Live,CL
+Closer,de Closer,Cl
+Critikat.com,de Critikat.com,Cr
+Culturebox - France Télévisions,de Culturebox - France Télévisions,FT
+Culturopoing.com,de Culturopoing.com,Cu
+Dernières Nouvelles d&#039;Alsace,des Dernières Nouvelles d'Alsace,DN
+Dvdrama,de Dvdrama,Dv
+Ecran Large,d'Ecran Large,Ec
+Elle,d'Elle,EL
+Excessif,de Excessif,Ex
+Femme Actuelle,de Femme Actuelle,FA
+Filmsactu,de Filmsactu,Fi
+Fluctuat.net,de Fluctuat.net,Fl
+France Soir,de France Soir,FS
+GQ,de GQ,GQ
+L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
+L&#039;Express,de L'Express,Ex
+L&#039;Express,de L'Express Contre,Ex2
+L&#039;Humanité,de L'Humanité,LH
+LCI,de LCI,LCI
+La Croix,de La Croix,LC
+La Septième Obsession,de La Septième Obsession,LS
+La Voix du Nord,de La Voix du Nord,VN
+Le Dauphiné Libéré,du Dauphiné Libéré,DL
+Le Figaro,du Figaro,LF
+Le Figaro,du Figaro Contre,LF2
+Le Journal du Dimanche,du Journal du Dimanche,JD
+Le Journal du Dimanche,du Journal du Dimanche Contre,JD2
+Le Journal du Geek,du Journal du Geek,JG
+Le Monde,du Monde,LM
+Le Nouvel Observateur,du Nouvel Observateur,NO
+Le Parisien,du Parisien,Pa
+Le Point,du Point,LP
+Les Echos,des Echos,LE
+Les Fiches du Cinéma,des Fiches du Cinéma,FC
+Les Inrockuptibles,des Inrockuptibles,In
+Libération,de Libération,Li
+MCinéma.com,de MCinéma.com,MCi
+Mad Movies,de Mad Movies,MM
+Marianne,de Marianne,Ma
+Marie Claire,de Marie Claire,MC
+Metro,de Metro,Me
+Novaplanet.com,de Novaplanet.com,No
+Ouest France,de Ouest France,OF
+Paris Match,de Paris Match,PM
+Positif,de Positif,Po
+Première,de Première,Pr
+Rolling Stone,de Rolling Stone,RS
+Score,de Score,Sc
+Studio Ciné Live,de Studio Ciné Live,St
+Studio Magazine,de Studio Magazine,SM
+Sud Ouest,de Sud Ouest,SO
+Transfuge,de Transfuge,Tr
+TéléCinéObs,de TéléCinéObs,TC
+Télé 7 Jours,de Télé 7 Jours,TJ
+Télé Loisirs,de Télé Loisirs,TL
+Télérama,de Télérama,Té
+Télérama,de Télérama Contre,Té2
+Urbuz,de Urbuz,Ur
+Voici,de Voici,Vo
+aVoir-aLire.com,d'aVoir-aLire.com,VL
+Zurban,de Zurban,Zu

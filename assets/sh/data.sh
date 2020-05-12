@@ -1,30 +1,31 @@
-# Delete data file
-rm -f ./assets/js/data.json
-
 # Add {"data":[{ at beginning of file
 echo "{\"data\":[{" > ./assets/js/data.json
 
 # Define Allociné Top baseUrl
 baseUrl=http://www.allocine.fr/film/aucinema/top/
-
-# Define Allociné first movies number
 curl -s $baseUrl > temp
-moviesNumber=$(cat temp | grep "label-text label-sm label-primary-full label-ranking" | tail -1 | cut -d'>' -f2 | cut -d'<' -f1)
-if [ -z "$moviesNumber" ]; then
+
+# Get Allociné Top baseUrl movies number
+moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
+if [ $moviesNumber -eq 0 ]; then
   # Define Allociné new baseUrl
   baseUrl=http://www.allocine.fr/film/aucinema/
   curl -s $baseUrl > temp
 
-  # Get Allociné new baseUrl pages number
-  pagesNumber=$(cat temp | grep -Eo "\">[0-9]+</a></div></nav>" | cut -d'>' -f2 | cut -d'<' -f1)
-
-  # Define movies number to 15
+  # Define Allociné new baseUrl movies and pages number
   moviesNumber=15
-elif [ $moviesNumber -gt 0 ] && [ $moviesNumber -lt 15 ]; then
+  pagesNumber=$(cat temp | grep -Eo "\">[0-9]+</a></div></nav>" | cut -d'>' -f2 | cut -d'<' -f1 | awk '{print $1}')
+
+   # Define Allociné new baseUrl movies and pages number to 1
+  if [ $pagesNumber -eq 0 ]; then
+    moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
+    pagesNumber=1
+  fi
+elif [ $moviesNumber -lt 15 ]; then
   # Define Allociné Top baseUrl pages number to 1
   pagesNumber=1
 else
-  # Get Allociné baseUrl pages number if movies number is 15
+  # Get Allociné Top baseUrl pages number
   pagesNumber=$(cat temp | grep -Eo "\">[0-9]+</a></div></nav>" | cut -d'>' -f2 | cut -d'<' -f1)
 fi
 
@@ -34,14 +35,13 @@ do
   # Get Allociné first page
   if [ $i -eq 1 ]; then
     id=1
-    curl -s $baseUrl > temp
   # Get Allociné second until second to last page
   elif [ $i -lt $pagesNumber ]; then
     curl -s $baseUrl\?page\=$i > temp
   # Get Allociné last page
   elif [ $i -eq $pagesNumber ]; then
     curl -s $baseUrl\?page\=$i > temp
-    moviesNumber=$(cat temp | grep -A1 "<a class=\"meta-title-link\"" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR == 1 || NR % 3 == 1' | wc -l | awk '{print $1}')
+    moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
   fi
 
   j=1
@@ -51,87 +51,243 @@ do
     echo "\"id\": \"$id\"," >> ./assets/js/data.json
 
     # Get Allociné movie url
-    url=$(cat temp | grep -m$j "<a class=\"meta-title-link\"" | tail -1 | head -1 | cut -d'"' -f4)
-    curl -s http://www.allocine.fr/$url > temp2
-    echo "\"url\": \"$url\"," >> ./assets/js/data.json
+    url=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4)
+    curl -s http://www.allocine.fr$url > temp2
+    completeUrl=https://www.allocine.fr$url
+    echo "\"url\": \"$completeUrl\"," >> ./assets/js/data.json
 
     # Extract movie title
     title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/')
     echo "\"title\": \"$title\"," >> ./assets/js/data.json
 
-    # Extract critic rating number
-    critic=$(cat temp2 | grep -m1 "<span class=\"stareval-note\">" | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./')
-    echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
-
-    # Extract critic rating and convert it to number
-    dataFile="./assets/sh/criticName.txt"
-    while IFS= read -r criticName <&3; do
-
-      criticRatingNumber=$(cat temp2 | grep "link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
-
-      if [ $criticRatingNumber -gt 0 ]; then
-        for k in $( eval echo {1..$criticRatingNumber} )
-        do
-        criticRating=$(cat temp2 | grep -m$k "link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
-        if [ $k -gt 1 ]; then
-          criticName="$criticName$k"
-        fi
-
-          case $criticRating in
-            "Chef-d&#039;oeuvre")
-              echo "\"$criticName\": \"5\"," >> ./assets/js/data.json
-              ;;
-            "Tr&egrave;s bien")
-              echo "\"$criticName\": \"4\"," >> ./assets/js/data.json
-              ;;
-            "Pas mal")
-              echo "\"$criticName\": \"3\"," >> ./assets/js/data.json
-              ;;
-            "Pas terrible")
-              echo "\"$criticName\": \"2\"," >> ./assets/js/data.json
-              ;;
-            "Tr&egrave;s mauvais")
-              echo "\"$criticName\": \"1\"," >> ./assets/js/data.json
-              ;;
-            *)
-              echo "\"$criticName\": \"\"," >> ./assets/js/data.json
-              ;;
-          esac
-        done
-      fi
-    done 3<$dataFile
-
-    # Extract user rating number
-    user=$(cat temp2 | grep -m2 "<span class=\"stareval-note\">" | tail -1 | cut -d'<' -f15 | cut -d'>' -f2 | sed 's/,/./')
-    echo "\"user\": \"$user\"," >> ./assets/js/data.json
-
     # Extract movie picture
     picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4 | sed 's/http/https/')
     echo "\"picture\": \"$picture\"," >> ./assets/js/data.json
 
-    # Extract movie date
-    date=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//')
-    echo "\"date\": \"$date\"," >> ./assets/js/data.json
+    # Extract movie date and link
+    echo "\"date\":[" >> ./assets/js/data.json
+
+      dateName=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//')
+      dateNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | wc -l | awk '{print $1}')
+      if [ $dateNumber -eq 0 ]; then
+        dateName=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1)
+      fi
+      echo "{\"dateName\": \"$dateName\"," >> ./assets/js/data.json
+
+      dateNewFormatDay=$(echo $dateName | cut -d' ' -f1)
+      dateNewFormatMonth=$(echo $dateName | cut -d' ' -f2)
+      case $dateNewFormatMonth in
+        "janvier")
+          dateNewFormatMonth="January"
+          ;;
+        "février")
+          dateNewFormatMonth="February"
+          ;;
+        "mars")
+          dateNewFormatMonth="March"
+          ;;
+        "avril")
+          dateNewFormatMonth="April"
+          ;;
+        "mai")
+          dateNewFormatMonth="May"
+          ;;
+        "juin")
+          dateNewFormatMonth="June"
+          ;;
+        "juillet")
+          dateNewFormatMonth="July"
+          ;;
+        "août")
+          dateNewFormatMonth="August"
+          ;;
+        "septembre")
+          dateNewFormatMonth="September"
+          ;;
+        "octobre")
+          dateNewFormatMonth="October"
+          ;;
+        "novembre")
+          dateNewFormatMonth="November"
+          ;;
+        "décembre")
+          dateNewFormatMonth="December"
+          ;;
+        *)
+          dateNewFormatMonth=""
+          ;;
+      esac
+      dateNewFormatYear=$(echo $dateName | cut -d' ' -f3)
+      dateNewFormat=$(date -d $dateNewFormatDay$dateNewFormatMonth$dateNewFormatYear +%F)
+      if [ ! -z $dateNewFormat ]; then
+        dateLink=https://www.allocine.fr/film/agenda/sem-$dateNewFormat
+      fi
+      echo "\"dateLink\": \"$dateLink\"}," >> ./assets/js/data.json
+
+    echo "]," >> ./assets/js/data.json
 
     # Extract movie duration
-    duration=$(cat temp2 | grep -m1 "[0-9]h " | sed 's/^ *//')
-    if [[ $duration != *"div"* ]]; then
-      echo "\"duration\": \"$duration\"," >> ./assets/js/data.json
-    else
-      echo "\"duration\": \"N/A\"," >> ./assets/js/data.json
+    duration=$(cat temp2 | grep -Eo "[0-9]+h [0-9]+min")
+    echo "\"duration\": \"$duration\"," >> ./assets/js/data.json
+
+    # Extract genre and link
+      genreNumber=$(cat temp2 | grep -m3 "<span class=\"ACrL2ZACrpbG1zL2d" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      if [ $genreNumber -gt 0 ]; then
+
+        echo "\"genre\":[" >> ./assets/js/data.json
+
+        for l in $( eval echo {1..$genreNumber} )
+        do
+          genreName=$(cat temp2 | grep -m3 "<span class=\"ACrL2ZACrpbG1zL2d" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          echo "{\"genreName\": \"$genreName\"," >> ./assets/js/data.json
+
+          genreId=$(cat temp2 | grep -Eo "genre\":\[.{0,25}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
+          if [ ! -z $genreId ]; then
+            genreLink=https://www.allocine.fr/films/genre-$genreId
+          fi
+          echo "\"genreLink\": \"$genreLink\"}," >> ./assets/js/data.json
+        done
+
+        echo "]," >> ./assets/js/data.json
+      fi
+
+    # Extract director and link
+      directorNumber=$(cat temp2 | grep -A15 "<span class=\"ligth\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      if [ $directorNumber -gt 0 ]; then
+
+        echo "\"director\":[" >> ./assets/js/data.json
+
+        for l in $( eval echo {1..$directorNumber} )
+        do
+          directorName=$(cat temp2 | grep -A15 "<span class=\"ligth\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          echo "{\"directorName\": \"$directorName\"," >> ./assets/js/data.json
+
+          directorId=$(cat temp2 | grep -Eo "director\":\[.{0,25}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
+          if [ ! -z $directorId ]; then
+            directorLink=https://www.allocine.fr/personne/fichepersonne_gen_cpersonne=$directorId.html
+          fi
+          echo "\"directorLink\": \"$directorLink\"}," >> ./assets/js/data.json
+        done
+
+        echo "]," >> ./assets/js/data.json
+      fi
+
+    # Extract main actors and link
+      mainActorsNumber=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | awk 'NR % 3 == 1' | sed '1d' | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      if [ $mainActorsNumber -gt 0 ]; then
+
+        echo "\"mainActors\":[" >> ./assets/js/data.json
+
+        for l in $( eval echo {1..$mainActorsNumber} )
+        do
+          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | awk 'NR % 3 == 1' | sed '1d' | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          echo "{\"mainActorsName\": \"$mainActorsName\"," >> ./assets/js/data.json
+
+          mainActorsId=$(cat temp2 | grep -Eo "actor\":\[.{0,23}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
+          if [ ! -z $mainActorsId ]; then
+            mainActorsLink=https://www.allocine.fr/personne/fichepersonne_gen_cpersonne=$mainActorsId.html
+          fi
+          echo "\"mainActorsLink\": \"$mainActorsLink\"}," >> ./assets/js/data.json
+        done
+
+        echo "]," >> ./assets/js/data.json
+      fi
+
+    # Extract nationality and link
+      nationalityNumber=$(cat temp2 | grep "nationality\">" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^ *//' | wc -l | awk '{print $1}')
+      if [ $nationalityNumber -gt 0 ]; then
+
+        echo "\"nationality\":[" >> ./assets/js/data.json
+
+        for l in $( eval echo {1..$nationalityNumber} )
+        do
+          nationalityName=$(cat temp2 | grep "nationality\">" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1 | sed 's/^ *//' | awk '{for(i=1;i<=NF;i++){ $i=toupper(substr($i,1,1)) substr($i,2) }}1')
+          echo "{\"nationalityName\": \"$nationalityName\"," >> ./assets/js/data.json
+
+          nationalityId=$(cat temp2 | grep -Eo "nationality\":\[.{0,150}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
+          if [ ! -z $nationalityId ]; then
+            nationalityLink=https://www.allocine.fr/films/pays-$nationalityId
+          fi
+          echo "\"nationalityLink\": \"$nationalityLink\"}," >> ./assets/js/data.json
+        done
+
+        echo "]," >> ./assets/js/data.json
+      fi
+
+    # Extract video player link
+    movieId=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4 | cut -d'=' -f2 | cut -d'.' -f1)
+    curl -s http://www.allocine.fr/videos/fichefilm-$movieId/toutes/ > temp3
+
+    movieTrailerId=$(cat temp3 | grep -m1 "<a class=\"meta-title-link\" href=\"/video/player_gen_cmedia=" | cut -d'=' -f4 | cut -d'&' -f1)
+    if [ ! -z $movieTrailerId ]; then
+      player=https://player.allocine.fr/$movieTrailerId.html
     fi
+    echo "\"player\": \"$player\"," >> ./assets/js/data.json
 
-    # Extract movie genre
-    genre=$(cat temp2 | grep -m3 "<span class=\"ACrL2ZACrpbG1zL2d" | sed -e 's/.\{45\}\==">\(.*\)<\/span>/\1/' | sed 's/^ *//' | tr '\n' ' ' | sed 's/.$//')
-    echo "\"genre\": \"$genre\"," >> ./assets/js/data.json
+    # Extract critic rating number
+    critic=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ critique*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
+    echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
 
-    # Extract movie director
-    director=$(cat temp2 | grep -m1 "<meta property=\"video:director\" content=\"" | cut -d'"' -f4)
-    echo "\"director\": \"$director\"," >> ./assets/js/data.json
+    # Extract critic number
+    criticNumber=$(cat temp2 | grep -Eo "<span class=\"stareval-review light\"> [0-9]+ critique*" | cut -d' ' -f4)
+    echo "\"criticNumber\": \"$criticNumber\"," >> ./assets/js/data.json
 
-    # Extract main actors
-    mainActors=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | cut -d'>' -f2 | cut -d'<' -f1 | awk 'NR % 3 == 1' | sed '1d' | sed 's/$/,/' | tr '\n' ' ' | sed 's/..$//')
-    echo "\"mainActors\": \"$mainActors\"" >> ./assets/js/data.json
+    # Extract critic rating and convert it to number
+    echo "\"criticNames\":{" >> ./assets/js/data.json
+
+    dataFile="./assets/sh/criticName.txt"
+    while IFS= read -r criticName <&3; do
+
+      criticName=$(echo $criticName | cut -d',' -f1)
+      criticNameFirst=$(echo $criticName | cut -d',' -f1)
+      criticRatingNumber=$(cat temp2 | grep "link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
+
+      if [ "$criticNameFirst" != "$criticNameTemp" ]; then
+        if [ $criticRatingNumber -gt 0 ]; then
+          for k in $( eval echo {1..$criticRatingNumber} )
+          do
+          criticRating=$(cat temp2 | grep -m$k "link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
+          if [ $k -gt 1 ]; then
+            criticName="$criticName$k"
+          fi
+
+            case $criticRating in
+              "Chef-d&#039;oeuvre")
+                echo "\"$criticName\": \"5\"," >> ./assets/js/data.json
+                ;;
+              "Tr&egrave;s bien")
+                echo "\"$criticName\": \"4\"," >> ./assets/js/data.json
+                ;;
+              "Pas mal")
+                echo "\"$criticName\": \"3\"," >> ./assets/js/data.json
+                ;;
+              "Pas terrible")
+                echo "\"$criticName\": \"2\"," >> ./assets/js/data.json
+                ;;
+              "Tr&egrave;s mauvais")
+                echo "\"$criticName\": \"1\"," >> ./assets/js/data.json
+                ;;
+              *)
+                echo "\"$criticName\": \"\"," >> ./assets/js/data.json
+                ;;
+            esac
+          done
+        fi
+      fi
+
+      criticNameTemp=$criticNameFirst
+
+    done 3<$dataFile
+
+    echo "}," >> ./assets/js/data.json
+
+    # Extract user rating number
+    user=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ note*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
+    echo "\"user\": \"$user\"," >> ./assets/js/data.json
+
+    # Extract movie summary
+    summary=$(cat temp2 | grep -A100 "Synopsis et détails" | tr '\r' ' ' | tr '\n' ' ' | grep -Eo "<div class=\"content-txt \">.*<div class=\"ovw-synopsis-info\">" | sed 's/<br>//g' | sed 's/"/\&#034;/g' | sed 's/  / /g' | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^ *//' | sed 's/ *$//')
+    echo "\"summary\": \"$summary\"," >> ./assets/js/data.json
 
     # Add },{ after every keys
     echo "},{" >> ./assets/js/data.json
@@ -139,8 +295,35 @@ do
   done
 done
 
-# Replace ,{ by ]} at the end of file
-sed -i '$s/,{/]}/' ./assets/js/data.json
+# Remove lines break and extra commas
+cat ./assets/js/data.json | sed '$s/,{/]}/' | tr '\n' ' ' | sed 's/}, ]/}]/g' | sed 's/, },/},/g' | sed 's/......$/ }]}/' > temp
+cat temp > ./assets/js/data.json
+
+# Add all critic names
+echo "{\"critics\":[" > ./assets/js/critics.json
+
+id=0
+sec=2
+dataFile="./assets/sh/criticName.txt"
+while IFS= read -r criticName <&3; do
+
+  # Extract criticName from datafile
+  criticName=$(echo $criticName | cut -d',' -f1)
+
+  # If same criticName add 2 to criticName else don't
+  if [ "$criticName" == "$criticNameTemp" ]; then
+    echo "{\"$id\": \"$criticName$sec\"}," >> ./assets/js/critics.json
+  else
+    echo "{\"$id\": \"$criticName\"}," >> ./assets/js/critics.json
+  fi
+
+  id=$[$id+1]
+  criticNameTemp=$criticName
+
+done 3<$dataFile
+
+cat assets/js/critics.json | tr '\n' ' ' | sed 's/..$/ ]}/' > temp
+cat temp > ./assets/js/critics.json
 
 # Delete temp file
 rm -f ./temp*
