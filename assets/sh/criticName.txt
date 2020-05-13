@@ -45,6 +45,7 @@ Le Point,du Point,LP
 Les Echos,des Echos,LE
 Les Fiches du Cinéma,des Fiches du Cinéma,FC
 Les Inrockuptibles,des Inrockuptibles,In
+Les Lettres Françaises,des Lettres Françaises,LF
 Libération,de Libération,Li
 MCinéma.com,de MCinéma.com,MCi
 Mad Movies,de Mad Movies,MM

@@ -261,18 +261,17 @@ $(document).ready(function() {
     }
 
     // Display movie details
-    $("#table").on("click", "td.details", function() {
+    $("#table").on("click", "td.details, td.noVis", function() {
         setTimeout(function() {
             var dataTables_scrollBody = $("div.dataTables_scrollBody").height();
             $("div.DTFC_RightBodyWrapper").height(dataTables_scrollBody);
         }, 500);
 
         // Get DataTable API instance
-        var table = $("#table").DataTable();
-
-        var tr = $(this).closest("tr");
-        var row = table.row(tr);
-
+        var table = $("#table").DataTable(),
+            tr = $(this).closest("tr"),
+            row = table.row(tr),
+            player = row.data().player;
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass("shown");
@@ -281,14 +280,17 @@ $(document).ready(function() {
             tr.addClass("shown");
         }
 
-        var videoSrc = row.data().player;
-
-        $("#myModal").on("shown.bs.modal", function (e) {
-          $("#video").attr("src", videoSrc);
+        $("div.video-thumbnail").hide();
+        $("div.video-thumbnail").find("img").on("load", function() {
+            $("div.video-thumbnail").show(1);
         });
 
-        $("#myModal").on("hide.bs.modal", function (e) {
-          $("#video").attr("src", videoSrc);
+        $("#myModal").on("shown.bs.modal", function(e) {
+            $("#video").attr("src", player);
+        });
+
+        $("#myModal").on("hide.bs.modal", function(e) {
+            $("#video").attr("src", player);
         });
     });
 

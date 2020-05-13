@@ -92,8 +92,12 @@ tbody>tr>td>p a {
 table.dataTable td.details:before {
     content: "\f055";
     font-family: FontAwesome;
-    cursor: pointer;
     color: #fff;
+}
+
+table.dataTable td.details:before,
+td.noVis {
+    cursor: pointer;
 }
 
 table.dataTable tr.shown td.details:before {
@@ -162,7 +166,7 @@ table.DTFC_Cloned tr,
 }
 
 .modal-dialog {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 30px auto;
 }
 
