@@ -127,7 +127,9 @@ table.DTFC_Cloned tr,
 }
 
 .dataTables_scroll,
-.dataTables_scrollBody {
+.dataTables_scrollBody,
+#table,
+#table>tbody {
     background-color: rgba(25, 25, 25, .8);
     margin-bottom: 32px;
 }

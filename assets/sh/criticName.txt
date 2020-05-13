@@ -11,6 +11,7 @@ CinemaTeaser,de CinemaTeaser,CT
 Cinopsis.com,de Cinopsis.com,Ci
 Ciné Live,de Ciné Live,CL
 Closer,de Closer,Cl
+Cplanet.com,de Cplanet.com,Cp
 Critikat.com,de Critikat.com,Cr
 Culturebox - France Télévisions,de Culturebox - France Télévisions,FT
 Culturopoing.com,de Culturopoing.com,Cu
@@ -25,10 +26,12 @@ Fluctuat.net,de Fluctuat.net,Fl
 France Soir,de France Soir,FS
 GQ,de GQ,GQ
 L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
+L&#039;Evénement,de L'Evénement,Ev
 L&#039;Express,de L'Express,Ex
 L&#039;Express,de L'Express Contre,Ex2
 L&#039;Humanité,de L'Humanité,LH
 LCI,de LCI,LCI
+Lenouveaucinema.com,du nouveaucinema.com,Le
 La Croix,de La Croix,LC
 La Septième Obsession,de La Septième Obsession,LS
 La Voix du Nord,de La Voix du Nord,VN
@@ -54,9 +57,11 @@ Marie Claire,de Marie Claire,MC
 Metro,de Metro,Me
 Novaplanet.com,de Novaplanet.com,No
 Ouest France,de Ouest France,OF
+Ouest France,de Ouest France Contre,OF2
 Paris Match,de Paris Match,PM
 Positif,de Positif,Po
 Première,de Première,Pr
+Repérages,de Repérages,Re
 Rolling Stone,de Rolling Stone,RS
 Score,de Score,Sc
 Studio Ciné Live,de Studio Ciné Live,St
@@ -68,7 +73,9 @@ Télé 7 Jours,de Télé 7 Jours,TJ
 Télé Loisirs,de Télé Loisirs,TL
 Télérama,de Télérama,Té
 Télérama,de Télérama Contre,Té2
+TF1 News,de TF1 News,TN
 Urbuz,de Urbuz,Ur
 Voici,de Voici,Vo
+VSD,de VSD,VSD
 aVoir-aLire.com,d'aVoir-aLire.com,VL
 Zurban,de Zurban,Zu

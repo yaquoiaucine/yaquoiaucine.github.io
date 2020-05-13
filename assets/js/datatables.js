@@ -1260,6 +1260,104 @@ function mainTable(data) {
             {
                 "data": null,
                 "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[74]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[75]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[76]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[77]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[78]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[79]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[80]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "render": function(data, type, row) {
                     var res = 0,
                         columnsKeyNameLength = 0;
 
