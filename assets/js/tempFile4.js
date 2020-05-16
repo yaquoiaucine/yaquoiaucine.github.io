@@ -1373,11 +1373,6 @@ function mainTable(data) {
                         return resTotal;
                     } else {
                         resTotal = res / columnsKeyNameLength;
-
-                        if (row.critic != resTotal.toFixed(1)) {
-                            console.log("Check critic rating : " + row.title)
-                        }
-
                         return resTotal.toFixed(2);
                     }
                 }
@@ -1562,18 +1557,27 @@ function mainTable(data) {
                 $(e.target).is(".dt-button.buttons-columnVisibility.active") ||
                 $(e.target).is(".dt-button.buttons-columnVisibility") ||
                 $(e.target).is('div[role="menu"]')) {
-                increment = 2;
-            } else if (
-                $(e.target).is("td.details")
-            ) {
-                increment = 0;
+
+                if (!$(".customButton").hasClass("customButtonSubmit")) {
+                    $(".customButton").addClass("customButtonSubmit");
+                    $(".customButtonSubmit span").html("Valider la sélection ?");
+                }
             } else {
-                window.location.reload(false);
-            };
+                $(".customButtonSubmit span").html("Sélectionner les notes");
+                $(".customButton").removeClass("customButtonSubmit");
+            }
         });
 
-        if (increment === 3) {
-            window.location.reload(false);
+        if ($(".customButton").hasClass("customButtonSubmit")) {
+            $(".customButtonSubmit span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>")
+            setTimeout(function() {
+                $(".customButtonSubmit span").html("Sélection validée <i class=\"fas fa-check\"></i>");
+            }, 4000);
+            setTimeout(function() {
+                $(".customButtonSubmit span").html("Sélectionner les notes");
+                $(".customButton").removeClass("customButtonSubmit");
+                window.location.reload(false);
+            }, 8000);
         }
     });
 
@@ -1593,7 +1597,7 @@ $(document).ready(function() {
         // Display movies quotes
         var randomQuoteNumber = makeRandomNumber(),
             random = randomQuotes.quotes[randomQuoteNumber],
-            randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + " <i class=\"fas fa-fw fa-quote-right\"></i>",
+            randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + " <i class=\"fas fa-quote-right\"></i>",
             randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>";
 
         window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
@@ -1608,10 +1612,30 @@ $(document).ready(function() {
             for (var i = 0; i < dataLength; i++) {
                 var criticNamesObject = data.data[i].criticNames,
                     criticNamesObjectLength = Object.keys(criticNamesObject).length,
-                    criticNamesRealLength = data.data[i].criticNumber;
+                    criticNamesRealLength = data.data[i].criticNumber,
+                    sum = 0,
+                    columnNumber = 0,
+                    newSum = 0;
 
                 if (criticNamesObjectLength != criticNamesRealLength) {
                     console.log(data.data[i].title + ": " + criticNamesObjectLength + " sur " + criticNamesRealLength)
+                }
+
+                if (criticNamesObjectLength > 0) {
+                    for (var key in data.data[i].criticNames) {
+                        if (data.data[i].criticNames[key] !== undefined && data.data[i].criticNames[key] !== "") {
+                            sum += parseInt(data.data[i].criticNames[key]);
+                            columnNumber += 1;
+                        }
+
+                        newSum = (sum / columnNumber).toFixed(1);
+                    }
+                } else {
+                    newSum = 0;
+                }
+
+                if (data.data[i].critic != newSum) {
+                    console.log(data.data[i].title + " : " + newSum + " / " + data.data[i].critic)
                 }
             }
         });

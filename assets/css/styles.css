@@ -61,6 +61,16 @@ div[role=menu]>button.active {
     color: #fff;
 }
 
+.customButtonSubmit {
+    background: #007bff;
+    color: #fff;
+}
+
+.customButtonSubmit:hover {
+    background: #fff;
+    color: #007bff;
+}
+
 button:hover,
 div[role=menu]>button:hover,
 div[role=menu]>button.active:hover {
