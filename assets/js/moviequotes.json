@@ -1,5 +1,6 @@
 var randomQuotes = {
-    "quotes": [{
+    "quotes": [
+        {
             "id": "1",
             "title": "Frankly, my dear, I don't give a damn.",
             "movie": "Gone With the Wind",
@@ -189,7 +190,8 @@ var randomQuotes = {
             "id": "32",
             "title": "Round up the usual suspects.",
             "movie": "Casablanca",
-            "year": "1942"
+            "year": "1942",
+            "picture": "assets/pictures/picture32.jpg"
         },
         {
             "id": "33",
@@ -201,7 +203,8 @@ var randomQuotes = {
             "id": "34",
             "title": "You know how to whistle, don't you, Steve? You just put your lips together and blow.",
             "movie": "To Have and Have Not",
-            "year": "1944"
+            "year": "1944",
+            "picture": "assets/pictures/picture34.jpg"
         },
         {
             "id": "35",

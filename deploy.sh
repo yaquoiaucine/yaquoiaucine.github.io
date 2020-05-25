@@ -13,6 +13,7 @@ js-beautify -r --type html assets/html/tempFile4.html
 js-beautify -r --type css assets/css/styles.css
 js-beautify -r --type js assets/js/datatables.js
 js-beautify -r --type html ./index.html
+js-beautify -r --type js ./index.js
 
 diffjs=$(diff assets/js/datatables.js assets/js/tempFile4.js | wc -l | awk '{print $1}')
 diffhtml=$(diff index.html assets/html/tempFile4.html | wc -l | awk '{print $1}')

@@ -2,10 +2,18 @@ image: node
 
 before_script:
   - npm install surge
+  - npm install get-json
+  - npm install mailgun-js
 
 main:
   stage: deploy
+  variables:
+    API_KEY: $API_KEY
+    DOMAIN_KEY: $DOMAIN_KEY
+    FROM_KEY: $FROM_KEY
+    TO_KEY: $TO_KEY
   script:
     - chmod +x ./assets/sh/data.sh
     - bash ./assets/sh/data.sh
     - node_modules/.bin/surge .
+    - node ./index.js

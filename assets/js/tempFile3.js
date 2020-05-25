@@ -156,6 +156,13 @@
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();
 
+    if (width > 1290) {
+        $("#table, #table_wrapper").css("max-width", width - 516);
+        $("#quotes").css("width", 500);
+    } else {
+        $("#table, #table_wrapper").css("max-width", 1274);
+    }
+
     var h1Height = $("h1").height(),
         descriptionHeight = $("p.description").height(),
         descriptionHeightBis = $("p.description").closest("p").height(),
@@ -191,7 +198,8 @@
         $(document).on("click", function(e) {
 
             // Get target parent class
-            var parentClass = $(e.target).parent().attr("class");
+            var parentClass = $(e.target).parent().attr("class"),
+                parentParentClass = $(e.target).parent().parent().attr("class");
 
             if (
                 parentClass === "dt-button buttons-columnVisibility active" ||
@@ -201,27 +209,48 @@
                 $(e.target).is(".dt-button.buttons-columnVisibility") ||
                 $(e.target).is('div[role="menu"]')) {
 
-              if ( ! $(".customButton").hasClass("customButtonSubmit")) {
-                  $(".customButton").addClass("customButtonSubmit");
-                  $(".customButtonSubmit span").html("Valider la sélection ?");
-              }
-            }
-            else {
-              $(".customButtonSubmit span").html("Sélectionner les notes");
-              $(".customButton").removeClass("customButtonSubmit");
+                if (!$(".customButton").hasClass("customButtonSubmit")) {
+                    $(".customButton").addClass("customButtonSubmit");
+                    $(".customButton span").html("Valider la sélection ?");
+                    $(".customButton").addClass("pulse");
+                }
+
+            } else {
+                if (parentParentClass === "dt-buttons" ||
+                    parentParentClass === "dt-button buttons-collection buttons-colvis customButton customButtonSubmit" ||
+                    $(e.target).is("td.details")) return;
+
+                if ($(".customButton").hasClass("customButtonSubmit")) {
+                    $(".customButton span").html("Sélectionner les notes");
+                    $(".customButton").removeClass("customButtonSubmit");
+                    $(".customButton").addClass("customButtonNotSubmit");
+                }
+
+                increment = 0;
             }
         });
 
         if ($(".customButton").hasClass("customButtonSubmit")) {
-          $(".customButtonSubmit span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>")
             setTimeout(function() {
-              $(".customButtonSubmit span").html("Sélection validée <i class=\"fas fa-check\"></i>");
-            }, 4000);
+                $("button, td.details").prop("disabled", true);
+                $(".customButton span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
+                $(".customButton").removeClass("pulse");
+            }, 100);
             setTimeout(function() {
-              $(".customButtonSubmit span").html("Sélectionner les notes");
-              $(".customButton").removeClass("customButtonSubmit");
+                $(".customButton span").html("Sélection validée <i class=\"fas fa-check\"></i>");
+            }, 4100);
+            setTimeout(function() {
+                $(".customButton span").html("Sélectionner les notes");
+                $(".customButton").removeClass("customButtonSubmit");
+                $(".customButton").removeClass("customButtonNotSubmit");
                 window.location.reload(false);
-            }, 8000);
+            }, 8100);
+        }
+
+        if ($(".customButton").hasClass("customButtonNotSubmit")) {
+            $(".customButton").addClass("customButtonSubmit");
+            $(".customButton span").html("Valider la sélection ?");
+            $(".customButton").addClass("pulse");
         }
     });
 
@@ -235,54 +264,24 @@ var width = $(window).width();
 
 $(document).ready(function() {
 
-    // If width > 767
-    if (width > 767) {
+    // If width > 1290
+    if (width > 1290) {
 
         // Display movies quotes
         var randomQuoteNumber = makeRandomNumber(),
             random = randomQuotes.quotes[randomQuoteNumber],
-            randomQuotesTitle = "<p><i class=\"fas fa-quote-left\"></i> " + random.title + " <i class=\"fas fa-quote-right\"></i>",
+            randomQuotesTitle = "<p><i class=\"fas fa-2x fa-quote-left\"></i><span>" + random.title + "</span>",
             randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>";
+
+        if (random.picture !== undefined) {
+            var randomQuotesPicture = "<p><img src=\"" + random.picture + "\" alt=\"\" width=\"374px\"></p>";
+        } else {
+            var randomQuotesPicture = "";
+        }
 
         window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
 
-        $("#quotes").css("width", width - 900);
-        document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear;
-
-        // Check critic ratings number
-        $.getJSON('https://yaquoiaucine.fr/assets/js/data.json', function(data) {
-            var dataLength = data.data.length;
-
-            for (var i = 0; i < dataLength; i++) {
-                var criticNamesObject = data.data[i].criticNames,
-                    criticNamesObjectLength = Object.keys(criticNamesObject).length,
-                    criticNamesRealLength = data.data[i].criticNumber,
-                    sum = 0,
-                    columnNumber = 0,
-                    newSum = 0;
-
-                if (criticNamesObjectLength != criticNamesRealLength) {
-                    console.log(data.data[i].title + ": " + criticNamesObjectLength + " sur " + criticNamesRealLength)
-                }
-
-                if (criticNamesObjectLength > 0) {
-                    for (var key in data.data[i].criticNames) {
-                        if (data.data[i].criticNames[key] !== undefined && data.data[i].criticNames[key] !== "") {
-                            sum += parseInt(data.data[i].criticNames[key]);
-                            columnNumber += 1;
-                        }
-
-                        newSum = (sum / columnNumber).toFixed(1);
-                    }
-                } else {
-                    newSum = 0;
-                }
-
-                if (data.data[i].critic != newSum) {
-                    console.log(data.data[i].title + " : " + newSum + " / " + data.data[i].critic)
-                }
-            }
-        });
+        document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear + randomQuotesPicture;
     }
 
     // Display movie details
@@ -311,14 +310,14 @@ $(document).ready(function() {
         });
 
         $("#myModal").on("shown.bs.modal", function(e) {
-            $("#video").attr("src", player);
+            $("#video").prop("src", player);
         });
 
         $("#myModal").on("hide.bs.modal", function(e) {
-            $("#video").attr("src", player);
+            $("#video").prop("src", player);
         });
     });
 
     // Call main function
-    $.getJSON('https://yaquoiaucine.fr/assets/js/critics.json', mainTable);
+    $.getJSON("https://yaquoiaucine.fr/assets/js/critics.json", mainTable);
 });

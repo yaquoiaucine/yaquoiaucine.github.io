@@ -9,6 +9,7 @@ Charlie Hebdo,de Charlie Hebdo,CH
 Chronic&#039;art.com,de Chronic'art.com,Ca
 CinemaTeaser,de CinemaTeaser,CT
 Cinopsis.com,de Cinopsis.com,Ci
+Cine Libre,de Cine Libre,CLi
 Ciné Live,de Ciné Live,CL
 Closer,de Closer,Cl
 Cplanet.com,de Cplanet.com,Cp
@@ -24,6 +25,7 @@ Femme Actuelle,de Femme Actuelle,FA
 Filmsactu,de Filmsactu,Fi
 Fluctuat.net,de Fluctuat.net,Fl
 France Soir,de France Soir,FS
+Gala,de Gala,Ga
 GQ,de GQ,GQ
 L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
 L&#039;Evénement,de L'Evénement,Ev
@@ -61,6 +63,7 @@ Ouest France,de Ouest France Contre,OF2
 Paris Match,de Paris Match,PM
 Positif,de Positif,Po
 Première,de Première,Pr
+Public,de Public,Pu
 Repérages,de Repérages,Re
 Rolling Stone,de Rolling Stone,RS
 Score,de Score,Sc
@@ -69,6 +72,7 @@ Studio Magazine,de Studio Magazine,SM
 Sud Ouest,de Sud Ouest,SO
 Transfuge,de Transfuge,Tr
 TéléCinéObs,de TéléCinéObs,TC
+Télé 2 semaines,de Télé 2 semaines,TS
 Télé 7 Jours,de Télé 7 Jours,TJ
 Télé Loisirs,de Télé Loisirs,TL
 Télérama,de Télérama,Té

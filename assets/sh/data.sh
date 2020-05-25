@@ -286,7 +286,7 @@ do
     echo "\"user\": \"$user\"," >> ./assets/js/data.json
 
     # Extract movie summary
-    summary=$(cat temp2 | grep -A100 "Synopsis et détails" | tr '\r' ' ' | tr '\n' ' ' | grep -Eo "<div class=\"content-txt \">.*<div class=\"ovw-synopsis-info\">" | sed 's/<br>//g' | sed 's/"/\&#034;/g' | sed 's/  / /g' | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^ *//' | sed 's/ *$//')
+    summary=$(cat temp2 | grep -A100 "Synopsis et détails" | tr '\r' ' ' | tr '\n' ' ' | grep -Eo "<div class=\"content-txt \">.*<div class=\"ovw-synopsis-info\">" | sed -E -e 's/<br>|<i>|<\/i>//g' | sed 's/"/\&#034;/g' | sed 's/  / /g' | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^ *//' | sed 's/ *$//')
     echo "\"summary\": \"$summary\"," >> ./assets/js/data.json
 
     # Add },{ after every keys
