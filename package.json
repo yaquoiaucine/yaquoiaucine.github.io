@@ -4,7 +4,8 @@
   "description": "https://yaquoiaucine.fr",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +13,11 @@
   "dependencies": {
     "get-json": "^1.0.1",
     "mailgun-js": "^0.22.0",
+    "minimist": "^1.2.5",
+    "npm-force-resolutions": "0.0.3",
     "surge": "^0.21.3"
+  },
+  "resolutions": {
+    "minimist": "^1.2.5"
   }
 }
