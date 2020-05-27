@@ -73,7 +73,6 @@ div[role=menu]>button.active {
 }
 
 .pulse {
-    font-size: 13px;
     box-shadow: 0 0 0 rgba(0, 123, 255, 1);
     animation: pulse 2s infinite;
 }
@@ -303,6 +302,10 @@ table.DTFC_Cloned tr,
     width: 100%;
     bottom: 0;
     margin: 0;
+}
+
+#credits>a {
+    margin: 0 15px 0 5px;
 }
 
 .fa,

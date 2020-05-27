@@ -1503,17 +1503,14 @@ function mainTable(data) {
                 "className": "customButton"
             },
             {
-                "extend": "columnVisibility",
                 "text": "Afficher toutes les notes",
                 "className": "customButtonDisplay",
-                "visibility": true
+                "action": function(e, dt, node, config) {}
             },
             {
-                "extend": "columnVisibility",
                 "text": "Masquer toutes les notes",
                 "className": "customButtonHide",
-                "columns": ":not(.noVis)",
-                "visibility": false
+                "action": function(e, dt, node, config) {}
             }
         ],
         "scrollX": scrollX,
@@ -1636,6 +1633,7 @@ function mainTable(data) {
                 if ($(".customButton").hasClass("customButtonSubmit")) {
                     $(".customButton span").html("Sélectionner les notes");
                     $(".customButton").removeClass("customButtonSubmit");
+                    $(".customButton").removeClass("pulse");
                     $(".customButton").addClass("customButtonNotSubmit");
                 }
 
@@ -1651,13 +1649,13 @@ function mainTable(data) {
             }, 100);
             setTimeout(function() {
                 $(".customButton span").html("Sélection validée <i class=\"fas fa-check\"></i>");
-            }, 4100);
+            }, 4000);
             setTimeout(function() {
                 $(".customButton span").html("Sélectionner les notes");
                 $(".customButton").removeClass("customButtonSubmit");
                 $(".customButton").removeClass("customButtonNotSubmit");
                 window.location.reload(false);
-            }, 8100);
+            }, 7000);
         }
 
         if ($(".customButton").hasClass("customButtonNotSubmit")) {
@@ -1667,8 +1665,50 @@ function mainTable(data) {
         }
     });
 
-    $(".customButtonDisplay, .customButtonHide").on("click", function() {
-        window.location.reload(false);
+    $(".customButtonDisplay").on("click", function() {
+        $("tr.shown").children().click();
+
+        setTimeout(function() {
+            $("button, td.details").prop("disabled", true);
+            $(".customButtonDisplay").addClass("customButtonSubmit");
+            $(".customButtonDisplay").addClass("pulse");
+            $(".customButtonDisplay span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
+            $(".customButtonDisplay").removeClass("pulse");
+        }, 100);
+        setTimeout(function() {
+            table.columns(".critic").visible(true);
+        }, 1000);
+        setTimeout(function() {
+            $(".customButtonDisplay span").html("Sélection validée <i class=\"fas fa-check\"></i>");
+        }, 7000)
+        setTimeout(function() {
+            $(".customButtonDisplay span").html("Afficher toutes les notes");
+            $(".customButtonDisplay").removeClass("customButtonSubmit");
+            window.location.reload(false);
+        }, 10000);
+    });
+
+    $(".customButtonHide").on("click", function() {
+        $("tr.shown").children().click();
+
+        setTimeout(function() {
+            $("button, td.details").prop("disabled", true);
+            $(".customButtonHide").addClass("customButtonSubmit");
+            $(".customButtonHide").addClass("pulse");
+            $(".customButtonHide span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
+            $(".customButtonHide").removeClass("pulse");
+        }, 100);
+        setTimeout(function() {
+            table.columns(".critic").visible(false);
+        }, 1000);
+        setTimeout(function() {
+            $(".customButtonHide span").html("Sélection validée <i class=\"fas fa-check\"></i>");
+        }, 7000)
+        setTimeout(function() {
+            $(".customButtonHide span").html("Masquer toutes les notes");
+            $(".customButtonHide").removeClass("customButtonSubmit");
+            window.location.reload(false);
+        }, 10000);
     });
 }
 
@@ -1715,12 +1755,12 @@ $(document).ready(function() {
         } else {
             row.child(format(row.data())).show();
             tr.addClass("shown");
-        }
 
-        $("div.video-thumbnail").hide();
-        $("div.video-thumbnail").find("img").on("load", function() {
-            $("div.video-thumbnail").show(1);
-        });
+            $("div.video-thumbnail").hide();
+            $("div.video-thumbnail").find("img").on("load", function() {
+                $("div.video-thumbnail").show(1);
+            });
+        }
 
         $("#myModal").on("shown.bs.modal", function(e) {
             $("#video").prop("src", player);

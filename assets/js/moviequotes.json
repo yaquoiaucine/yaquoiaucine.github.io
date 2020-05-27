@@ -336,7 +336,8 @@ var randomQuotes = {
             "id": "56",
             "title": "A boy's best friend is his mother.",
             "movie": "Psycho",
-            "year": "1960"
+            "year": "1960",
+            "picture": "assets/pictures/picture56.jpg"
         },
         {
             "id": "57",
