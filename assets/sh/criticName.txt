@@ -7,6 +7,7 @@ CNews,de CNews,CN
 Cahiers du Cinéma,des Cahiers du Cinéma,CC
 Charlie Hebdo,de Charlie Hebdo,CH
 Chronic&#039;art.com,de Chronic'art.com,Ca
+Cinéastes,de Cinéastes,Cin
 CinemaTeaser,de CinemaTeaser,CT
 Cinopsis.com,de Cinopsis.com,Ci
 Cine Libre,de Cine Libre,CLi
@@ -22,6 +23,7 @@ Ecran Large,d'Ecran Large,Ec
 Elle,d'Elle,EL
 Excessif,de Excessif,Ex
 Femme Actuelle,de Femme Actuelle,FA
+FHM,de FHM,FHM
 Filmsactu,de Filmsactu,Fi
 Fluctuat.net,de Fluctuat.net,Fl
 France Soir,de France Soir,FS
@@ -58,6 +60,7 @@ Marianne,de Marianne,Ma
 Marie Claire,de Marie Claire,MC
 Metro,de Metro,Me
 Novaplanet.com,de Novaplanet.com,No
+Obejctif-Cinema.com,d'Obejctif-Cinema.com,OC
 Ouest France,de Ouest France,OF
 Ouest France,de Ouest France Contre,OF2
 Paris Match,de Paris Match,PM

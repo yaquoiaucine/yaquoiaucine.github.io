@@ -131,6 +131,39 @@ tbody>tr>td>p a {
     color: #fff;
 }
 
+table.dataTable.display tbody td.highlightElement {
+    position: relative;
+    z-index: 99999;
+}
+
+#overlay {
+    position: fixed;
+    z-index: 99998;
+    background: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.nextTutorial {
+    text-decoration: none;
+}
+
+#newCredits {
+    position: fixed;
+    z-index: 99999;
+    padding: 8px;
+    width: 100%;
+    bottom: 0;
+    margin: 0 0 0 4px;
+    background-color: #007bff;
+    color: #fff;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    max-width: 462px;
+}
+
 table.dataTable td.details:before {
     content: "\f055";
     font-family: FontAwesome;
@@ -176,6 +209,7 @@ table.DTFC_Cloned tr,
     margin-bottom: 32px;
 }
 
+#detailsTable,
 #summaryTable {
     max-width: 482px;
 }
@@ -264,7 +298,7 @@ table.DTFC_Cloned tr,
 
     tbody>tr>td>p,
     .td_picture {
-        width: 225px;
+        width: 223px;
     }
 
     tbody>tr>td>p {

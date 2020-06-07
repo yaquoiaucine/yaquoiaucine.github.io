@@ -144,6 +144,16 @@
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw(false);
+
+            setTimeout(function() {
+                var firstConnexion = localStorage.getItem("firstConnexion");
+
+                if (!firstConnexion) {
+                    localStorage.setItem("firstConnexion", new Date());
+                    $("td.details:first").click();
+                    tutorialShow();
+                }
+            }, 100);
         }
     }
 
@@ -336,6 +346,7 @@ $(document).ready(function() {
             tr = $(this).closest("tr"),
             row = table.row(tr),
             player = row.data().player;
+
         if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass("shown");
@@ -343,9 +354,11 @@ $(document).ready(function() {
             row.child(format(row.data())).show();
             tr.addClass("shown");
 
-            $("div.video-thumbnail").hide();
-            $("div.video-thumbnail").find("img").on("load", function() {
-                $("div.video-thumbnail").show(1);
+            var videoThumbnail = $(this).closest("tr").next().find("div.video-thumbnail");
+
+            videoThumbnail.hide();
+            videoThumbnail.find("img").on("load", function() {
+                videoThumbnail.show(1);
             });
         }
 
@@ -356,6 +369,30 @@ $(document).ready(function() {
         $("#myModal").on("hide.bs.modal", function(e) {
             $("#video").prop("src", player);
         });
+    });
+
+    $(".tutorial").on("click", function() {
+        if ($(".tdElement").closest("table").closest("tr").prev().hasClass("shown")) {
+            $("td.details:first").click().click();
+        } else {
+            $("td.details:first").click();
+        }
+
+        tutorialShow();
+    });
+
+    $("body").on("click", function(e) {
+        if ((e.target.id === "overlay") || ($(e.target).is(".nextTutorial"))) {
+            tutorialHide();
+        }
+    });
+
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 150) {
+            $("#overlay h2").html("");
+        } else {
+            $("#overlay h2").html("<span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\" aria-hidden=\"true\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\" aria-hidden=\"true\"></i></a>");
+        }
     });
 
     // Call main function

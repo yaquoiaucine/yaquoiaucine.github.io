@@ -146,6 +146,35 @@ function format(data) {
     return text;
 }
 
+function tutorialShow() {
+    $("tr.shown:first").next().find("td:first table tbody tr td").addClass("tdElement");
+
+    $("#overlay").fadeIn("fast");
+    $(".tdElement:first").css({
+        "border-top": "2px solid #fff",
+        "border-left": "2px solid #fff"
+    });
+    $(".tdElement:first").next().css({
+        "border-top": "2px solid #fff",
+        "border-right": "2px solid #fff"
+    });
+    $(".tdElement:first").closest("table").next().find("td").css({
+        "border-left": "2px solid #fff",
+        "border-bottom": "2px solid #fff",
+        "border-right": "2px solid #fff"
+    });
+    $(".tdElement").addClass("highlightElement");
+
+    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
+}
+
+function tutorialHide() {
+    $("#overlay").fadeOut("fast");
+    $("#overlay").remove();
+    $(".tdElement").removeClass("highlightElement");
+    $(".tdElement").css("border", "none");
+}
+
 // Main table function
 function mainTable(data) {
 
