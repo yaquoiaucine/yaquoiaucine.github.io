@@ -74,12 +74,7 @@
                     var columnsKeyNameButton = [];
 
                     for (var i = 0; i < columnsKeyName.length; i++) {
-                        columnsKeyNameButton[i] = columnsKeyName[i]
-                            .replace(/L&#039;Express2/g, "L&#039;Express Contre")
-                            .replace(/Le Figaro2/g, "Le Figaro Contre")
-                            .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
-                            .replace(/Télérama2/g, "Télérama Contre")
-                            .replace(/&#039;/g, "'");
+                        columnsKeyNameButton[i] = replaceCriticsTitle(columnsKeyName[i]);
                     }
 
                     return columnsKeyNameButton[idx - 2];
@@ -144,16 +139,6 @@
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw(false);
-
-            setTimeout(function() {
-                var firstConnexion = localStorage.getItem("firstConnexion");
-
-                if (!firstConnexion) {
-                    localStorage.setItem("firstConnexion", new Date());
-                    $("td.details:first").click();
-                    tutorialShow();
-                }
-            }, 100);
         }
     }
 
@@ -351,6 +336,7 @@ $(document).ready(function() {
             row.child.hide();
             tr.removeClass("shown");
         } else {
+            if ($(".shown").length > 0) $(".shown")[0].children[0].click();
             row.child(format(row.data())).show();
             tr.addClass("shown");
 
@@ -362,36 +348,34 @@ $(document).ready(function() {
             });
         }
 
-        $("#myModal").on("shown.bs.modal", function(e) {
-            $("#video").prop("src", player);
+        $("#myModal").on("shown.bs.modal", function() {
+            video = $(this).find("#video");
+            $(video).prop("src", player);
         });
 
-        $("#myModal").on("hide.bs.modal", function(e) {
-            $("#video").prop("src", player);
+        $("#myModal").on("hide.bs.modal", function() {
+            video = $(this).find("#video");
+            $(video).prop("src", player);
         });
     });
 
-    $(".tutorial").on("click", function() {
-        if ($(".tdElement").closest("table").closest("tr").prev().hasClass("shown")) {
-            $("td.details:first").click().click();
-        } else {
-            $("td.details:first").click();
-        }
+    if (width > 767) {
+      $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>")
+    }
 
-        tutorialShow();
-    });
+    $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
-        if ((e.target.id === "overlay") || ($(e.target).is(".nextTutorial"))) {
+        if (e.target.id === "overlay") {
             tutorialHide();
         }
     });
 
     $(window).scroll(function() {
-        if ($(this).scrollTop() > 150) {
+        if ($(this).scrollTop() > 10) {
             $("#overlay h2").html("");
         } else {
-            $("#overlay h2").html("<span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\" aria-hidden=\"true\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\" aria-hidden=\"true\"></i></a>");
+            $("#overlay h2").html("<span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Choisissez vos critiques préférées · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span>");
         }
     });
 

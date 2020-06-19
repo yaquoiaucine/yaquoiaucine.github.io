@@ -26,6 +26,12 @@ p {
     font-size: 14px;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px;
+}
+
 button {
     padding: 4px;
     border-radius: 4px;
@@ -43,13 +49,14 @@ button {
 }
 
 .dt-buttons {
-    padding: 8px;
+    margin-bottom: 10px;
+    padding: 10px 10px 5px 10px;
     float: left;
 }
 
 div[role=menu] {
     max-width: 800px;
-    margin-bottom: 5px;
+    margin: 0 10px 5px 0;
 }
 
 div[role=menu]>button {
@@ -131,7 +138,8 @@ tbody>tr>td>p a {
     color: #fff;
 }
 
-table.dataTable.display tbody td.highlightElement {
+table.dataTable.display tbody td.highlightElement,
+.highlightElement {
     position: relative;
     z-index: 99999;
 }
@@ -146,22 +154,12 @@ table.dataTable.display tbody td.highlightElement {
     left: 0;
 }
 
-.nextTutorial {
-    text-decoration: none;
+#overlay h2 {
+    background-color: black;
 }
 
-#newCredits {
-    position: fixed;
-    z-index: 99999;
-    padding: 8px;
-    width: 100%;
-    bottom: 0;
-    margin: 0 0 0 4px;
-    background-color: #007bff;
-    color: #fff;
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    max-width: 462px;
+.nextTutorial {
+    text-decoration: none;
 }
 
 table.dataTable td.details:before {
@@ -220,6 +218,7 @@ table.DTFC_Cloned tr,
 }
 
 .video-thumbnail {
+    margin: 8px 0 0 8px;
     position: relative;
     display: inline-block;
     cursor: pointer;
@@ -264,7 +263,7 @@ table.DTFC_Cloned tr,
     opacity: 1;
 }
 
-@media screen and (max-width:767px) {
+@media (max-width:767px) {
 
     #detailsTable,
     #summaryTable {
@@ -274,6 +273,10 @@ table.DTFC_Cloned tr,
 
     #detailsTable>tbody>tr>td>div>img {
         width: 100%;
+    }
+
+    tbody>tr>td>p {
+        font-size: 13px;
     }
 }
 
@@ -1226,9 +1229,18 @@ table.dataTable.display tbody td i[class] {
     margin-right: 6px;
 }
 
+table.dataTable.display tbody td i.fa-star {
+    color: #28a745;
+}
+
 table.dataTable.display tbody td i[class]:hover,
 table.dataTable.display tbody td i[class]:focus {
     color: rgba(255, 255, 255, .5);
+}
+
+table.dataTable.display tbody td i.fa-star:hover,
+table.dataTable.display tbody td i.fa-star:focus {
+    color: #1d7831;
 }
 
 table.dataTable.display tbody td i[class] img {

@@ -29,6 +29,7 @@ Fluctuat.net,de Fluctuat.net,Fl
 France Soir,de France Soir,FS
 Gala,de Gala,Ga
 GQ,de GQ,GQ
+IGN France,de IGN France,IGN
 L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
 L&#039;Evénement,de L'Evénement,Ev
 L&#039;Express,de L'Express,Ex
@@ -47,6 +48,7 @@ Le Journal du Dimanche,du Journal du Dimanche Contre,JD2
 Le Journal du Geek,du Journal du Geek,JG
 Le Monde,du Monde,LM
 Le Nouvel Observateur,du Nouvel Observateur,NO
+Le Nouvel Observateur,du Nouvel Observateur Contre,NO2
 Le Parisien,du Parisien,Pa
 Le Point,du Point,LP
 Les Echos,des Echos,LE
@@ -54,6 +56,7 @@ Les Fiches du Cinéma,des Fiches du Cinéma,FC
 Les Inrockuptibles,des Inrockuptibles,In
 Les Lettres Françaises,des Lettres Françaises,LF
 Libération,de Libération,Li
+Libération,de Libération Contre,Li2
 MCinéma.com,de MCinéma.com,MCi
 Mad Movies,de Mad Movies,MM
 Marianne,de Marianne,Ma
@@ -73,6 +76,7 @@ Score,de Score,Sc
 Studio Ciné Live,de Studio Ciné Live,St
 Studio Magazine,de Studio Magazine,SM
 Sud Ouest,de Sud Ouest,SO
+Sud Ouest,de Sud Ouest Contre,SO2
 Transfuge,de Transfuge,Tr
 TéléCinéObs,de TéléCinéObs,TC
 Télé 2 semaines,de Télé 2 semaines,TS

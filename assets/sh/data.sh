@@ -7,7 +7,7 @@ curl -s $baseUrl > temp
 
 # Get Allociné Top baseUrl movies number
 moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
-if [ $moviesNumber -eq 0 ]; then
+if [ $moviesNumber -lt 15 ]; then
   # Define Allociné new baseUrl
   baseUrl=http://www.allocine.fr/film/aucinema/
   curl -s $baseUrl > temp
@@ -173,14 +173,14 @@ do
       fi
 
     # Extract main actors and link
-      mainActorsNumber=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | awk 'NR % 3 == 1' | sed '1d' | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      mainActorsNumber=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
       if [ $mainActorsNumber -gt 0 ]; then
 
         echo "\"mainActors\":[" >> ./assets/js/data.json
 
         for l in $( eval echo {1..$mainActorsNumber} )
         do
-          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | awk 'NR % 3 == 1' | sed '1d' | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
           echo "{\"mainActorsName\": \"$mainActorsName\"," >> ./assets/js/data.json
 
           mainActorsId=$(cat temp2 | grep -Eo "actor\":\[.{0,23}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
@@ -217,6 +217,7 @@ do
     # Extract video player link
     movieId=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4 | cut -d'=' -f2 | cut -d'.' -f1)
     curl -s http://www.allocine.fr/videos/fichefilm-$movieId/toutes/ > temp3
+    curl -s http://www.allocine.fr/film/fichefilm-$movieId/critiques/presse/ > temp4
 
     movieTrailerId=$(cat temp3 | grep -m1 "<a class=\"meta-title-link\" href=\"/video/player_gen_cmedia=" | cut -d'=' -f4 | cut -d'&' -f1)
     if [ ! -z $movieTrailerId ]; then
@@ -225,7 +226,7 @@ do
     echo "\"player\": \"$player\"," >> ./assets/js/data.json
 
     # Extract critic rating number
-    critic=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ critique*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
+    critic=$(cat temp4 | grep -m1 -Eo "</div><span class=\"stareval-note\">[0-9],[0-9]</span></div>" | cut -d'>' -f3 | cut -d'<' -f1 | sed 's/,/./')
     echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
 
     # Extract critic number

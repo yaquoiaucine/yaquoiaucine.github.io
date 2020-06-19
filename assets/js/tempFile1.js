@@ -33,14 +33,37 @@ function makeRandomNumber() {
     return newRandomNumber;
 }
 
-  // Display extra information for every movie
+function sortCriticsDesc(a, b) {
+    if (a[1] === b[1]) {
+        return 0;
+    } else {
+        return (a[1] > b[1]) ? -1 : 1;
+    }
+}
+
+function replaceCriticsTitle(critic) {
+    var s = String(critic);
+
+    return s
+        .replace(/L&#039;Express2/g, "L&#039;Express Contre")
+        .replace(/Le Figaro2/g, "Le Figaro Contre")
+        .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
+        .replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre")
+        .replace(/Libération2/g, "Libération Contre")
+        .replace(/Ouest France2/g, "Ouest France Contre")
+        .replace(/Sud Ouest2/g, "Sud Ouest Contre")
+        .replace(/Télérama2/g, "Télérama Contre")
+        .replace(/&#039;/g, "'");
+}
+
+// Display extra information for every movie
 function format(data) {
     var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
         "<td><p><a href=\"" + data.url + "\" target=\"_blank\">Fiche Allociné</a></p>";
 
-      text += "<div class=\"container\">" +
+    text += "<div class=\"container\">" +
         "<div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">" +
         "<div class=\"modal-dialog modal-dialog-centered\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-body\">" +
         "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">" +
@@ -138,18 +161,90 @@ function format(data) {
 
     text += "</td></tr></table>";
 
-      if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+    if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><p>Synopsis :</p>" +
         "<div id=\"summary\"><p>" + data.summary + "</p></div></td></tr></table>";
 
+    if (data.criticNames !== "") text += "<table id=\"criticNamesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><p>Notes de la presse :</p><p><ul>";
+
+    var criticNames = data.criticNames,
+        criticNamesTempArray = [],
+        criticNamesSortArray = [];
+
+    for (var critic in criticNames) {
+        criticNamesTempArray.push([critic, criticNames[critic]]);
+    }
+
+    var n = criticNamesTempArray.length / 2;
+
+    criticNamesSortArray = criticNamesTempArray.sort(sortCriticsDesc);
+    criticNamesSortArrayDivide = new Array(Math.ceil(criticNamesSortArray.length / n)).fill().map(_ => criticNamesSortArray.splice(0, n))
+
+    for (var i = 0; i < criticNamesSortArrayDivide.length; i++) {
+        var criticNamesSortArrayDivideChild = criticNamesSortArrayDivide[i];
+        ulNew = (i === 1) ? "</ul></p></td><td><p>&nbsp;</p><p><ul>" : "";
+
+        for (var j = 0; j < criticNamesSortArrayDivideChild.length; j++) {
+            var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
+            criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
+
+            switch (criticRatingNumber) {
+                case "1":
+                    text += "<li><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
+                    break;
+                case "2":
+                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
+                    break;
+                case "3":
+                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
+                    break;
+                case "4":
+                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
+                    break;
+                case "5":
+                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
+                    break;
+                default:
+                    text += "";
+                    break;
+            }
+
+            if (j === 0 && width > 767) text += ulNew;
+        }
+    }
+
+    text += "</ul></p></td></tr></table>";
+
     return text;
 }
 
-function tutorialShow() {
+function tutorialStepCritics(e) {
+    $(".dt-button.buttons-collection.buttons-colvis.customButton").click();
+    if (e) e.stopPropagation();
+
+    $("#overlay").fadeIn("fast");
+    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Choisissez vos critiques préférées · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
+    $(".dt-buttons").addClass("highlightElement");
+    $(".dt-buttons").css("border", "2px solid #fff");
+}
+
+function tutorialStepMovie() {
+    $("tr.shown:first").next().find("td:first table tbody tr td").addClass("tdElement");
+
+    if ($(".tdElement").closest("table").closest("tr").prev().hasClass("shown")) {
+        $("td.details:first").click().click();
+    } else {
+        $("td.details:first").click();
+    }
+
     $("tr.shown:first").next().find("td:first table tbody tr td").addClass("tdElement");
 
     $("#overlay").fadeIn("fast");
+    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
+    $(".tdElement").addClass("highlightElement");
     $(".tdElement:first").css({
         "border-top": "2px solid #fff",
         "border-left": "2px solid #fff"
@@ -163,16 +258,21 @@ function tutorialShow() {
         "border-bottom": "2px solid #fff",
         "border-right": "2px solid #fff"
     });
-    $(".tdElement").addClass("highlightElement");
+}
 
-    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
+function tutorialShow(e) {
+    tutorialStepCritics(e);
+}
+
+function removeCss() {
+    $(".dt-buttons, .tdElement").removeClass("highlightElement");
+    $(".dt-buttons, .tdElement").css("border", "none");
 }
 
 function tutorialHide() {
     $("#overlay").fadeOut("fast");
     $("#overlay").remove();
-    $(".tdElement").removeClass("highlightElement");
-    $(".tdElement").css("border", "none");
+    removeCss();
 }
 
 // Main table function
