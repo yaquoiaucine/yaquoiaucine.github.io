@@ -306,17 +306,16 @@ $(document).ready(function() {
         var randomQuoteNumber = makeRandomNumber(),
             random = randomQuotes.quotes[randomQuoteNumber],
             randomQuotesTitle = "<p><i class=\"fas fa-2x fa-quote-left\"></i><span>" + random.title + "</span>",
-            randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>";
-
-        if (random.picture !== undefined) {
-            var randomQuotesPicture = "<p><img src=\"" + random.picture + "\" alt=\"\" width=\"374px\"></p>";
-        } else {
-            var randomQuotesPicture = "";
-        }
-
-        window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
+            randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>",
+            randomQuotesPicture = "<p><img src=\"assets/pictures/picture" + random.id + ".jpg\" width=\"374px\"></p>";
 
         document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear + randomQuotesPicture;
+
+        $("#quotes p img").on("error", function() {
+            document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear;
+        });
+
+        window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
     }
 
     // Display movie details
@@ -336,7 +335,6 @@ $(document).ready(function() {
             row.child.hide();
             tr.removeClass("shown");
         } else {
-            if ($(".shown").length > 0) $(".shown")[0].children[0].click();
             row.child(format(row.data())).show();
             tr.addClass("shown");
 
@@ -360,7 +358,7 @@ $(document).ready(function() {
     });
 
     if (width > 767) {
-      $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>")
+        $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>")
     }
 
     $(".tutorial").on("click", tutorialShow);

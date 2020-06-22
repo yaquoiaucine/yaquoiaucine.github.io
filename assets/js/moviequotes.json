@@ -190,8 +190,7 @@ var randomQuotes = {
             "id": "32",
             "title": "Round up the usual suspects.",
             "movie": "Casablanca",
-            "year": "1942",
-            "picture": "assets/pictures/picture32.jpg"
+            "year": "1942"
         },
         {
             "id": "33",
@@ -203,8 +202,7 @@ var randomQuotes = {
             "id": "34",
             "title": "You know how to whistle, don't you, Steve? You just put your lips together and blow.",
             "movie": "To Have and Have Not",
-            "year": "1944",
-            "picture": "assets/pictures/picture34.jpg"
+            "year": "1944"
         },
         {
             "id": "35",
@@ -336,8 +334,7 @@ var randomQuotes = {
             "id": "56",
             "title": "A boy's best friend is his mother.",
             "movie": "Psycho",
-            "year": "1960",
-            "picture": "assets/pictures/picture56.jpg"
+            "year": "1960"
         },
         {
             "id": "57",

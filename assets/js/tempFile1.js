@@ -56,21 +56,38 @@ function replaceCriticsTitle(critic) {
         .replace(/&#039;/g, "'");
 }
 
+function splitUp(arr, n) {
+    var rest = arr.length % n,
+        restUsed = rest,
+        partLength = Math.floor(arr.length / n),
+        result = [];
+
+    for(var i = 0; i < arr.length; i += partLength) {
+        var end = partLength + i,
+            add = false;
+
+        if(rest !== 0 && restUsed) {
+            end++;
+            restUsed--;
+            add = true;
+        }
+
+        result.push(arr.slice(i, end));
+
+        if(add) {
+            i++;
+        }
+    }
+
+    return result;
+}
+
 // Display extra information for every movie
 function format(data) {
     var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
         "<td><p><a href=\"" + data.url + "\" target=\"_blank\">Fiche Allociné</a></p>";
-
-    text += "<div class=\"container\">" +
-        "<div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">" +
-        "<div class=\"modal-dialog modal-dialog-centered\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-body\">" +
-        "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">" +
-        "<span aria-hidden=\"true\">&times;</span></button>" +
-        "<div class=\"embed-responsive embed-responsive-16by9\">" +
-        "<iframe class=\"embed-responsive-item\" src=\"" + data.player + "\" id=\"video\"  allowscriptaccess=\"always\" allow=\"autoplay\"></iframe>" +
-        "</div></div></div></div></div></div>";
 
     text += "<p>";
     if (data.date[0].dateLink !== "") {
@@ -163,12 +180,12 @@ function format(data) {
 
     if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
-        "<td><p>Synopsis :</p>" +
+        "<td><p><strong>Synopsis :</strong></p>" +
         "<div id=\"summary\"><p>" + data.summary + "</p></div></td></tr></table>";
 
     if (data.criticNames !== "") text += "<table id=\"criticNamesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
-        "<td><p>Notes de la presse :</p><p><ul>";
+        "<td><p><strong>Notes de la presse :</strong></p><ul>";
 
     var criticNames = data.criticNames,
         criticNamesTempArray = [],
@@ -178,18 +195,20 @@ function format(data) {
         criticNamesTempArray.push([critic, criticNames[critic]]);
     }
 
-    var n = criticNamesTempArray.length / 2;
-
     criticNamesSortArray = criticNamesTempArray.sort(sortCriticsDesc);
-    criticNamesSortArrayDivide = new Array(Math.ceil(criticNamesSortArray.length / n)).fill().map(_ => criticNamesSortArray.splice(0, n))
+    criticNamesSortArrayDivide = splitUp(criticNamesSortArray, 2);
 
     for (var i = 0; i < criticNamesSortArrayDivide.length; i++) {
         var criticNamesSortArrayDivideChild = criticNamesSortArrayDivide[i];
-        ulNew = (i === 1) ? "</ul></p></td><td><p>&nbsp;</p><p><ul>" : "";
+        ulNew = (i === 1) ? "</ul></td><td><p>&nbsp;</p><ul>" : "";
+        liNew = (i === 1) ? "<li>&nbsp;</li>" : "";
 
         for (var j = 0; j < criticNamesSortArrayDivideChild.length; j++) {
             var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
-            criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
+                criticRatingNumber = criticNamesSortArrayDivideChild[j][1],
+                criticNamesArrayEven = criticNamesSortArray.length % 2 === 0;
+
+            if (j === 0 && width > 767) text += ulNew;
 
             switch (criticRatingNumber) {
                 case "1":
@@ -212,11 +231,11 @@ function format(data) {
                     break;
             }
 
-            if (j === 0 && width > 767) text += ulNew;
+            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false) text += liNew;
         }
     }
 
-    text += "</ul></p></td></tr></table>";
+    text += "</ul></td></tr></table>";
 
     return text;
 }
