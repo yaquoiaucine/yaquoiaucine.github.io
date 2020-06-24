@@ -346,15 +346,7 @@ $(document).ready(function() {
             });
         }
 
-        $("#myModal").on("shown.bs.modal", function() {
-            video = $(this).find("#video");
-            $(video).prop("src", player);
-        });
-
-        $("#myModal").on("hide.bs.modal", function() {
-            video = $(this).find("#video");
-            $(video).prop("src", player);
-        });
+        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
     if (width > 767) {
@@ -364,9 +356,14 @@ $(document).ready(function() {
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
+        elementClass = $(e.target).attr("class");
+
         if (e.target.id === "overlay") {
             tutorialHide();
         }
+
+        if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
+        if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
     });
 
     $(window).scroll(function() {

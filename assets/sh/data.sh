@@ -286,6 +286,22 @@ do
     user=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ note*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
     echo "\"user\": \"$user\"," >> ./assets/js/data.json
 
+    echo "\"movieDetails\":{" >> ./assets/js/data.json
+
+    # Extract original title
+    originalTitle=$(cat temp2 | grep -A1 "<span class=\"what light\"> Titre original <\/span>" | tail -1 | cut -d '>' -f2 | cut -d '<' -f1)
+    echo "\"originalTitle\": \"$originalTitle\"," >> ./assets/js/data.json
+
+    # Extract distributeur
+    distributeur=$(cat temp2 | grep -A1 "<span class=\"what light\">Distributeur<\/span>" | tail -1 | cut -d '>' -f2 | cut -d '<' -f1 | sed 's/^ *//' | sed 's/ *$//')
+    echo "\"distributeur\": \"$distributeur\"," >> ./assets/js/data.json
+
+    # Extract recompenses
+    recompenses=$(cat temp2 | grep -A2 "<span class=\"what light\">Récompenses<\/span>" | tail -1 | sed 's/^ *//')
+    echo "\"recompenses\": \"$recompenses\"," >> ./assets/js/data.json
+
+    echo "}," >> ./assets/js/data.json
+
     # Extract movie summary
     summary=$(cat temp2 | grep -A100 "Synopsis et détails" | tr '\r' ' ' | tr '\n' ' ' | grep -Eo "<div class=\"content-txt \">.*<div class=\"ovw-synopsis-info\">" | sed -E -e 's/<br>|<i>|<\/i>|<p>|<\/p>|<strong>|<\/strong>//g' | sed 's/"/\&#034;/g' | sed 's/  / /g' | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^ *//' | sed 's/ *$//')
     echo "\"summary\": \"$summary\"," >> ./assets/js/data.json

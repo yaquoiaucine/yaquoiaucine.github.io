@@ -183,7 +183,45 @@ function format(data) {
         "<td><p><strong>Synopsis :</strong></p>" +
         "<div id=\"summary\"><p>" + data.summary + "</p></div></td></tr></table>";
 
-    if (data.criticNames !== "") text += "<table id=\"criticNamesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+    if (!$.isEmptyObject(data.movieDetails)) text += "<table id=\"movieDetailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><p><strong>Informations techniques :</strong></p><ul>";
+
+    var movieDetails = data.movieDetails,
+        movieDetailsTempArray = [],
+        index = 0,
+        movieDetailsWording = ["Titre original : ", "Distributeur : ", "Récompenses : "];
+
+    for (var detail in movieDetails) {
+        movieDetailsTempArray.push([movieDetailsWording[index], movieDetails[detail]]);
+        index++;
+    }
+
+    movieDetailsTempArrayDivide = splitUp(movieDetailsTempArray, 2);
+
+    var liNumber = 0;
+
+    for (var i = 0; i < movieDetailsTempArrayDivide.length; i++) {
+        var movieDetailsTempArrayDivideChild = movieDetailsTempArrayDivide[i];
+        ulNew = (i === 1) ? "</ul></td><td class=\"secondTd\"><p>&nbsp;</p><ul>" : "";
+
+        for (var j = 0; j < movieDetailsTempArrayDivideChild.length; j++) {
+            if (j === 0 && width > 767) text += ulNew;
+
+            if (movieDetailsTempArrayDivideChild[j][1] !== "") {
+                text += "<li>" + movieDetailsTempArrayDivideChild[j][0] + movieDetailsTempArrayDivideChild[j][1] + "</li>";
+                liNumber++;
+            }
+        }
+    }
+
+    if (liNumber % 2 !== 0 && width > 767) {
+        text += "<li>&nbsp;</li>";
+    }
+
+    text += "</ul></td></tr></table>";
+
+    if (!$.isEmptyObject(data.criticNames)) text += "<table id=\"criticNamesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><p><strong>Notes de la presse :</strong></p><ul>";
 
@@ -198,6 +236,8 @@ function format(data) {
     criticNamesSortArray = criticNamesTempArray.sort(sortCriticsDesc);
     criticNamesSortArrayDivide = splitUp(criticNamesSortArray, 2);
 
+    var criticNamesArrayEven = criticNamesSortArray.length % 2 === 0;
+
     for (var i = 0; i < criticNamesSortArrayDivide.length; i++) {
         var criticNamesSortArrayDivideChild = criticNamesSortArrayDivide[i];
         ulNew = (i === 1) ? "</ul></td><td><p>&nbsp;</p><ul>" : "";
@@ -205,8 +245,7 @@ function format(data) {
 
         for (var j = 0; j < criticNamesSortArrayDivideChild.length; j++) {
             var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
-                criticRatingNumber = criticNamesSortArrayDivideChild[j][1],
-                criticNamesArrayEven = criticNamesSortArray.length % 2 === 0;
+                criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
 
             if (j === 0 && width > 767) text += ulNew;
 
@@ -231,7 +270,7 @@ function format(data) {
                     break;
             }
 
-            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false) text += liNew;
+            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 767) text += liNew;
         }
     }
 
