@@ -1,3 +1,33 @@
+/* French initialisation for the jQuery UI date picker plugin. */
+/* Written by Keith Wood (kbwood{at}iinet.com.au) and Stéphane Nahmani (sholby@sholby.net). */
+jQuery(function($) {
+    $.datepicker.regional["fr"] = {
+        closeText: "Fermer",
+        prevText: "&#x3c;Préc",
+        nextText: "Suiv&#x3e;",
+        currentText: "Aujourd\'hui",
+        monthNames: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
+            "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
+        ],
+        monthNamesShort: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun",
+            "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"
+        ],
+        dayNames: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
+        dayNamesShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+        dayNamesMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"],
+        weekHeader: "Sm",
+        dateFormat: "mm/dd/yy",
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: "",
+        numberOfMonths: 2,
+        showButtonPanel: true
+    };
+
+    $.datepicker.setDefaults($.datepicker.regional["fr"]);
+});
+
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
     var indexes = [];
@@ -80,6 +110,77 @@ function splitUp(arr, n) {
     }
 
     return result;
+}
+
+function setInputsDates(e) {
+    var numberDays = e.target.value,
+        todayStart = new Date();
+
+    todayStart.setDate(todayStart.getDate() - parseInt(numberDays));
+
+    var dd = String(todayStart.getDate()).padStart(2, "0"),
+        mm = String(todayStart.getMonth() + 1).padStart(2, "0"),
+        yyyy = todayStart.getFullYear();
+
+    todayStart = mm + "/" + dd + "/" + yyyy;
+
+    var todayEnd = new Date(),
+        dd = String(todayEnd.getDate()).padStart(2, "0"),
+        mm = String(todayEnd.getMonth() + 1).padStart(2, "0"),
+        yyyy = todayEnd.getFullYear();
+
+    todayEnd = mm + "/" + dd + "/" + yyyy;
+
+    document.getElementById("min").value = todayStart;
+    document.getElementById("max").value = todayEnd;
+}
+
+function splitDate(date) {
+    var newDate = date.split(" ");
+
+    switch (newDate[1]) {
+        case "janvier":
+            newDate[1] = "01";
+            break;
+        case "février":
+            newDate[1] = "02";
+            break;
+        case "mars":
+            newDate[1] = "03";
+            break;
+        case "avril":
+            newDate[1] = "04";
+            break;
+        case "mai":
+            newDate[1] = "05";
+            break;
+        case "juin":
+            newDate[1] = "06";
+            break;
+        case "juillet":
+            newDate[1] = "07";
+            break;
+        case "août":
+            newDate[1] = "08";
+            break;
+        case "septembre":
+            newDate[1] = "09";
+            break;
+        case "octobre":
+            newDate[1] = "10";
+            break;
+        case "novembre":
+            newDate[1] = "11";
+            break;
+        case "décembre":
+            newDate[1] = "12";
+            break;
+        default:
+            newDate[1] = "";
+            break;
+    }
+
+    return newDate[1] + "/" + newDate[0] + "/" + newDate[2];
 }
 
 // Display extra information for every movie
@@ -360,7 +461,7 @@ function mainTable(data) {
         columnsKeyName = columnsKeyNameDynamic.slice();
 
     // Define total columns number
-    var columnNumberOrder = columnsKeyNameDynamic.length + 4;
+    var columnNumberOrder = columnsKeyNameDynamic.length + 5;
 
     // Define last critic column number
     var columnNumber = columnNumberOrder - 3;
@@ -407,6 +508,9 @@ function mainTable(data) {
             },
             {
                 "data": "title"
+            },
+            {
+                "data": "date[0].dateName"
             },
             {
                 "data": null,
@@ -1837,11 +1941,48 @@ function mainTable(data) {
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw(false);
+
+            // Add period list before buttons
+            $(".dt-buttons").prepend(
+                "<select id=\"periodList\" name=\"periodList\" onchange=\"setInputsDates(event)\">" +
+                "<option disabled selected>Filtrer par date de sortie</option>" +
+                "<option value=\"7\">Les 7 derniers jours</option>" +
+                "<option value=\"30\">Les 30 derniers jours</option>" +
+                "<option value=\"90\">Les 3 derniers mois</option>" +
+                "<option value=\"365\">Les 12 derniers mois</option>" +
+                "</select>"
+            );
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $("#periodList").change(function() {
+                table.draw();
+            });
         }
     }
 
     // Display table
     var table = $("#table").DataTable(data);
+
+    table.columns("#releaseDateColumn").visible(false);
+
+    // Extend dataTables search
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $("#min").val(),
+                max = $("#max").val(),
+                releaseDate = splitDate(data[2]) || 0;
+
+            if (
+                (min == "" || max == "") ||
+                (moment(releaseDate).isSameOrAfter(min) && moment(releaseDate).isSameOrBefore(max))
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $("#min, #max").datepicker();
 
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();

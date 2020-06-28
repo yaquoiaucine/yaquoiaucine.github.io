@@ -139,11 +139,48 @@
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw(false);
+
+            // Add period list before buttons
+            $(".dt-buttons").prepend(
+                "<select id=\"periodList\" name=\"periodList\" onchange=\"setInputsDates(event)\">" +
+                "<option disabled selected>Filtrer par date de sortie</option>" +
+                "<option value=\"7\">Les 7 derniers jours</option>" +
+                "<option value=\"30\">Les 30 derniers jours</option>" +
+                "<option value=\"90\">Les 3 derniers mois</option>" +
+                "<option value=\"365\">Les 12 derniers mois</option>" +
+                "</select>"
+            );
+
+            // Event listener to the two range filtering inputs to redraw on input
+            $("#periodList").change(function() {
+                table.draw();
+            });
         }
     }
 
     // Display table
     var table = $("#table").DataTable(data);
+
+    table.columns("#releaseDateColumn").visible(false);
+
+    // Extend dataTables search
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $("#min").val(),
+                max = $("#max").val(),
+                releaseDate = splitDate(data[2]) || 0;
+
+            if (
+                (min == "" || max == "") ||
+                (moment(releaseDate).isSameOrAfter(min) && moment(releaseDate).isSameOrBefore(max))
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $("#min, #max").datepicker();
 
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();

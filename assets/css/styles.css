@@ -32,7 +32,12 @@ ul {
     margin: 8px;
 }
 
-button {
+.dateRange {
+    display: none;
+}
+
+button,
+#periodList {
     padding: 4px;
     border-radius: 4px;
     border-color: transparent;
@@ -116,6 +121,7 @@ div[role=menu]>button.active {
 }
 
 button:hover,
+#periodList:hover,
 div[role=menu]>button:hover,
 div[role=menu]>button.active:hover {
     background: #fff;
