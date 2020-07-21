@@ -17,3 +17,4 @@ main:
     - bash ./assets/sh/data.sh
     - node_modules/.bin/surge .
     - node ./index.js
+    - node_modules/.bin/surge .

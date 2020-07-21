@@ -1,43 +1,39 @@
 # Add {"data":[{ at beginning of file
 echo "{\"data\":[{" > ./assets/js/data.json
 
-# Define Allociné Top baseUrl
-baseUrl=http://www.allocine.fr/film/aucinema/top/
+# Define Allociné baseUrl
+baseUrl=http://www.allocine.fr/film/aucinema/
 curl -s $baseUrl > temp
 
-# Get Allociné Top baseUrl movies number
+# Get Allociné baseUrl movies number
 moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
 if [ $moviesNumber -lt 15 ]; then
-  # Define Allociné new baseUrl
-  baseUrl=http://www.allocine.fr/film/aucinema/
-  curl -s $baseUrl > temp
-
-  # Define Allociné new baseUrl movies and pages number
-  moviesNumber=15
-  pagesNumber=$(cat temp | grep -Eo "\">[0-9]+</a></div></nav>" | cut -d'>' -f2 | cut -d'<' -f1 | awk '{print $1}')
-
-   # Define Allociné new baseUrl movies and pages number to 1
-  if [ $pagesNumber -eq 0 ]; then
-    moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
-    pagesNumber=1
-  fi
-elif [ $moviesNumber -lt 15 ]; then
-  # Define Allociné Top baseUrl pages number to 1
+  # Define Allociné baseUrl pages number to 1
   pagesNumber=1
 else
-  # Get Allociné Top baseUrl pages number
+  # Get Allociné baseUrl pages number
   pagesNumber=$(cat temp | grep -Eo "\">[0-9]+</a></div></nav>" | cut -d'>' -f2 | cut -d'<' -f1)
 fi
 
 # Loop through all Allociné pages
 for i in $( eval echo {1..$pagesNumber} )
 do
+  # Display number of pages remaining
+  echo page number $i / $pagesNumber
+
   # Get Allociné first page
   if [ $i -eq 1 ]; then
     id=1
   # Get Allociné second until second to last page
   elif [ $i -lt $pagesNumber ]; then
     curl -s $baseUrl\?page\=$i > temp
+
+    checkMoviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
+    if [ $checkMoviesNumber -eq 0 ]; then
+      curl -s $baseUrl\?page\=$i > temp
+    fi
+
+    curl -s $baseUrl\?page\=$i > log$i
   # Get Allociné last page
   elif [ $i -eq $pagesNumber ]; then
     curl -s $baseUrl\?page\=$i > temp
@@ -68,14 +64,23 @@ do
     echo "\"date\":[" >> ./assets/js/data.json
 
       dateName=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//')
+      spaceNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | tr -cd ' \t' | wc -c | awk '{print $1}')
       dateNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | wc -l | awk '{print $1}')
       if [ $dateNumber -eq 0 ]; then
         dateName=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1)
+        spaceNumber=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1 | tr -cd ' \t' | wc -c | awk '{print $1}')
       fi
       echo "{\"dateName\": \"$dateName\"," >> ./assets/js/data.json
 
-      dateNewFormatDay=$(echo $dateName | cut -d' ' -f1)
-      dateNewFormatMonth=$(echo $dateName | cut -d' ' -f2)
+      if [ $spaceNumber -eq 1 ]; then
+        dateNewFormatDay=1
+        dateNewFormatMonth=$(echo $dateName | cut -d' ' -f1)
+        dateNewFormatYear=$(echo $dateName | cut -d' ' -f2)
+      else
+        dateNewFormatDay=$(echo $dateName | cut -d' ' -f1)
+        dateNewFormatMonth=$(echo $dateName | cut -d' ' -f2)
+        dateNewFormatYear=$(echo $dateName | cut -d' ' -f3)
+      fi
       case $dateNewFormatMonth in
         "janvier")
           dateNewFormatMonth="January"
@@ -117,7 +122,6 @@ do
           dateNewFormatMonth=""
           ;;
       esac
-      dateNewFormatYear=$(echo $dateName | cut -d' ' -f3)
       dateNewFormat=$(date -d $dateNewFormatDay$dateNewFormatMonth$dateNewFormatYear +%F)
       if [ ! -z $dateNewFormat ]; then
         dateLink=https://www.allocine.fr/film/agenda/sem-$dateNewFormat
@@ -180,7 +184,7 @@ do
 
         for l in $( eval echo {1..$mainActorsNumber} )
         do
-          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1 | tr -d '\t')
           echo "{\"mainActorsName\": \"$mainActorsName\"," >> ./assets/js/data.json
 
           mainActorsId=$(cat temp2 | grep -Eo "actor\":\[.{0,23}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
@@ -230,7 +234,7 @@ do
     echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
 
     # Extract critic number
-    criticNumber=$(cat temp2 | grep -Eo "<span class=\"stareval-review light\"> [0-9]+ critique*" | cut -d' ' -f4)
+    criticNumber=$(cat temp4 | grep -Eo "<span class=\"light\">[0-9]+ titre*" | cut -d'>' -f2 | cut -d' ' -f1)
     echo "\"criticNumber\": \"$criticNumber\"," >> ./assets/js/data.json
 
     # Extract critic rating and convert it to number
@@ -241,13 +245,13 @@ do
 
       criticName=$(echo $criticName | cut -d',' -f1)
       criticNameFirst=$(echo $criticName | cut -d',' -f1)
-      criticRatingNumber=$(cat temp2 | grep "link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
+      criticRatingNumber=$(cat temp2 | grep "js-anchor-link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
 
       if [ "$criticNameFirst" != "$criticNameTemp" ]; then
         if [ $criticRatingNumber -gt 0 ]; then
           for k in $( eval echo {1..$criticRatingNumber} )
           do
-          criticRating=$(cat temp2 | grep -m$k "link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
+          criticRating=$(cat temp2 | grep -m$k "js-anchor-link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
           if [ $k -gt 1 ]; then
             criticName="$criticName$k"
           fi

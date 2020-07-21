@@ -1,51 +1,12 @@
-/* French initialisation for the jQuery UI date picker plugin. */
-/* Written by Keith Wood (kbwood{at}iinet.com.au) and Stéphane Nahmani (sholby@sholby.net). */
-jQuery(function($) {
-    $.datepicker.regional["fr"] = {
-        closeText: "Fermer",
-        prevText: "&#x3c;Préc",
-        nextText: "Suiv&#x3e;",
-        currentText: "Aujourd\'hui",
-        monthNames: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
-        ],
-        monthNamesShort: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun",
-            "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"
-        ],
-        dayNames: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
-        dayNamesShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-        dayNamesMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"],
-        weekHeader: "Sm",
-        dateFormat: "mm/dd/yy",
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: "",
-        numberOfMonths: 2,
-        showButtonPanel: true
-    };
-
-    $.datepicker.setDefaults($.datepicker.regional["fr"]);
-});
-
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
     var indexes = [];
     for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i] === element) {
-            indexes.unshift(i);
-        }
+        if (this[i] === element) indexes.unshift(i);
     }
 
     return indexes;
 };
-
-var randomQuotesLength = randomQuotes.quotes.length,
-    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber"));
-
-if (uniqueRandomNumber === null) {
-    uniqueRandomNumber = [];
-}
 
 // Return unique random number for quotes
 function makeRandomNumber() {
@@ -63,6 +24,7 @@ function makeRandomNumber() {
     return newRandomNumber;
 }
 
+// Return sorted values in descending order
 function sortCriticsDesc(a, b) {
     if (a[1] === b[1]) {
         return 0;
@@ -71,6 +33,7 @@ function sortCriticsDesc(a, b) {
     }
 }
 
+// Replace critics titles
 function replaceCriticsTitle(critic) {
     var s = String(critic);
 
@@ -86,6 +49,7 @@ function replaceCriticsTitle(critic) {
         .replace(/&#039;/g, "'");
 }
 
+// Split array in even or odd number
 function splitUp(arr, n) {
     var rest = arr.length % n,
         restUsed = rest,
@@ -104,37 +68,38 @@ function splitUp(arr, n) {
 
         result.push(arr.slice(i, end));
 
-        if (add) {
-            i++;
-        }
+        if (add) i++;
     }
 
     return result;
 }
 
-function setInputsDates(e) {
-    var numberDays = e.target.value,
-        todayStart = new Date();
+// Set inputs filter dates
+function setInputsDates(node) {
+    $("*").removeClass("clickedFilter");
+    $(node).addClass("clickedFilter");
+
+    var numberDays = window.localStorage.getItem("filterValue"),
+        todayStart = new Date(),
+        todayEnd = new Date(),
+        ddEnd = String(todayEnd.getDate()).padStart(2, "0"),
+        mmEnd = String(todayEnd.getMonth() + 1).padStart(2, "0"),
+        yyyyEnd = todayEnd.getFullYear();
 
     todayStart.setDate(todayStart.getDate() - parseInt(numberDays));
 
-    var dd = String(todayStart.getDate()).padStart(2, "0"),
-        mm = String(todayStart.getMonth() + 1).padStart(2, "0"),
-        yyyy = todayStart.getFullYear();
+    var ddStart = String(todayStart.getDate()).padStart(2, "0"),
+        mmStart = String(todayStart.getMonth() + 1).padStart(2, "0"),
+        yyyyStart = todayStart.getFullYear();
 
-    todayStart = mm + "/" + dd + "/" + yyyy;
-
-    var todayEnd = new Date(),
-        dd = String(todayEnd.getDate()).padStart(2, "0"),
-        mm = String(todayEnd.getMonth() + 1).padStart(2, "0"),
-        yyyy = todayEnd.getFullYear();
-
-    todayEnd = mm + "/" + dd + "/" + yyyy;
+    todayStart = mmStart + "/" + ddStart + "/" + yyyyStart;
+    todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd;
 
     document.getElementById("min").value = todayStart;
     document.getElementById("max").value = todayEnd;
 }
 
+// Change french date format to mm/dd/yyyy
 function splitDate(date) {
     var newDate = date.split(" ");
 
@@ -316,9 +281,7 @@ function format(data) {
         }
     }
 
-    if (liNumber % 2 !== 0 && width > 767) {
-        text += "<li>&nbsp;</li>";
-    }
+    if (liNumber % 2 !== 0 && width > 767) text += "<li>&nbsp;</li>";
 
     text += "</ul></td></tr></table>";
 
@@ -444,9 +407,7 @@ function mainTable(data) {
     var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
 
     // If datatablesData get datatablesData columns
-    if (datatablesData) {
-        var columns = datatablesData.columns;
-    }
+    if (datatablesData) var columns = datatablesData.columns;
 
     var criticNamesArray = [],
         criticNamesArrayLength = Object.keys(data.critics).length;
@@ -466,13 +427,12 @@ function mainTable(data) {
     // Define last critic column number
     var columnNumber = columnNumberOrder - 3;
 
+    // Define number of columns at the beginning
+    var columnNumberStart = 3;
+
     // Get columns visible state array
     for (var column in columns) {
-        if (columns.hasOwnProperty(column)) {
-            if (column >= 2 && column <= columnNumber) {
-                columnsVisibleState.push(columns[column].visible);
-            }
-        }
+        if (columns.hasOwnProperty(column) && column >= columnNumberStart && column <= columnNumber) columnsVisibleState.push(columns[column].visible);
     }
 
     // Get columns not visible indexes
@@ -483,23 +443,12 @@ function mainTable(data) {
         columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
     }
 
-    // If width > 767, fix the last 3 columns and add visibility buttons
-    if (width > 767) {
-        var scrollX = true,
-            leftColumns = 0,
-            rightColumns = 3,
-            dom = "Bfrtip";
-    } else {
-        var scrollX = false,
-            leftColumns = 0,
-            rightColumns = 0,
-            dom = "frtip",
-            columnsKeyNameDynamic = columnsKeyName;
-    }
+    // If width > 767, fix the last 3 columns
+    rightColumns = (width > 767) ? 3 : 0;
 
     // Set datatables data
     var data = {
-        "ajax": "https://yaquoiaucine.fr/assets/js/data.json",
+        "ajax": "https://yaquoiaucine.fr/assets/js/data30.json",
         "columns": [{
                 "className": "details",
                 "orderable": false,

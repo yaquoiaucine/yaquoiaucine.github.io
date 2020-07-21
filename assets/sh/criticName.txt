@@ -1,5 +1,7 @@
 20 Minutes,de 20 Minutes,20
+20 Minutes,de 20 Minutes Contre,202
 Aden,d'Aden,Ad
+Africultures.com,de Africultures.com,Af
 BIBA,de BIBA,BI
 Bande à part,de Bande à part,BA
 Brazil,de Brazil,Br
@@ -13,6 +15,7 @@ Cinopsis.com,de Cinopsis.com,Ci
 Cine Libre,de Cine Libre,CLi
 Ciné Live,de Ciné Live,CL
 Closer,de Closer,Cl
+Combat,de Combat,Co
 Cplanet.com,de Cplanet.com,Cp
 Critikat.com,de Critikat.com,Cr
 Culturebox - France Télévisions,de Culturebox - France Télévisions,FT
@@ -30,8 +33,11 @@ France Soir,de France Soir,FS
 Gala,de Gala,Ga
 GQ,de GQ,GQ
 IGN France,de IGN France,IGN
+Impact,de Impact,Im
+L&#039;Aurore,de L'Aurore,Au
 L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
 L&#039;Evénement,de L'Evénement,Ev
+L&#039;Evènement du Jeudi,de L'Evènement du Jeudi,EJ
 L&#039;Express,de L'Express,Ex
 L&#039;Express,de L'Express Contre,Ex2
 L&#039;Humanité,de L'Humanité,LH
@@ -47,12 +53,17 @@ Le Journal du Dimanche,du Journal du Dimanche,JD
 Le Journal du Dimanche,du Journal du Dimanche Contre,JD2
 Le Journal du Geek,du Journal du Geek,JG
 Le Monde,du Monde,LM
+Le Monde,du Monde Contre,LM2
 Le Nouvel Observateur,du Nouvel Observateur,NO
 Le Nouvel Observateur,du Nouvel Observateur Contre,NO2
 Le Parisien,du Parisien,Pa
+Le Parisien,du Parisien Contre,Pa2
 Le Point,du Point,LP
+Le Quotidien de Paris,du Quotidien de Paris,QP
+Le Soir,du Soir,LS
 Les Echos,des Echos,LE
 Les Fiches du Cinéma,des Fiches du Cinéma,FC
+Les Fiches du Cinéma,des Fiches du Cinéma Contre,FC2
 Les Inrockuptibles,des Inrockuptibles,In
 Les Lettres Françaises,des Lettres Françaises,LF
 Libération,de Libération,Li
@@ -61,22 +72,34 @@ MCinéma.com,de MCinéma.com,MCi
 Mad Movies,de Mad Movies,MM
 Marianne,de Marianne,Ma
 Marie Claire,de Marie Claire,MC
+Marie Claire,de Marie Claire Contre,MC2
 Metro,de Metro,Me
+Nice-Matin,de Nice-Matin,NM
 Novaplanet.com,de Novaplanet.com,No
 Obejctif-Cinema.com,d'Obejctif-Cinema.com,OC
 Ouest France,de Ouest France,OF
 Ouest France,de Ouest France Contre,OF2
+Ouirock.com,de Ouirock.com,Ou
 Paris Match,de Paris Match,PM
+Planetcinema.com,de Planetcinema.com,Pl
 Positif,de Positif,Po
+Positif,de Positif Contre,Po2
 Première,de Première,Pr
 Public,de Public,Pu
 Repérages,de Repérages,Re
 Rolling Stone,de Rolling Stone,RS
 Score,de Score,Sc
+Starfix,de Starfix,Sx
 Studio Ciné Live,de Studio Ciné Live,St
 Studio Magazine,de Studio Magazine,SM
+Studio Magazine,de Studio Magazine Contre,SM2
+So Film,de So Film,SF
 Sud Ouest,de Sud Ouest,SO
 Sud Ouest,de Sud Ouest Contre,SO2
+Synopsis,de Synopsis,Sy
+Technikart,de Technikart,Te
+Time Out Paris,de Time Out Paris,TO
+The Hollywood Reporter,de The Hollywood Reporter,HR
 Transfuge,de Transfuge,Tr
 TéléCinéObs,de TéléCinéObs,TC
 Télé 2 semaines,de Télé 2 semaines,TS
@@ -86,6 +109,7 @@ Télérama,de Télérama,Té
 Télérama,de Télérama Contre,Té2
 TF1 News,de TF1 News,TN
 Urbuz,de Urbuz,Ur
+Variety,de Variety,Va
 Voici,de Voici,Vo
 VSD,de VSD,VSD
 aVoir-aLire.com,d'aVoir-aLire.com,VL

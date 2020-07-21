@@ -1,51 +1,12 @@
-/* French initialisation for the jQuery UI date picker plugin. */
-/* Written by Keith Wood (kbwood{at}iinet.com.au) and Stéphane Nahmani (sholby@sholby.net). */
-jQuery(function($) {
-    $.datepicker.regional["fr"] = {
-        closeText: "Fermer",
-        prevText: "&#x3c;Préc",
-        nextText: "Suiv&#x3e;",
-        currentText: "Aujourd\'hui",
-        monthNames: ["Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin",
-            "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
-        ],
-        monthNamesShort: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jun",
-            "Jul", "Aou", "Sep", "Oct", "Nov", "Dec"
-        ],
-        dayNames: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
-        dayNamesShort: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-        dayNamesMin: ["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"],
-        weekHeader: "Sm",
-        dateFormat: "mm/dd/yy",
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: "",
-        numberOfMonths: 2,
-        showButtonPanel: true
-    };
-
-    $.datepicker.setDefaults($.datepicker.regional["fr"]);
-});
-
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
     var indexes = [];
     for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i] === element) {
-            indexes.unshift(i);
-        }
+        if (this[i] === element) indexes.unshift(i);
     }
 
     return indexes;
 };
-
-var randomQuotesLength = randomQuotes.quotes.length,
-    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber"));
-
-if (uniqueRandomNumber === null) {
-    uniqueRandomNumber = [];
-}
 
 // Return unique random number for quotes
 function makeRandomNumber() {
@@ -63,6 +24,7 @@ function makeRandomNumber() {
     return newRandomNumber;
 }
 
+// Return sorted values in descending order
 function sortCriticsDesc(a, b) {
     if (a[1] === b[1]) {
         return 0;
@@ -71,6 +33,7 @@ function sortCriticsDesc(a, b) {
     }
 }
 
+// Replace critics titles
 function replaceCriticsTitle(critic) {
     var s = String(critic);
 
@@ -86,6 +49,7 @@ function replaceCriticsTitle(critic) {
         .replace(/&#039;/g, "'");
 }
 
+// Split array in even or odd number
 function splitUp(arr, n) {
     var rest = arr.length % n,
         restUsed = rest,
@@ -104,37 +68,38 @@ function splitUp(arr, n) {
 
         result.push(arr.slice(i, end));
 
-        if (add) {
-            i++;
-        }
+        if (add) i++;
     }
 
     return result;
 }
 
-function setInputsDates(e) {
-    var numberDays = e.target.value,
-        todayStart = new Date();
+// Set inputs filter dates
+function setInputsDates(node) {
+    $("*").removeClass("clickedFilter");
+    $(node).addClass("clickedFilter");
+
+    var numberDays = window.localStorage.getItem("filterValue"),
+        todayStart = new Date(),
+        todayEnd = new Date(),
+        ddEnd = String(todayEnd.getDate()).padStart(2, "0"),
+        mmEnd = String(todayEnd.getMonth() + 1).padStart(2, "0"),
+        yyyyEnd = todayEnd.getFullYear();
 
     todayStart.setDate(todayStart.getDate() - parseInt(numberDays));
 
-    var dd = String(todayStart.getDate()).padStart(2, "0"),
-        mm = String(todayStart.getMonth() + 1).padStart(2, "0"),
-        yyyy = todayStart.getFullYear();
+    var ddStart = String(todayStart.getDate()).padStart(2, "0"),
+        mmStart = String(todayStart.getMonth() + 1).padStart(2, "0"),
+        yyyyStart = todayStart.getFullYear();
 
-    todayStart = mm + "/" + dd + "/" + yyyy;
-
-    var todayEnd = new Date(),
-        dd = String(todayEnd.getDate()).padStart(2, "0"),
-        mm = String(todayEnd.getMonth() + 1).padStart(2, "0"),
-        yyyy = todayEnd.getFullYear();
-
-    todayEnd = mm + "/" + dd + "/" + yyyy;
+    todayStart = mmStart + "/" + ddStart + "/" + yyyyStart;
+    todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd;
 
     document.getElementById("min").value = todayStart;
     document.getElementById("max").value = todayEnd;
 }
 
+// Change french date format to mm/dd/yyyy
 function splitDate(date) {
     var newDate = date.split(" ");
 
@@ -316,9 +281,7 @@ function format(data) {
         }
     }
 
-    if (liNumber % 2 !== 0 && width > 767) {
-        text += "<li>&nbsp;</li>";
-    }
+    if (liNumber % 2 !== 0 && width > 767) text += "<li>&nbsp;</li>";
 
     text += "</ul></td></tr></table>";
 
@@ -444,9 +407,7 @@ function mainTable(data) {
     var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
 
     // If datatablesData get datatablesData columns
-    if (datatablesData) {
-        var columns = datatablesData.columns;
-    }
+    if (datatablesData) var columns = datatablesData.columns;
 
     var criticNamesArray = [],
         criticNamesArrayLength = Object.keys(data.critics).length;
@@ -466,13 +427,12 @@ function mainTable(data) {
     // Define last critic column number
     var columnNumber = columnNumberOrder - 3;
 
+    // Define number of columns at the beginning
+    var columnNumberStart = 3;
+
     // Get columns visible state array
     for (var column in columns) {
-        if (columns.hasOwnProperty(column)) {
-            if (column >= 2 && column <= columnNumber) {
-                columnsVisibleState.push(columns[column].visible);
-            }
-        }
+        if (columns.hasOwnProperty(column) && column >= columnNumberStart && column <= columnNumber) columnsVisibleState.push(columns[column].visible);
     }
 
     // Get columns not visible indexes
@@ -483,23 +443,12 @@ function mainTable(data) {
         columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
     }
 
-    // If width > 767, fix the last 3 columns and add visibility buttons
-    if (width > 767) {
-        var scrollX = true,
-            leftColumns = 0,
-            rightColumns = 3,
-            dom = "Bfrtip";
-    } else {
-        var scrollX = false,
-            leftColumns = 0,
-            rightColumns = 0,
-            dom = "frtip",
-            columnsKeyNameDynamic = columnsKeyName;
-    }
+    // If width > 767, fix the last 3 columns
+    rightColumns = (width > 767) ? 3 : 0;
 
     // Set datatables data
     var data = {
-        "ajax": "https://yaquoiaucine.fr/assets/js/data.json",
+        "ajax": "https://yaquoiaucine.fr/assets/js/data30.json",
         "columns": [{
                 "className": "details",
                 "orderable": false,
@@ -514,6 +463,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[0]];
 
@@ -528,6 +478,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[1]];
 
@@ -542,6 +493,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[2]];
 
@@ -556,6 +508,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[3]];
 
@@ -570,6 +523,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[4]];
 
@@ -584,6 +538,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[5]];
 
@@ -598,6 +553,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[6]];
 
@@ -612,6 +568,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[7]];
 
@@ -626,6 +583,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[8]];
 
@@ -640,6 +598,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[9]];
 
@@ -654,6 +613,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[10]];
 
@@ -668,6 +628,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[11]];
 
@@ -682,6 +643,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[12]];
 
@@ -696,6 +658,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[13]];
 
@@ -710,6 +673,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[14]];
 
@@ -724,6 +688,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[15]];
 
@@ -738,6 +703,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[16]];
 
@@ -752,6 +718,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[17]];
 
@@ -766,6 +733,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[18]];
 
@@ -780,6 +748,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[19]];
 
@@ -794,6 +763,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[20]];
 
@@ -808,6 +778,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[21]];
 
@@ -822,6 +793,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[22]];
 
@@ -836,6 +808,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[23]];
 
@@ -850,6 +823,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[24]];
 
@@ -864,6 +838,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[25]];
 
@@ -878,6 +853,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[26]];
 
@@ -892,6 +868,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[27]];
 
@@ -906,6 +883,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[28]];
 
@@ -920,6 +898,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[29]];
 
@@ -934,6 +913,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[30]];
 
@@ -948,6 +928,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[31]];
 
@@ -962,6 +943,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[32]];
 
@@ -976,6 +958,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[33]];
 
@@ -990,6 +973,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[34]];
 
@@ -1004,6 +988,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[35]];
 
@@ -1018,6 +1003,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[36]];
 
@@ -1032,6 +1018,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[37]];
 
@@ -1046,6 +1033,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[38]];
 
@@ -1060,6 +1048,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[39]];
 
@@ -1074,6 +1063,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[40]];
 
@@ -1088,6 +1078,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[41]];
 
@@ -1102,6 +1093,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[42]];
 
@@ -1116,6 +1108,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[43]];
 
@@ -1130,6 +1123,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[44]];
 
@@ -1144,6 +1138,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[45]];
 
@@ -1158,6 +1153,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[46]];
 
@@ -1172,6 +1168,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[47]];
 
@@ -1186,6 +1183,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[48]];
 
@@ -1200,6 +1198,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[49]];
 
@@ -1214,6 +1213,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[50]];
 
@@ -1228,6 +1228,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[51]];
 
@@ -1242,6 +1243,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[52]];
 
@@ -1256,6 +1258,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[53]];
 
@@ -1270,6 +1273,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[54]];
 
@@ -1284,6 +1288,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[55]];
 
@@ -1298,6 +1303,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[56]];
 
@@ -1312,6 +1318,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[57]];
 
@@ -1326,6 +1333,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[58]];
 
@@ -1340,6 +1348,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[59]];
 
@@ -1354,6 +1363,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[60]];
 
@@ -1368,6 +1378,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[61]];
 
@@ -1382,6 +1393,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[62]];
 
@@ -1396,6 +1408,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[63]];
 
@@ -1410,6 +1423,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[64]];
 
@@ -1424,6 +1438,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[65]];
 
@@ -1438,6 +1453,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[66]];
 
@@ -1452,6 +1468,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[67]];
 
@@ -1466,6 +1483,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[68]];
 
@@ -1480,6 +1498,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[69]];
 
@@ -1494,6 +1513,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[70]];
 
@@ -1508,6 +1528,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[71]];
 
@@ -1522,6 +1543,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[72]];
 
@@ -1536,6 +1558,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[73]];
 
@@ -1550,6 +1573,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[74]];
 
@@ -1564,6 +1588,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[75]];
 
@@ -1578,6 +1603,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[76]];
 
@@ -1592,6 +1618,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[77]];
 
@@ -1606,6 +1633,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[78]];
 
@@ -1620,6 +1648,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[79]];
 
@@ -1634,6 +1663,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[80]];
 
@@ -1648,6 +1678,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[81]];
 
@@ -1662,6 +1693,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[82]];
 
@@ -1676,6 +1708,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[83]];
 
@@ -1690,6 +1723,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[84]];
 
@@ -1704,6 +1738,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[85]];
 
@@ -1718,6 +1753,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[86]];
 
@@ -1732,6 +1768,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[87]];
 
@@ -1746,6 +1783,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[88]];
 
@@ -1760,6 +1798,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[89]];
 
@@ -1774,6 +1813,7 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[90]];
 
@@ -1788,8 +1828,369 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
                 "render": function(data, type, row) {
                     var rowcolumnsKeyName = row.criticNames[columnsKeyName[91]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[92]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[93]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[94]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[95]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[96]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[97]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[98]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[99]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[100]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[101]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[102]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[103]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[104]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[105]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[106]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[107]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[108]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[109]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[110]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[111]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[112]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[113]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[114]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[115]];
 
                     if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
                         var res = parseFloat(rowcolumnsKeyName).toFixed(1);
@@ -1847,18 +2248,23 @@ function mainTable(data) {
                         }
                     }
 
-                    if (resBis === 0) {
+                    var resCritic = resBis / columnsKeyNameLengthBis;
+
+                    if (resBis === 0 && row.user === "") {
+                        var resTotal = parseFloat(0);
+                    } else if (resBis === 0) {
                         var resTotal = parseFloat(row.user);
+                    } else if (row.user === "") {
+                        var resTotal = parseFloat(resCritic);
                     } else {
-                        var resCritic = resBis / columnsKeyNameLengthBis,
-                            resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
+                        var resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
                     }
 
                     return resTotal.toFixed(2);
                 }
             }
         ],
-        "dom": dom,
+        "dom": "Bfrtip",
         "stateSave": true,
         "stateSaveCallback": function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
@@ -1867,10 +2273,65 @@ function mainTable(data) {
             return JSON.parse(localStorage.getItem("DataTables_" + settings.sInstance))
         },
         "columnDefs": [{
-            "targets": [0, 1, columnNumber + 1, columnNumber + 2, columnNumber + 3],
+            "targets": [0, 1, 2, columnNumber + 1, columnNumber + 2, columnNumber + 3],
             "className": "noVis"
         }],
         "buttons": [{
+                "extend": "collection",
+                "className": "periodListArrayButton",
+                "collectionLayout": "four-column",
+                "text": "Filtrer par date de sortie",
+                "buttons": [{
+                        "text": "Les 7 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "7");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 2 dernières semaines",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "14");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 3 dernières semaines",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "21");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 30 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "30");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Depuis toujours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "36500");
+
+                            $("#loading").show();
+
+                            table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
+
+                            setTimeout(function() {
+                                $("#loading").hide();
+                            }, 4000);
+
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    }
+                ]
+            }, {
                 "extend": "colvis",
                 "columnText": function(dt, idx, title) {
                     var columnsKeyNameButton = [];
@@ -1879,7 +2340,7 @@ function mainTable(data) {
                         columnsKeyNameButton[i] = replaceCriticsTitle(columnsKeyName[i]);
                     }
 
-                    return columnsKeyNameButton[idx - 2];
+                    return columnsKeyNameButton[idx - 3];
                 },
                 "columns": ":not(.noVis)",
                 "collectionLayout": "four-column",
@@ -1887,19 +2348,28 @@ function mainTable(data) {
                 "className": "customButton"
             },
             {
-                "text": "Afficher toutes les notes",
+                "text": "Tout afficher",
                 "className": "customButtonDisplay",
                 "action": function(e, dt, node, config) {}
             },
             {
-                "text": "Masquer toutes les notes",
+                "text": "Tout masquer",
                 "className": "customButtonHide",
                 "action": function(e, dt, node, config) {}
+            },
+            {
+                "text": "Effacer les préférences",
+                "action": function(e, dt, node, config) {
+                    localStorage.removeItem("DataTables_table");
+                    localStorage.removeItem("filterValue");
+                    localStorage.removeItem("uniqueRandomNumber");
+                    window.location.reload(false);
+                }
             }
         ],
-        "scrollX": scrollX,
+        "scrollX": true,
         "fixedColumns": {
-            "leftColumns": leftColumns,
+            "leftColumns": 0,
             "rightColumns": rightColumns
         },
         "paging": false,
@@ -1908,55 +2378,33 @@ function mainTable(data) {
         "destroy": true,
         "language": {
             "search": "<i class=\"fas fa-search\"></i>",
-            "searchPlaceholder": "Rechercher un film"
+            "searchPlaceholder": "Rechercher un film",
+            "emptyTable": "Chargement, veuillez patienter..."
         },
         "initComplete": function(data) {
 
-            // If width < 767 hide all critic columns
-            if (width < 767) {
-                for (var i = 2; i <= columnNumber; i++) {
-                    table.column(i).visible(false, false);
-                }
-            }
-
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
-                if (index <= columnNumber - 2) {
+                if (index <= columnNumber - columnNumberStart) {
                     var data = this.data(),
                         res = 0;
 
                     for (var i = 0; i < data.length; i++) {
-                        newIndex = index - 2;
+                        newIndex = index - columnNumberStart;
 
-                        if (data[i].criticNames[columnsKeyName[newIndex]] !== undefined) {
-                            res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]);
-                        }
+                        if (data[i].criticNames[columnsKeyName[newIndex]] !== undefined) res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]);
                     }
 
-                    if (res === 0) {
-                        table.column(index).visible(false, false);
-                    }
+                    if (res === 0) table.column(index).visible(false, false);
                 }
             });
 
+            var filterValue = window.localStorage.getItem("filterValue");
+
+            if (filterValue == 36500) table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
+
             // Adjust column sizing and redraw
-            table.columns.adjust().draw(false);
-
-            // Add period list before buttons
-            $(".dt-buttons").prepend(
-                "<select id=\"periodList\" name=\"periodList\" onchange=\"setInputsDates(event)\">" +
-                "<option disabled selected>Filtrer par date de sortie</option>" +
-                "<option value=\"7\">Les 7 derniers jours</option>" +
-                "<option value=\"30\">Les 30 derniers jours</option>" +
-                "<option value=\"90\">Les 3 derniers mois</option>" +
-                "<option value=\"365\">Les 12 derniers mois</option>" +
-                "</select>"
-            );
-
-            // Event listener to the two range filtering inputs to redraw on input
-            $("#periodList").change(function() {
-                table.draw();
-            });
+            table.columns.adjust().draw();
         }
     }
 
@@ -1982,8 +2430,6 @@ function mainTable(data) {
         }
     );
 
-    $("#min, #max").datepicker();
-
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();
 
@@ -2006,7 +2452,28 @@ function mainTable(data) {
 
     var increment = 0;
 
-    $(".customButton").on("click", function() {
+    $(".customButton, .periodListArrayButton").on("click", function(e) {
+
+        var filterValue = window.localStorage.getItem("filterValue");
+        switch (filterValue) {
+            case "7":
+                var childNumber = 0;
+                break;
+            case "14":
+                var childNumber = 1;
+                break;
+            case "21":
+                var childNumber = 2;
+                break;
+            case "30":
+                var childNumber = 3;
+                break;
+            case "36500":
+                var childNumber = 4;
+                break;
+        }
+
+        if (!$(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").hasClass("clickedFilter")) $(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
 
         // Add margin top
         $(".dt-button-collection.four-column").css("margin-top", "5px");
@@ -2134,9 +2601,27 @@ function mainTable(data) {
 }
 
 // Get window width
-var width = $(window).width();
+var width = $(window).width(),
+    randomQuotesLength = randomQuotes.quotes.length,
+    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber"));
+
+if (uniqueRandomNumber === null) uniqueRandomNumber = [];
 
 $(document).ready(function() {
+
+    var filterValue = window.localStorage.getItem("filterValue");
+
+    if (!filterValue) window.localStorage.setItem("filterValue", "7");
+
+    if (filterValue == 36500) {
+        $("#loading").show();
+
+        setTimeout(function() {
+            $("#loading").hide();
+        }, 4000);
+    }
+
+    setInputsDates();
 
     // If width > 1290
     if (width > 1290) {
@@ -2185,21 +2670,18 @@ $(document).ready(function() {
             });
         }
 
+        if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
         if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
-    if (width > 767) {
-        $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>")
-    }
+    if (width > 767) $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>");
 
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
         elementClass = $(e.target).attr("class");
 
-        if (e.target.id === "overlay") {
-            tutorialHide();
-        }
+        if (e.target.id === "overlay") tutorialHide();
 
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));

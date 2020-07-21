@@ -32,6 +32,36 @@ ul {
     margin: 8px;
 }
 
+#loading {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 999999;
+    background-color: black;
+    filter: alpha(opacity=100);
+    -moz-opacity: 1;
+    opacity: 1;
+    display: none;
+}
+
+#loading img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#loadingCentered {
+    position: absolute;
+    top: calc(50% + 140px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .dateRange {
     display: none;
 }
@@ -65,10 +95,11 @@ div[role=menu] {
 }
 
 div[role=menu]>button {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.8);
 }
 
-div[role=menu]>button.active {
+div[role=menu]>button.active,
+div[role=menu]>button.clickedFilter {
     background: #28a745;
     color: #fff;
 }
@@ -283,6 +314,14 @@ table.DTFC_Cloned tr,
 
     tbody>tr>td>p {
         font-size: 13px;
+    }
+
+    #loading h2 {
+        font-size: 14px;
+    }
+
+    .critic {
+        display: none;
     }
 }
 

@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="./assets/css/styles.css">
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/fc-3.3.0/datatables.min.js"></script>
-    <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
@@ -46,6 +46,12 @@
 </head>
 
 <body>
+    <div id="loading">
+        <img src="./assets/pictures/spinning.gif" alt="Inception gif">
+        <div id="loadingCentered">
+            <h2>Chargement, veuillez patienter...</h2>
+        </div>
+    </div>
     <div class="container">
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">

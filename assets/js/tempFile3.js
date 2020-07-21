@@ -45,18 +45,23 @@
                         }
                     }
 
-                    if (resBis === 0) {
+                    var resCritic = resBis / columnsKeyNameLengthBis;
+
+                    if (resBis === 0 && row.user === "") {
+                        var resTotal = parseFloat(0);
+                    } else if (resBis === 0) {
                         var resTotal = parseFloat(row.user);
+                    } else if (row.user === "") {
+                        var resTotal = parseFloat(resCritic);
                     } else {
-                        var resCritic = resBis / columnsKeyNameLengthBis,
-                            resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
+                        var resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
                     }
 
                     return resTotal.toFixed(2);
                 }
             }
         ],
-        "dom": dom,
+        "dom": "Bfrtip",
         "stateSave": true,
         "stateSaveCallback": function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
@@ -65,10 +70,65 @@
             return JSON.parse(localStorage.getItem("DataTables_" + settings.sInstance))
         },
         "columnDefs": [{
-            "targets": [0, 1, columnNumber + 1, columnNumber + 2, columnNumber + 3],
+            "targets": [0, 1, 2, columnNumber + 1, columnNumber + 2, columnNumber + 3],
             "className": "noVis"
         }],
         "buttons": [{
+                "extend": "collection",
+                "className": "periodListArrayButton",
+                "collectionLayout": "four-column",
+                "text": "Filtrer par date de sortie",
+                "buttons": [{
+                        "text": "Les 7 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "7");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 2 dernières semaines",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "14");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 3 dernières semaines",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "21");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Les 30 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "30");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "Depuis toujours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "36500");
+
+                            $("#loading").show();
+
+                            table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
+
+                            setTimeout(function() {
+                                $("#loading").hide();
+                            }, 4000);
+
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    }
+                ]
+            }, {
                 "extend": "colvis",
                 "columnText": function(dt, idx, title) {
                     var columnsKeyNameButton = [];
@@ -77,7 +137,7 @@
                         columnsKeyNameButton[i] = replaceCriticsTitle(columnsKeyName[i]);
                     }
 
-                    return columnsKeyNameButton[idx - 2];
+                    return columnsKeyNameButton[idx - 3];
                 },
                 "columns": ":not(.noVis)",
                 "collectionLayout": "four-column",
@@ -85,19 +145,28 @@
                 "className": "customButton"
             },
             {
-                "text": "Afficher toutes les notes",
+                "text": "Tout afficher",
                 "className": "customButtonDisplay",
                 "action": function(e, dt, node, config) {}
             },
             {
-                "text": "Masquer toutes les notes",
+                "text": "Tout masquer",
                 "className": "customButtonHide",
                 "action": function(e, dt, node, config) {}
+            },
+            {
+                "text": "Effacer les préférences",
+                "action": function(e, dt, node, config) {
+                    localStorage.removeItem("DataTables_table");
+                    localStorage.removeItem("filterValue");
+                    localStorage.removeItem("uniqueRandomNumber");
+                    window.location.reload(false);
+                }
             }
         ],
-        "scrollX": scrollX,
+        "scrollX": true,
         "fixedColumns": {
-            "leftColumns": leftColumns,
+            "leftColumns": 0,
             "rightColumns": rightColumns
         },
         "paging": false,
@@ -106,55 +175,33 @@
         "destroy": true,
         "language": {
             "search": "<i class=\"fas fa-search\"></i>",
-            "searchPlaceholder": "Rechercher un film"
+            "searchPlaceholder": "Rechercher un film",
+            "emptyTable": "Chargement, veuillez patienter..."
         },
         "initComplete": function(data) {
 
-            // If width < 767 hide all critic columns
-            if (width < 767) {
-                for (var i = 2; i <= columnNumber; i++) {
-                    table.column(i).visible(false, false);
-                }
-            }
-
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
-                if (index <= columnNumber - 2) {
+                if (index <= columnNumber - columnNumberStart) {
                     var data = this.data(),
                         res = 0;
 
                     for (var i = 0; i < data.length; i++) {
-                        newIndex = index - 2;
+                        newIndex = index - columnNumberStart;
 
-                        if (data[i].criticNames[columnsKeyName[newIndex]] !== undefined) {
-                            res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]);
-                        }
+                        if (data[i].criticNames[columnsKeyName[newIndex]] !== undefined) res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]);
                     }
 
-                    if (res === 0) {
-                        table.column(index).visible(false, false);
-                    }
+                    if (res === 0) table.column(index).visible(false, false);
                 }
             });
 
+            var filterValue = window.localStorage.getItem("filterValue");
+
+            if (filterValue == 36500) table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
+
             // Adjust column sizing and redraw
-            table.columns.adjust().draw(false);
-
-            // Add period list before buttons
-            $(".dt-buttons").prepend(
-                "<select id=\"periodList\" name=\"periodList\" onchange=\"setInputsDates(event)\">" +
-                "<option disabled selected>Filtrer par date de sortie</option>" +
-                "<option value=\"7\">Les 7 derniers jours</option>" +
-                "<option value=\"30\">Les 30 derniers jours</option>" +
-                "<option value=\"90\">Les 3 derniers mois</option>" +
-                "<option value=\"365\">Les 12 derniers mois</option>" +
-                "</select>"
-            );
-
-            // Event listener to the two range filtering inputs to redraw on input
-            $("#periodList").change(function() {
-                table.draw();
-            });
+            table.columns.adjust().draw();
         }
     }
 
@@ -180,8 +227,6 @@
         }
     );
 
-    $("#min, #max").datepicker();
-
     // Sort table last column
     table.column(columnNumberOrder).order("desc").draw();
 
@@ -204,7 +249,28 @@
 
     var increment = 0;
 
-    $(".customButton").on("click", function() {
+    $(".customButton, .periodListArrayButton").on("click", function(e) {
+
+        var filterValue = window.localStorage.getItem("filterValue");
+        switch (filterValue) {
+            case "7":
+                var childNumber = 0;
+                break;
+            case "14":
+                var childNumber = 1;
+                break;
+            case "21":
+                var childNumber = 2;
+                break;
+            case "30":
+                var childNumber = 3;
+                break;
+            case "36500":
+                var childNumber = 4;
+                break;
+        }
+
+        if (!$(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").hasClass("clickedFilter")) $(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
 
         // Add margin top
         $(".dt-button-collection.four-column").css("margin-top", "5px");
@@ -332,9 +398,27 @@
 }
 
 // Get window width
-var width = $(window).width();
+var width = $(window).width(),
+    randomQuotesLength = randomQuotes.quotes.length,
+    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber"));
+
+if (uniqueRandomNumber === null) uniqueRandomNumber = [];
 
 $(document).ready(function() {
+
+    var filterValue = window.localStorage.getItem("filterValue");
+
+    if (!filterValue) window.localStorage.setItem("filterValue", "7");
+
+    if (filterValue == 36500) {
+        $("#loading").show();
+
+        setTimeout(function() {
+            $("#loading").hide();
+        }, 4000);
+    }
+
+    setInputsDates();
 
     // If width > 1290
     if (width > 1290) {
@@ -383,21 +467,18 @@ $(document).ready(function() {
             });
         }
 
+        if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
         if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
-    if (width > 767) {
-        $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>")
-    }
+    if (width > 767) $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>");
 
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
         elementClass = $(e.target).attr("class");
 
-        if (e.target.id === "overlay") {
-            tutorialHide();
-        }
+        if (e.target.id === "overlay") tutorialHide();
 
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
