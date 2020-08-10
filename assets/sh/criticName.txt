@@ -7,6 +7,7 @@ Bande à part,de Bande à part,BA
 Brazil,de Brazil,Br
 CNews,de CNews,CN
 Cahiers du Cinéma,des Cahiers du Cinéma,CC
+Cahiers du Cinéma,des Cahiers du Cinéma Contre,CC2
 Charlie Hebdo,de Charlie Hebdo,CH
 Chronic&#039;art.com,de Chronic'art.com,Ca
 Cinéastes,de Cinéastes,Cin
@@ -24,6 +25,7 @@ Dernières Nouvelles d&#039;Alsace,des Dernières Nouvelles d'Alsace,DN
 Dvdrama,de Dvdrama,Dv
 Ecran Large,d'Ecran Large,Ec
 Elle,d'Elle,EL
+Elle,d'Elle Contre,EL2
 Excessif,de Excessif,Ex
 Femme Actuelle,de Femme Actuelle,FA
 FHM,de FHM,FHM
@@ -44,6 +46,7 @@ L&#039;Humanité,de L'Humanité,LH
 LCI,de LCI,LCI
 Lenouveaucinema.com,du nouveaucinema.com,Le
 La Croix,de La Croix,LC
+La Croix,de La Croix Contre,LC2
 La Septième Obsession,de La Septième Obsession,LS
 La Voix du Nord,de La Voix du Nord,VN
 Le Dauphiné Libéré,du Dauphiné Libéré,DL
@@ -59,6 +62,7 @@ Le Nouvel Observateur,du Nouvel Observateur Contre,NO2
 Le Parisien,du Parisien,Pa
 Le Parisien,du Parisien Contre,Pa2
 Le Point,du Point,LP
+Le Point,du Point Contre,LP2
 Le Quotidien de Paris,du Quotidien de Paris,QP
 Le Soir,du Soir,LS
 Les Echos,des Echos,LE
@@ -81,10 +85,12 @@ Ouest France,de Ouest France,OF
 Ouest France,de Ouest France Contre,OF2
 Ouirock.com,de Ouirock.com,Ou
 Paris Match,de Paris Match,PM
+Paris Match,de Paris Match Contre,PM2
 Planetcinema.com,de Planetcinema.com,Pl
 Positif,de Positif,Po
 Positif,de Positif Contre,Po2
 Première,de Première,Pr
+Première,de Première Contre,Pr2
 Public,de Public,Pu
 Repérages,de Repérages,Re
 Rolling Stone,de Rolling Stone,RS

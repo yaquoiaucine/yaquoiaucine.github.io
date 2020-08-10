@@ -61,7 +61,7 @@
                 }
             }
         ],
-        "dom": "Bfrtip",
+        "dom": "Brtip",
         "stateSave": true,
         "stateSaveCallback": function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
@@ -145,12 +145,12 @@
                 "className": "customButton"
             },
             {
-                "text": "Tout afficher",
+                "text": "Afficher toutes les notes",
                 "className": "customButtonDisplay",
                 "action": function(e, dt, node, config) {}
             },
             {
-                "text": "Tout masquer",
+                "text": "Masquer toutes les notes",
                 "className": "customButtonHide",
                 "action": function(e, dt, node, config) {}
             },
@@ -170,12 +170,9 @@
             "rightColumns": rightColumns
         },
         "paging": false,
-        "pageLength": 100,
         "info": false,
         "destroy": true,
         "language": {
-            "search": "<i class=\"fas fa-search\"></i>",
-            "searchPlaceholder": "Rechercher un film",
             "emptyTable": "Chargement, veuillez patienter..."
         },
         "initComplete": function(data) {
@@ -202,6 +199,8 @@
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw();
+
+            $(".dataTables_scrollBody").append("<div class=\"marginbottom\"></div>");
         }
     }
 
@@ -209,6 +208,37 @@
     var table = $("#table").DataTable(data);
 
     table.columns("#releaseDateColumn").visible(false);
+
+    $("#inputSearch").keyup(function() {
+        table.search($(this).val()).draw();
+    });
+
+    $(".fa-search").on("click", function() {
+        var inputWidth = (width > 1290) ? "180px" : "90px";
+
+        $("#inputSearch").css({
+            "visibility": "visible",
+            "width": inputWidth,
+            "margin": "0 5px"
+        });
+    });
+
+    $("*").on("click", function(e) {
+        if ($("#inputSearch").width() != 0 && e.target.id != "inputSearch") {
+            $("#inputSearch").css({
+                "visibility": "hidden",
+                "width": "0px",
+                "margin": "0 5px 0 0"
+            });
+        };
+    });
+
+    $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+        localStorage.removeItem("DataTables_table");
+        localStorage.removeItem("filterValue");
+        localStorage.removeItem("uniqueRandomNumber");
+        window.location.reload(false);
+    };
 
     // Extend dataTables search
     $.fn.dataTable.ext.search.push(
@@ -471,8 +501,6 @@ $(document).ready(function() {
         if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
-    if (width > 767) $("p#credits").append("<i class=\"far fa-question-circle\"></i><a class=\"tutorial\" href=\"#\">Aide</a>");
-
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
@@ -480,6 +508,7 @@ $(document).ready(function() {
 
         if (e.target.id === "overlay") tutorialHide();
 
+        if (elementClass === "modal fade") $("#video").prop("src", "");
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
     });

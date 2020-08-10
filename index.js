@@ -79,23 +79,32 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
     });
 
     for (var i = 0; i < dataLength; i++) {
-        var excludeTitles = ["Adam"],
+        var excludeTitles = [
+                "Adam",
+                "Harry Potter à l'école des sorciers"
+            ],
             excludeCriticnames = [
-                "Télérama2",
+                "20 Minutes2",
+                "Cahiers du Cinéma2",
+                "Elle2",
                 "L&#039;Express2",
+                "La Croix2",
                 "Le Figaro2",
                 "Le Journal du Dimanche2",
-                "Le Nouvel Observateur2",
-                "Libération2",
-                "Ouest France2",
-                "Sud Ouest2",
-                "Les Fiches du Cinéma2",
-                "20 Minutes2",
-                "Marie Claire2",
-                "Studio Magazine2",
                 "Le Monde2",
+                "Le Nouvel Observateur2",
                 "Le Parisien2",
-                "Positif2"
+                "Le Point2",
+                "Les Fiches du Cinéma2",
+                "Libération2",
+                "Marie Claire2",
+                "Ouest France2",
+                "Paris Match2",
+                "Positif2",
+                "Première2",
+                "Studio Magazine2",
+                "Sud Ouest2",
+                "Télérama2"
             ],
             criticNamesObject = data.data[i].criticNames,
             criticNamesObjectLength = Object.keys(criticNamesObject).length,
@@ -140,7 +149,7 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
         html: text
     };
 
-    if (text != "<ul></ul>") {
+    if (text != "<ul><li>Presses non rajoutées : </li></ul>") {
         console.log(text);
 
         mg.messages().send(mailgunData, function(error, body) {

@@ -38,12 +38,25 @@ function replaceCriticsTitle(critic) {
     var s = String(critic);
 
     return s
+        .replace(/20 Minutes2/g, "20 Minutes Contre")
+        .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
+        .replace(/d&#039;Elle2/g, "d&#039;Elle Contre")
         .replace(/L&#039;Express2/g, "L&#039;Express Contre")
+        .replace(/La Croix2/g, "La Croix Contre")
         .replace(/Le Figaro2/g, "Le Figaro Contre")
         .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
+        .replace(/Le Monde2/g, "Le Monde Contre")
         .replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre")
+        .replace(/Le Parisien2/g, "Le Parisien Contre")
+        .replace(/Le Point2/g, "Le Point Contre")
+        .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
         .replace(/Libération2/g, "Libération Contre")
+        .replace(/Marie Claire2/g, "Marie Claire Contre")
         .replace(/Ouest France2/g, "Ouest France Contre")
+        .replace(/Paris Match2/g, "Paris Match Contre")
+        .replace(/Positif2/g, "Positif Contre")
+        .replace(/Première2/g, "Première Contre")
+        .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
         .replace(/Télérama2/g, "Télérama Contre")
         .replace(/&#039;/g, "'");
@@ -152,7 +165,7 @@ function splitDate(date) {
 function format(data) {
     var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
-        "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
+        "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-keyboard=\"true\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
         "<td><p><a href=\"" + data.url + "\" target=\"_blank\">Fiche Allociné</a></p>";
 
     text += "<p>";

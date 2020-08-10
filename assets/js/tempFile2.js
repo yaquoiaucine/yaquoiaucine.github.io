@@ -578,3 +578,33 @@ return res;}},
 if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
 
 return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[116]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[117]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[118]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[119]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[120]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[121]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
