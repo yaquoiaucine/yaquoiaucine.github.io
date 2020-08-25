@@ -39,3 +39,4 @@ sed -i '' 's/ Contre/2/g' ./assets/sh/critics2.txt
 sed -i '' 's/'"'"'/\&#039;/g' ./assets/sh/critics2.txt
 sed -i '' 's/Fiches du Cinéma/Les Fiches du Cinéma/g' ./assets/sh/critics2.txt
 sed -i '' 's/d\&#039;Elle2/Elle2/g' ./assets/sh/critics2.txt
+sed -i '' 's/d\&#039;Ecran Large2/Ecran Large2/g' ./assets/sh/critics2.txt

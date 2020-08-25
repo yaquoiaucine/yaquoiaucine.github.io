@@ -6,6 +6,7 @@ BIBA,de BIBA,BI
 Bande à part,de Bande à part,BA
 Brazil,de Brazil,Br
 CNews,de CNews,CN
+CNews,de CNews Contre,CN2
 Cahiers du Cinéma,des Cahiers du Cinéma,CC
 Cahiers du Cinéma,des Cahiers du Cinéma Contre,CC2
 Charlie Hebdo,de Charlie Hebdo,CH
@@ -21,9 +22,11 @@ Cplanet.com,de Cplanet.com,Cp
 Critikat.com,de Critikat.com,Cr
 Culturebox - France Télévisions,de Culturebox - France Télévisions,FT
 Culturopoing.com,de Culturopoing.com,Cu
+Culturopoing.com,de Culturopoing.com Contre,Cu2
 Dernières Nouvelles d&#039;Alsace,des Dernières Nouvelles d'Alsace,DN
 Dvdrama,de Dvdrama,Dv
 Ecran Large,d'Ecran Large,Ec
+Ecran Large,d'Ecran Large Contre,Ec2
 Elle,d'Elle,EL
 Elle,d'Elle Contre,EL2
 Excessif,de Excessif,Ex
@@ -43,6 +46,8 @@ L&#039;Evènement du Jeudi,de L'Evènement du Jeudi,EJ
 L&#039;Express,de L'Express,Ex
 L&#039;Express,de L'Express Contre,Ex2
 L&#039;Humanité,de L'Humanité,LH
+L&#039;Humanité,de L'Humanité Contre,LH2
+L&#039;Observateur d&#039;aujourd&#039;hui,L'Observateur d'aujourd'hui,Oa
 LCI,de LCI,LCI
 Lenouveaucinema.com,du nouveaucinema.com,Le
 La Croix,de La Croix,LC
@@ -69,6 +74,7 @@ Les Echos,des Echos,LE
 Les Fiches du Cinéma,des Fiches du Cinéma,FC
 Les Fiches du Cinéma,des Fiches du Cinéma Contre,FC2
 Les Inrockuptibles,des Inrockuptibles,In
+Les Inrockuptibles,des Inrockuptibles Contre,In2
 Les Lettres Françaises,des Lettres Françaises,LF
 Libération,de Libération,Li
 Libération,de Libération Contre,Li2
@@ -78,6 +84,7 @@ Marianne,de Marianne,Ma
 Marie Claire,de Marie Claire,MC
 Marie Claire,de Marie Claire Contre,MC2
 Metro,de Metro,Me
+Metro,de Metro Contre,Me2
 Nice-Matin,de Nice-Matin,NM
 Novaplanet.com,de Novaplanet.com,No
 Obejctif-Cinema.com,d'Obejctif-Cinema.com,OC

@@ -115,13 +115,7 @@
                         "action": function(e, dt, node, config) {
                             window.localStorage.setItem("filterValue", "36500");
 
-                            $("#loading").show();
-
                             table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
-                            setTimeout(function() {
-                                $("#loading").hide();
-                            }, 4000);
 
                             setInputsDates(node);
                             table.draw();
@@ -199,8 +193,6 @@
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw();
-
-            $(".dataTables_scrollBody").append("<div class=\"marginbottom\"></div>");
         }
     }
 
@@ -213,25 +205,25 @@
         table.search($(this).val()).draw();
     });
 
-    $(".fa-search").on("click", function() {
-        var inputWidth = (width > 1290) ? "180px" : "90px";
+    if (width < 768) {
+        $(".fa-search").on("click", function() {
+            if ($(".fa-search").hasClass("fa-search")) {
+                $("#inputSearch").css({
+                    "visibility": "visible",
+                    "width": "88%"
+                });
+            } else {
+                $("#inputSearch").css({
+                    "visibility": "hidden",
+                    "width": "0"
+                });
+            }
 
-        $("#inputSearch").css({
-            "visibility": "visible",
-            "width": inputWidth,
-            "margin": "0 5px"
+            $("#inputSearch").focus();
+            $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+            $(this).toggleClass("fa-search fa-times-circle");
         });
-    });
-
-    $("*").on("click", function(e) {
-        if ($("#inputSearch").width() != 0 && e.target.id != "inputSearch") {
-            $("#inputSearch").css({
-                "visibility": "hidden",
-                "width": "0px",
-                "margin": "0 5px 0 0"
-            });
-        };
-    });
+    }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
         localStorage.removeItem("DataTables_table");
@@ -440,14 +432,6 @@ $(document).ready(function() {
 
     if (!filterValue) window.localStorage.setItem("filterValue", "7");
 
-    if (filterValue == 36500) {
-        $("#loading").show();
-
-        setTimeout(function() {
-            $("#loading").hide();
-        }, 4000);
-    }
-
     setInputsDates();
 
     // If width > 1290
@@ -498,7 +482,7 @@ $(document).ready(function() {
         }
 
         if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
-        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
+        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
     $(".tutorial").on("click", tutorialShow);

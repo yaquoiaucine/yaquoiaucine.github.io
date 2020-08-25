@@ -39,9 +39,13 @@ function replaceCriticsTitle(critic) {
 
     return s
         .replace(/20 Minutes2/g, "20 Minutes Contre")
+        .replace(/CNews2/g, "CNews Contre")
         .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
+        .replace(/Culturopoing.com2/g, "Culturopoing.com Contre")
+        .replace(/d&#039;Ecran Large2/g, "d&#039;Ecran Large Contre")
         .replace(/d&#039;Elle2/g, "d&#039;Elle Contre")
         .replace(/L&#039;Express2/g, "L&#039;Express Contre")
+        .replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre")
         .replace(/La Croix2/g, "La Croix Contre")
         .replace(/Le Figaro2/g, "Le Figaro Contre")
         .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
@@ -50,8 +54,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Le Parisien2/g, "Le Parisien Contre")
         .replace(/Le Point2/g, "Le Point Contre")
         .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
+        .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
         .replace(/Marie Claire2/g, "Marie Claire Contre")
+        .replace(/Metro2/g, "Metro Contre")
         .replace(/Ouest France2/g, "Ouest France Contre")
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
@@ -2306,6 +2312,111 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[122]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[123]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[124]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[125]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[126]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[127]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[128]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
                 "render": function(data, type, row) {
                     var res = 0,
                         columnsKeyNameLength = 0;
@@ -2421,13 +2532,7 @@ function mainTable(data) {
                         "action": function(e, dt, node, config) {
                             window.localStorage.setItem("filterValue", "36500");
 
-                            $("#loading").show();
-
                             table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
-                            setTimeout(function() {
-                                $("#loading").hide();
-                            }, 4000);
 
                             setInputsDates(node);
                             table.draw();
@@ -2505,8 +2610,6 @@ function mainTable(data) {
 
             // Adjust column sizing and redraw
             table.columns.adjust().draw();
-
-            $(".dataTables_scrollBody").append("<div class=\"marginbottom\"></div>");
         }
     }
 
@@ -2519,25 +2622,25 @@ function mainTable(data) {
         table.search($(this).val()).draw();
     });
 
-    $(".fa-search").on("click", function() {
-        var inputWidth = (width > 1290) ? "180px" : "90px";
+    if (width < 768) {
+        $(".fa-search").on("click", function() {
+            if ($(".fa-search").hasClass("fa-search")) {
+                $("#inputSearch").css({
+                    "visibility": "visible",
+                    "width": "88%"
+                });
+            } else {
+                $("#inputSearch").css({
+                    "visibility": "hidden",
+                    "width": "0"
+                });
+            }
 
-        $("#inputSearch").css({
-            "visibility": "visible",
-            "width": inputWidth,
-            "margin": "0 5px"
+            $("#inputSearch").focus();
+            $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+            $(this).toggleClass("fa-search fa-times-circle");
         });
-    });
-
-    $("*").on("click", function(e) {
-        if ($("#inputSearch").width() != 0 && e.target.id != "inputSearch") {
-            $("#inputSearch").css({
-                "visibility": "hidden",
-                "width": "0px",
-                "margin": "0 5px 0 0"
-            });
-        };
-    });
+    }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
         localStorage.removeItem("DataTables_table");
@@ -2746,14 +2849,6 @@ $(document).ready(function() {
 
     if (!filterValue) window.localStorage.setItem("filterValue", "7");
 
-    if (filterValue == 36500) {
-        $("#loading").show();
-
-        setTimeout(function() {
-            $("#loading").hide();
-        }, 4000);
-    }
-
     setInputsDates();
 
     // If width > 1290
@@ -2804,7 +2899,7 @@ $(document).ready(function() {
         }
 
         if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
-        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
+        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
     });
 
     $(".tutorial").on("click", tutorialShow);

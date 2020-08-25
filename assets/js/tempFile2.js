@@ -608,3 +608,38 @@ return res;}},
 if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
 
 return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[122]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[123]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[124]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[125]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[126]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[127]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[128]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},

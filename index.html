@@ -21,7 +21,7 @@
     <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
     <meta name="title" content="Y'a quoi au ciné ?" />
     <meta name="description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
     <meta property="og:url" content="https://yaquoiaucine.fr/" />
@@ -46,12 +46,6 @@
 </head>
 
 <body>
-    <div id="loading">
-        <img src="./assets/pictures/spinning.gif" alt="Inception gif">
-        <div id="loadingCentered">
-            <h2>Chargement, veuillez patienter...</h2>
-        </div>
-    </div>
     <div class="container">
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -103,6 +97,7 @@
                             <th title="Note de Bande à part">BA.</th>
                             <th title="Note de Brazil">Br.</th>
                             <th title="Note de CNews">CN.</th>
+                            <th title="Note de CNews Contre">CN2.</th>
                             <th title="Note des Cahiers du Cinéma">CC.</th>
                             <th title="Note des Cahiers du Cinéma Contre">CC2.</th>
                             <th title="Note de Charlie Hebdo">CH.</th>
@@ -118,9 +113,11 @@
                             <th title="Note de Critikat.com">Cr.</th>
                             <th title="Note de Culturebox - France Télévisions">FT.</th>
                             <th title="Note de Culturopoing.com">Cu.</th>
+                            <th title="Note de Culturopoing.com Contre">Cu2.</th>
                             <th title="Note des Dernières Nouvelles d'Alsace">DN.</th>
                             <th title="Note de Dvdrama">Dv.</th>
                             <th title="Note d'Ecran Large">Ec.</th>
+                            <th title="Note d'Ecran Large Contre">Ec2.</th>
                             <th title="Note d'Elle">EL.</th>
                             <th title="Note d'Elle Contre">EL2.</th>
                             <th title="Note de Excessif">Ex.</th>
@@ -140,6 +137,8 @@
                             <th title="Note de L'Express">Ex.</th>
                             <th title="Note de L'Express Contre">Ex2.</th>
                             <th title="Note de L'Humanité">LH.</th>
+                            <th title="Note de L'Humanité Contre">LH2.</th>
+                            <th title="Note L'Observateur d'aujourd'hui">Oa.</th>
                             <th title="Note de LCI">LCI.</th>
                             <th title="Note du nouveaucinema.com">Le.</th>
                             <th title="Note de La Croix">LC.</th>
@@ -166,6 +165,7 @@
                             <th title="Note des Fiches du Cinéma">FC.</th>
                             <th title="Note des Fiches du Cinéma Contre">FC2.</th>
                             <th title="Note des Inrockuptibles">In.</th>
+                            <th title="Note des Inrockuptibles Contre">In2.</th>
                             <th title="Note des Lettres Françaises">LF.</th>
                             <th title="Note de Libération">Li.</th>
                             <th title="Note de Libération Contre">Li2.</th>
@@ -175,6 +175,7 @@
                             <th title="Note de Marie Claire">MC.</th>
                             <th title="Note de Marie Claire Contre">MC2.</th>
                             <th title="Note de Metro">Me.</th>
+                            <th title="Note de Metro Contre">Me2.</th>
                             <th title="Note de Nice-Matin">NM.</th>
                             <th title="Note de Novaplanet.com">No.</th>
                             <th title="Note d'Obejctif-Cinema.com">OC.</th>
@@ -229,11 +230,10 @@
             </div>
 
             <p id="credits">
-                <i class="fas fa-search"></i><input type="text" id="inputSearch" name="search" placeholder="Rechercher..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Rechercher...'">
-                <span class="vertical"></span>
                 <i class="fab fa-twitter"></i><a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiauciné,yqac,cinéma,films,actuellementensalles">Partager</a>
                 <i class="fab fa-youtube"></i><a href="https://toucheradiostation.com/recent" target="_blank">Playlist</a>
                 <i class="fab fa-github"></i><a href="https://github.com/pierrevano/yaquoiaucine" target="_blank">GitHub</a>
+                <i class="fas fa-search"></i><input type="text" id="inputSearch" name="search" placeholder="Rechercher un titre de film">
             </p>
 
             <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160321234-1"></script>
