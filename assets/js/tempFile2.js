@@ -643,3 +643,28 @@ return res;}},
 if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
 
 return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[129]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[130]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[131]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[132]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},
+{"data": null, "className": "critic", "render": function(data, type, row) {var rowcolumnsKeyName = row.criticNames[columnsKeyName[133]];
+
+if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {var res = parseFloat(rowcolumnsKeyName).toFixed(1);} else {var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";}
+
+return res;}},

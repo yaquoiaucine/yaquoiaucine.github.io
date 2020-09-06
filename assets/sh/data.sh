@@ -156,14 +156,14 @@ do
       fi
 
     # Extract director and link
-      directorNumber=$(cat temp2 | grep -A15 "<span class=\"ligth\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      directorNumber=$(cat temp2 | grep -A15 "<span class=\"light\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
       if [ $directorNumber -gt 0 ]; then
 
         echo "\"director\":[" >> ./assets/js/data.json
 
         for l in $( eval echo {1..$directorNumber} )
         do
-          directorName=$(cat temp2 | grep -A15 "<span class=\"ligth\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
+          directorName=$(cat temp2 | grep -A15 "<span class=\"light\">De</span>" | grep "blue-link\">" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1)
           echo "{\"directorName\": \"$directorName\"," >> ./assets/js/data.json
 
           directorId=$(cat temp2 | grep -Eo "director\":\[.{0,25}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)
@@ -177,14 +177,14 @@ do
       fi
 
     # Extract main actors and link
-      mainActorsNumber=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
+      mainActorsNumber=$(cat temp2 | grep -A9 "<span class=\"light\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
       if [ $mainActorsNumber -gt 0 ]; then
 
         echo "\"mainActors\":[" >> ./assets/js/data.json
 
         for l in $( eval echo {1..$mainActorsNumber} )
         do
-          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"ligth\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1 | tr -d '\t')
+          mainActorsName=$(cat temp2 | grep -A9 "<span class=\"light\">Avec</span>" | grep "<span class=\"ACrL3BACrlcnNvbm5lL2ZpY2hlcGVy" | cut -d'>' -f2 | cut -d'<' -f1 | head -$l | tail -1 | tr -d '\t')
           echo "{\"mainActorsName\": \"$mainActorsName\"," >> ./assets/js/data.json
 
           mainActorsId=$(cat temp2 | grep -Eo "actor\":\[.{0,23}" | cut -d']' -f1 | grep -Eo "[0-9]+" | head -$l | tail -1)

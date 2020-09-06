@@ -82,15 +82,19 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
         var excludeTitles = [
                 "Adam",
                 "Harry Potter à l'école des sorciers",
-                "Dragons"
+                "Dragons",
+                "Family Romance, LLC"
             ],
             excludeCriticnames = [
                 "20 Minutes2",
                 "CNews2",
                 "Cahiers du Cinéma2",
+                "Charlie Hebdo2",
+                "Chronic&#039;art.com2",
                 "Culturopoing.com2",
                 "Ecran Large2",
                 "Elle2",
+                "L&#039;Ecran Fantastique2",
                 "L&#039;Express2",
                 "L&#039;Humanité2",
                 "La Croix2",
@@ -103,12 +107,14 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "Les Fiches du Cinéma2",
                 "Inrockuptibles2",
                 "Libération2",
+                "MCinéma.com2",
                 "Marie Claire2",
                 "Metro2",
                 "Ouest France2",
                 "Paris Match2",
                 "Positif2",
                 "Première2",
+                "Studio Ciné Live2",
                 "Studio Magazine2",
                 "Sud Ouest2",
                 "Télérama2"

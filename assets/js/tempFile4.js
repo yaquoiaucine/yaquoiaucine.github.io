@@ -41,9 +41,12 @@ function replaceCriticsTitle(critic) {
         .replace(/20 Minutes2/g, "20 Minutes Contre")
         .replace(/CNews2/g, "CNews Contre")
         .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
+        .replace(/Charlie Hebdo2/g, "Charlie Hebdo Contre")
+        .replace(/Chronic&#039;art.com2/g, "Chronic&#039;art.com Contre")
         .replace(/Culturopoing.com2/g, "Culturopoing.com Contre")
         .replace(/d&#039;Ecran Large2/g, "d&#039;Ecran Large Contre")
         .replace(/d&#039;Elle2/g, "d&#039;Elle Contre")
+        .replace(/L&#039;Ecran Fantastique2/g, "L&#039;Ecran Fantastique Contre")
         .replace(/L&#039;Express2/g, "L&#039;Express Contre")
         .replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre")
         .replace(/La Croix2/g, "La Croix Contre")
@@ -56,12 +59,14 @@ function replaceCriticsTitle(critic) {
         .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
         .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
+        .replace(/MCinéma.com2/g, "MCinéma.com Contre")
         .replace(/Marie Claire2/g, "Marie Claire Contre")
         .replace(/Metro2/g, "Metro Contre")
         .replace(/Ouest France2/g, "Ouest France Contre")
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
         .replace(/Première2/g, "Première Contre")
+        .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
         .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
         .replace(/Télérama2/g, "Télérama Contre")
@@ -293,7 +298,7 @@ function format(data) {
         for (var j = 0; j < movieDetailsTempArrayDivideChild.length; j++) {
             if (j === 0 && width > 767) text += ulNew;
 
-            if (movieDetailsTempArrayDivideChild[j][1] !== "") {
+            if (movieDetailsTempArrayDivideChild[j][1] !== "" && movieDetailsTempArrayDivideChild[j][1] !== "-") {
                 text += "<li>" + movieDetailsTempArrayDivideChild[j][0] + movieDetailsTempArrayDivideChild[j][1] + "</li>";
                 liNumber++;
             }
@@ -467,7 +472,7 @@ function mainTable(data) {
 
     // Set datatables data
     var data = {
-        "ajax": "https://yaquoiaucine.fr/assets/js/data30.json",
+        "ajax": "https://yaquoiaucine.fr/assets/js/data.json",
         "columns": [{
                 "className": "details",
                 "orderable": false,
@@ -2417,6 +2422,81 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[129]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[130]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[131]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[132]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[133]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
                 "render": function(data, type, row) {
                     var res = 0,
                         columnsKeyNameLength = 0;
@@ -2531,9 +2611,6 @@ function mainTable(data) {
                         "text": "Depuis toujours",
                         "action": function(e, dt, node, config) {
                             window.localStorage.setItem("filterValue", "36500");
-
-                            table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
                             setInputsDates(node);
                             table.draw();
                         }
@@ -2571,7 +2648,8 @@ function mainTable(data) {
                     localStorage.removeItem("DataTables_table");
                     localStorage.removeItem("filterValue");
                     localStorage.removeItem("uniqueRandomNumber");
-                    window.location.reload(false);
+                    window.location.reload(true);
+
                 }
             }
         ],
@@ -2587,6 +2665,10 @@ function mainTable(data) {
             "emptyTable": "Chargement, veuillez patienter..."
         },
         "initComplete": function(data) {
+
+            // Hide loading screen when table loaded
+            $("#loadingOverlay").fadeOut();
+            $("#loadingOverlayImg").fadeOut();
 
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
@@ -2624,10 +2706,20 @@ function mainTable(data) {
 
     if (width < 768) {
         $(".fa-search").on("click", function() {
+            if ($(".fa-twitter").hasClass("hideicon")) {
+                setTimeout(function() {
+                    $("#inputSearchSpan").toggleClass("expanded");
+                    $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+                }, 400);
+            } else {
+                $("#inputSearchSpan").toggleClass("expanded");
+                $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+            }
+
             if ($(".fa-search").hasClass("fa-search")) {
                 $("#inputSearch").css({
                     "visibility": "visible",
-                    "width": "88%"
+                    "width": "100%"
                 });
             } else {
                 $("#inputSearch").css({
@@ -2637,16 +2729,20 @@ function mainTable(data) {
             }
 
             $("#inputSearch").focus();
-            $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
             $(this).toggleClass("fa-search fa-times-circle");
         });
+    }
+
+    if (width < 350) {
+        $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
+        $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
     }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
         localStorage.removeItem("DataTables_table");
         localStorage.removeItem("filterValue");
         localStorage.removeItem("uniqueRandomNumber");
-        window.location.reload(false);
+        window.location.reload(true);
     };
 
     // Extend dataTables search
@@ -2778,7 +2874,7 @@ function mainTable(data) {
                 $(".customButton span").html("Sélectionner les notes");
                 $(".customButton").removeClass("customButtonSubmit");
                 $(".customButton").removeClass("customButtonNotSubmit");
-                window.location.reload(false);
+                window.location.reload(true);
             }, 7000);
         }
 
@@ -2808,7 +2904,7 @@ function mainTable(data) {
         setTimeout(function() {
             $(".customButtonDisplay span").html("Afficher toutes les notes");
             $(".customButtonDisplay").removeClass("customButtonSubmit");
-            window.location.reload(false);
+            window.location.reload(true);
         }, 10000);
     });
 
@@ -2831,7 +2927,7 @@ function mainTable(data) {
         setTimeout(function() {
             $(".customButtonHide span").html("Masquer toutes les notes");
             $(".customButtonHide").removeClass("customButtonSubmit");
-            window.location.reload(false);
+            window.location.reload(true);
         }, 10000);
     });
 }
@@ -2898,8 +2994,12 @@ $(document).ready(function() {
             });
         }
 
-        if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
-        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").find("ul").text() === "") $(this).parent().next().find(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").find("li").text() === " ") $(this).parent().next().find(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").prev().find("li").length === 0) {
+            $(this).parent().next().find(".secondTd").find("p").html("<strong>Informations techniques :</strong>");
+            $(this).parent().next().find(".secondTd").prev().remove();
+        }
     });
 
     $(".tutorial").on("click", tutorialShow);

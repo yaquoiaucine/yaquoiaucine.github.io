@@ -10,7 +10,9 @@ CNews,de CNews Contre,CN2
 Cahiers du Cinéma,des Cahiers du Cinéma,CC
 Cahiers du Cinéma,des Cahiers du Cinéma Contre,CC2
 Charlie Hebdo,de Charlie Hebdo,CH
+Charlie Hebdo,de Charlie Hebdo Contre,CH2
 Chronic&#039;art.com,de Chronic'art.com,Ca
+Chronic&#039;art.com,de Chronic'art.com Contre,Ca2
 Cinéastes,de Cinéastes,Cin
 CinemaTeaser,de CinemaTeaser,CT
 Cinopsis.com,de Cinopsis.com,Ci
@@ -41,6 +43,7 @@ IGN France,de IGN France,IGN
 Impact,de Impact,Im
 L&#039;Aurore,de L'Aurore,Au
 L&#039;Ecran Fantastique,de L'Ecran Fantastique,EF
+L&#039;Ecran Fantastique,de L'Ecran Fantastique Contre,EF2
 L&#039;Evénement,de L'Evénement,Ev
 L&#039;Evènement du Jeudi,de L'Evènement du Jeudi,EJ
 L&#039;Express,de L'Express,Ex
@@ -79,6 +82,7 @@ Les Lettres Françaises,des Lettres Françaises,LF
 Libération,de Libération,Li
 Libération,de Libération Contre,Li2
 MCinéma.com,de MCinéma.com,MCi
+MCinéma.com,de MCinéma.com Contre,MCi2
 Mad Movies,de Mad Movies,MM
 Marianne,de Marianne,Ma
 Marie Claire,de Marie Claire,MC
@@ -104,6 +108,7 @@ Rolling Stone,de Rolling Stone,RS
 Score,de Score,Sc
 Starfix,de Starfix,Sx
 Studio Ciné Live,de Studio Ciné Live,St
+Studio Ciné Live,de Studio Ciné Live Contre,St2
 Studio Magazine,de Studio Magazine,SM
 Studio Magazine,de Studio Magazine Contre,SM2
 So Film,de So Film,SF

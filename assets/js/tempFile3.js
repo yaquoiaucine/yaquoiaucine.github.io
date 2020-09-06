@@ -114,9 +114,6 @@
                         "text": "Depuis toujours",
                         "action": function(e, dt, node, config) {
                             window.localStorage.setItem("filterValue", "36500");
-
-                            table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
                             setInputsDates(node);
                             table.draw();
                         }
@@ -154,7 +151,8 @@
                     localStorage.removeItem("DataTables_table");
                     localStorage.removeItem("filterValue");
                     localStorage.removeItem("uniqueRandomNumber");
-                    window.location.reload(false);
+                    window.location.reload(true);
+
                 }
             }
         ],
@@ -170,6 +168,10 @@
             "emptyTable": "Chargement, veuillez patienter..."
         },
         "initComplete": function(data) {
+
+            // Hide loading screen when table loaded
+            $("#loadingOverlay").fadeOut();
+            $("#loadingOverlayImg").fadeOut();
 
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
@@ -207,10 +209,20 @@
 
     if (width < 768) {
         $(".fa-search").on("click", function() {
+            if ($(".fa-twitter").hasClass("hideicon")) {
+                setTimeout(function() {
+                    $("#inputSearchSpan").toggleClass("expanded");
+                    $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+                }, 400);
+            } else {
+                $("#inputSearchSpan").toggleClass("expanded");
+                $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
+            }
+
             if ($(".fa-search").hasClass("fa-search")) {
                 $("#inputSearch").css({
                     "visibility": "visible",
-                    "width": "88%"
+                    "width": "100%"
                 });
             } else {
                 $("#inputSearch").css({
@@ -220,16 +232,20 @@
             }
 
             $("#inputSearch").focus();
-            $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
             $(this).toggleClass("fa-search fa-times-circle");
         });
+    }
+
+    if (width < 350) {
+      $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
+      $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
     }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
         localStorage.removeItem("DataTables_table");
         localStorage.removeItem("filterValue");
         localStorage.removeItem("uniqueRandomNumber");
-        window.location.reload(false);
+        window.location.reload(true);
     };
 
     // Extend dataTables search
@@ -361,7 +377,7 @@
                 $(".customButton span").html("Sélectionner les notes");
                 $(".customButton").removeClass("customButtonSubmit");
                 $(".customButton").removeClass("customButtonNotSubmit");
-                window.location.reload(false);
+                window.location.reload(true);
             }, 7000);
         }
 
@@ -391,7 +407,7 @@
         setTimeout(function() {
             $(".customButtonDisplay span").html("Afficher toutes les notes");
             $(".customButtonDisplay").removeClass("customButtonSubmit");
-            window.location.reload(false);
+            window.location.reload(true);
         }, 10000);
     });
 
@@ -414,7 +430,7 @@
         setTimeout(function() {
             $(".customButtonHide span").html("Masquer toutes les notes");
             $(".customButtonHide").removeClass("customButtonSubmit");
-            window.location.reload(false);
+            window.location.reload(true);
         }, 10000);
     });
 }
@@ -481,8 +497,12 @@ $(document).ready(function() {
             });
         }
 
-        if ($(".secondTd").find("ul").text() === "") $(".secondTd").remove();
-        if ($(".secondTd").find("li").text() === " ") $(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").find("ul").text() === "") $(this).parent().next().find(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").find("li").text() === " ") $(this).parent().next().find(".secondTd").remove();
+        if ($(this).parent().next().find(".secondTd").prev().find("li").length === 0) {
+          $(this).parent().next().find(".secondTd").find("p").html("<strong>Informations techniques :</strong>");
+          $(this).parent().next().find(".secondTd").prev().remove();
+        }
     });
 
     $(".tutorial").on("click", tutorialShow);
