@@ -44,3 +44,5 @@ cat ./assets/html/tempFile3.html >> ./index.html
 js-beautify -r --type html index.html
 
 cat index.html > ./assets/html/tempFile4.html
+
+sh assets/sh/criticsBis.sh

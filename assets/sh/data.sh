@@ -63,9 +63,9 @@ do
     # Extract movie date and link
     echo "\"date\":[" >> ./assets/js/data.json
 
-      dateName=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//')
-      spaceNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | tr -cd ' \t' | wc -c | awk '{print $1}')
-      dateNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | wc -l | awk '{print $1}')
+      dateName=$(cat temp2 | grep "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1)
+      spaceNumber=$(cat temp2 | grep "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1 | tr -cd ' \t' | wc -c | awk '{print $1}')
+      dateNumber=$(cat temp2 | grep "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
       if [ $dateNumber -eq 0 ]; then
         dateName=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1)
         spaceNumber=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1 | tr -cd ' \t' | wc -c | awk '{print $1}')

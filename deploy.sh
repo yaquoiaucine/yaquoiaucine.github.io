@@ -1,3 +1,8 @@
+# Add table version
+newTableVersion=1.01-$(date +%Y%m%d)
+sed -i '' "2s/.*/var tableVersion=\"$newTableVersion\";/" assets/js/datatables.js
+sed -i '' "2s/.*/var tableVersion=\"$newTableVersion\";/" assets/js/tempFile1.js
+
 # Create temp files to check diff
 cat ./assets/js/tempFile1.js > ./assets/js/tempFile4.js
 cat ./assets/js/tempFile2.js >> ./assets/js/tempFile4.js
@@ -10,7 +15,7 @@ cat ./assets/html/tempFile3.html >> ./assets/html/tempFile4.html
 js-beautify -r --type html assets/html/tempFile4.html
 
 # Beautify files
-js-beautify -r --type css assets/css/styles.css
+js-beautify -r --type css assets/css/style.css
 js-beautify -r --type css assets/css/bootstrap.css
 js-beautify -r --type js assets/js/datatables.js
 js-beautify -r --type html ./index.html

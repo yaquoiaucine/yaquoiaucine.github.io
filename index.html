@@ -28,15 +28,22 @@
     <meta property="og:title" content="Y'a quoi au ciné ?" />
     <meta property="og:description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.bootstrap4.min.css">
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/fc-3.3.0/datatables.min.js"></script>
-    <script src="https://momentjs.com/downloads/moment.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/dayjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/plugin/isSameOrAfter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/plugin/isSameOrBefore.min.js"></script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_isSameOrAfter)
+    </script>
+    <script>
+        dayjs.extend(window.dayjs_plugin_isSameOrBefore)
+    </script>
 
     <script src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -45,223 +52,232 @@
     <script src="./assets/js/datatables.js"></script>
 </head>
 
-<div id="loadingOverlay"></div>
-<figure id="loadingOverlayImg">
-    <img src="assets/pictures/homepageicon.png" alt="Chargement" />
-    <figcaption>Chargement...</figcaption>
-</figure>
-
 <body>
-    <div class="container">
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-times-circle" aria-hidden="true"></i>
-                        </button>
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+
+    <div id="loadingOverlay"></div>
+    <figure id="loadingOverlayImg">
+        <img src="assets/pictures/homepageicon.png" alt="Chargement" />
+        <figcaption>Chargement<span class="one">.</span><span class="two">.</span><span class="three">.</span></figcaption>
+        <figcaption id="clearLocalStorage">Ça prend trop de temps ?<span>Cliquez ici</span></figcaption>
+    </figure>
+
+    <div class="mainContent">
+        <div class="container">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                            </button>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <h1>Y'a quoi au ciné ?</h1>
-    <p class="description"><i>"T'as vu quoi récemment ?", "C'est quoi le meilleur film au ciné ?", "Tu me recommandes quoi en ce moment ?"<br /></i> - Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma.<p>
-            <p id="info">
-                <i class="far fa-newspaper" title="Note de la presse"></i> <i> Note de la presse,</i>
-                <i class="fas fa-users" title="Note des spectateurs"></i> <i> Note des spectateurs,</i>
-                <i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i> <i> Moyenne de la presse et des spectateurs</i>
-            </p>
-            <table border="0" cellspacing="5" cellpadding="5">
-                <tbody>
-                    <tr class="dateRange">
-                        <td>Date de début :</td>
-                        <td><input type="text" id="min" name="min"></td>
-                    </tr>
-                    <tr class="dateRange">
-                        <td>Date de fin :</td>
-                        <td><input type="text" id="max" name="max"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div id="containerTable">
-                <table id="table" class="display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Titre du film</th>
-                            <th id="releaseDateColumn">Date de sortie</th>
-                            <th title="Note de 20 Minutes">20.</th>
-                            <th title="Note de 20 Minutes Contre">202.</th>
-                            <th title="Note d'Aden">Ad.</th>
-                            <th title="Note de Africultures.com">Af.</th>
-                            <th title="Note de BIBA">BI.</th>
-                            <th title="Note de Bande à part">BA.</th>
-                            <th title="Note de Brazil">Br.</th>
-                            <th title="Note de CNews">CN.</th>
-                            <th title="Note de CNews Contre">CN2.</th>
-                            <th title="Note des Cahiers du Cinéma">CC.</th>
-                            <th title="Note des Cahiers du Cinéma Contre">CC2.</th>
-                            <th title="Note de Charlie Hebdo">CH.</th>
-                            <th title="Note de Charlie Hebdo Contre">CH2.</th>
-                            <th title="Note de Chronic'art.com">Ca.</th>
-                            <th title="Note de Chronic'art.com Contre">Ca2.</th>
-                            <th title="Note de Cinéastes">Cin.</th>
-                            <th title="Note de CinemaTeaser">CT.</th>
-                            <th title="Note de Cinopsis.com">Ci.</th>
-                            <th title="Note de Cine Libre">CLi.</th>
-                            <th title="Note de Ciné Live">CL.</th>
-                            <th title="Note de Closer">Cl.</th>
-                            <th title="Note de Combat">Co.</th>
-                            <th title="Note de Cplanet.com">Cp.</th>
-                            <th title="Note de Critikat.com">Cr.</th>
-                            <th title="Note de Culturebox - France Télévisions">FT.</th>
-                            <th title="Note de Culturopoing.com">Cu.</th>
-                            <th title="Note de Culturopoing.com Contre">Cu2.</th>
-                            <th title="Note des Dernières Nouvelles d'Alsace">DN.</th>
-                            <th title="Note de Dvdrama">Dv.</th>
-                            <th title="Note d'Ecran Large">Ec.</th>
-                            <th title="Note d'Ecran Large Contre">Ec2.</th>
-                            <th title="Note d'Elle">EL.</th>
-                            <th title="Note d'Elle Contre">EL2.</th>
-                            <th title="Note de Excessif">Ex.</th>
-                            <th title="Note de Femme Actuelle">FA.</th>
-                            <th title="Note de FHM">FHM.</th>
-                            <th title="Note de Filmsactu">Fi.</th>
-                            <th title="Note de Fluctuat.net">Fl.</th>
-                            <th title="Note de France Soir">FS.</th>
-                            <th title="Note de Gala">Ga.</th>
-                            <th title="Note de GQ">GQ.</th>
-                            <th title="Note de IGN France">IGN.</th>
-                            <th title="Note de Impact">Im.</th>
-                            <th title="Note de L'Aurore">Au.</th>
-                            <th title="Note de L'Ecran Fantastique">EF.</th>
-                            <th title="Note de L'Ecran Fantastique Contre">EF2.</th>
-                            <th title="Note de L'Evénement">Ev.</th>
-                            <th title="Note de L'Evènement du Jeudi">EJ.</th>
-                            <th title="Note de L'Express">Ex.</th>
-                            <th title="Note de L'Express Contre">Ex2.</th>
-                            <th title="Note de L'Humanité">LH.</th>
-                            <th title="Note de L'Humanité Contre">LH2.</th>
-                            <th title="Note L'Observateur d'aujourd'hui">Oa.</th>
-                            <th title="Note de LCI">LCI.</th>
-                            <th title="Note du nouveaucinema.com">Le.</th>
-                            <th title="Note de La Croix">LC.</th>
-                            <th title="Note de La Croix Contre">LC2.</th>
-                            <th title="Note de La Septième Obsession">LS.</th>
-                            <th title="Note de La Voix du Nord">VN.</th>
-                            <th title="Note du Dauphiné Libéré">DL.</th>
-                            <th title="Note du Figaro">LF.</th>
-                            <th title="Note du Figaro Contre">LF2.</th>
-                            <th title="Note du Journal du Dimanche">JD.</th>
-                            <th title="Note du Journal du Dimanche Contre">JD2.</th>
-                            <th title="Note du Journal du Geek">JG.</th>
-                            <th title="Note du Monde">LM.</th>
-                            <th title="Note du Monde Contre">LM2.</th>
-                            <th title="Note du Nouvel Observateur">NO.</th>
-                            <th title="Note du Nouvel Observateur Contre">NO2.</th>
-                            <th title="Note du Parisien">Pa.</th>
-                            <th title="Note du Parisien Contre">Pa2.</th>
-                            <th title="Note du Point">LP.</th>
-                            <th title="Note du Point Contre">LP2.</th>
-                            <th title="Note du Quotidien de Paris">QP.</th>
-                            <th title="Note du Soir">LS.</th>
-                            <th title="Note des Echos">LE.</th>
-                            <th title="Note des Fiches du Cinéma">FC.</th>
-                            <th title="Note des Fiches du Cinéma Contre">FC2.</th>
-                            <th title="Note des Inrockuptibles">In.</th>
-                            <th title="Note des Inrockuptibles Contre">In2.</th>
-                            <th title="Note des Lettres Françaises">LF.</th>
-                            <th title="Note de Libération">Li.</th>
-                            <th title="Note de Libération Contre">Li2.</th>
-                            <th title="Note de MCinéma.com">MCi.</th>
-                            <th title="Note de MCinéma.com Contre">MCi2.</th>
-                            <th title="Note de Mad Movies">MM.</th>
-                            <th title="Note de Marianne">Ma.</th>
-                            <th title="Note de Marie Claire">MC.</th>
-                            <th title="Note de Marie Claire Contre">MC2.</th>
-                            <th title="Note de Metro">Me.</th>
-                            <th title="Note de Metro Contre">Me2.</th>
-                            <th title="Note de Nice-Matin">NM.</th>
-                            <th title="Note de Novaplanet.com">No.</th>
-                            <th title="Note d'Obejctif-Cinema.com">OC.</th>
-                            <th title="Note de Ouest France">OF.</th>
-                            <th title="Note de Ouest France Contre">OF2.</th>
-                            <th title="Note de Ouirock.com">Ou.</th>
-                            <th title="Note de Paris Match">PM.</th>
-                            <th title="Note de Paris Match Contre">PM2.</th>
-                            <th title="Note de Planetcinema.com">Pl.</th>
-                            <th title="Note de Positif">Po.</th>
-                            <th title="Note de Positif Contre">Po2.</th>
-                            <th title="Note de Première">Pr.</th>
-                            <th title="Note de Première Contre">Pr2.</th>
-                            <th title="Note de Public">Pu.</th>
-                            <th title="Note de Repérages">Re.</th>
-                            <th title="Note de Rolling Stone">RS.</th>
-                            <th title="Note de Score">Sc.</th>
-                            <th title="Note de Starfix">Sx.</th>
-                            <th title="Note de Studio Ciné Live">St.</th>
-                            <th title="Note de Studio Ciné Live Contre">St2.</th>
-                            <th title="Note de Studio Magazine">SM.</th>
-                            <th title="Note de Studio Magazine Contre">SM2.</th>
-                            <th title="Note de So Film">SF.</th>
-                            <th title="Note de Sud Ouest">SO.</th>
-                            <th title="Note de Sud Ouest Contre">SO2.</th>
-                            <th title="Note de Synopsis">Sy.</th>
-                            <th title="Note de Technikart">Te.</th>
-                            <th title="Note de Time Out Paris">TO.</th>
-                            <th title="Note de The Hollywood Reporter">HR.</th>
-                            <th title="Note de Transfuge">Tr.</th>
-                            <th title="Note de TéléCinéObs">TC.</th>
-                            <th title="Note de Télé 2 semaines">TS.</th>
-                            <th title="Note de Télé 7 Jours">TJ.</th>
-                            <th title="Note de Télé Loisirs">TL.</th>
-                            <th title="Note de Télérama">Té.</th>
-                            <th title="Note de Télérama Contre">Té2.</th>
-                            <th title="Note de TF1 News">TN.</th>
-                            <th title="Note de Urbuz">Ur.</th>
-                            <th title="Note de Variety">Va.</th>
-                            <th title="Note de Voici">Vo.</th>
-                            <th title="Note de VSD">VSD.</th>
-                            <th title="Note d'aVoir-aLire.com">VL.</th>
-                            <th title="Note de Zurban">Zu.</th>
-                            <th><i class="far fa-newspaper" title="Note de la presse"></i></th>
-                            <th><i class="fas fa-users" title="Note des spectateurs"></i></th>
-                            <th><i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i></th>
+        <h1><a href="index.html">Y'a quoi au ciné ?</a></h1>
+        <p class="description"><i>"T'as vu quoi récemment ?", "C'est quoi le meilleur film au ciné ?", "Tu me recommandes quoi en ce moment ?"<br /></i> - Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma.<p>
+                <p id="info">
+                    <i class="far fa-newspaper" title="Note de la presse"></i> <i> Note de la presse,</i>
+                    <i class="fas fa-users" title="Note des spectateurs"></i> <i> Note des spectateurs,</i>
+                    <i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i> <i> Moyenne de la presse et des spectateurs</i>
+                </p>
+                <table border="0" cellspacing="5" cellpadding="5">
+                    <tbody>
+                        <tr class="dateRange">
+                            <td>Date de début :</td>
+                            <td><input type="text" id="min" name="min"></td>
                         </tr>
-                    </thead>
+                        <tr class="dateRange">
+                            <td>Date de fin :</td>
+                            <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                    </tbody>
                 </table>
+                <div id="containerTable">
+                    <table id="table" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Titre du film</th>
+                                <th id="releaseDateColumn">Date de sortie</th>
+                                <th title="Note de 20 Minutes">20.</th>
+                                <th title="Note de 20 Minutes Contre">202.</th>
+                                <th title="Note d'Aden">Ad.</th>
+                                <th title="Note de Africultures.com">Af.</th>
+                                <th title="Note de BIBA">BI.</th>
+                                <th title="Note de Bande à part">BA.</th>
+                                <th title="Note de Brazil">Br.</th>
+                                <th title="Note de CNews">CN.</th>
+                                <th title="Note de CNews Contre">CN2.</th>
+                                <th title="Note des Cahiers du Cinéma">CC.</th>
+                                <th title="Note des Cahiers du Cinéma Contre">CC2.</th>
+                                <th title="Note de Charlie Hebdo">CH.</th>
+                                <th title="Note de Charlie Hebdo Contre">CH2.</th>
+                                <th title="Note de Chronic'art.com">Ca.</th>
+                                <th title="Note de Chronic'art.com Contre">Ca2.</th>
+                                <th title="Note de Cinéastes">Cin.</th>
+                                <th title="Note de CinemaTeaser">CT.</th>
+                                <th title="Note de CinemaTeaser Contre">CT2.</th>
+                                <th title="Note de Cinopsis.com">Ci.</th>
+                                <th title="Note de Cine Libre">CLi.</th>
+                                <th title="Note de Ciné Live">CL.</th>
+                                <th title="Note de Closer">Cl.</th>
+                                <th title="Note de Combat">Co.</th>
+                                <th title="Note de Cplanet.com">Cp.</th>
+                                <th title="Note de Critikat.com">Cr.</th>
+                                <th title="Note de Culturebox - France Télévisions">FT.</th>
+                                <th title="Note de Culturopoing.com">Cu.</th>
+                                <th title="Note de Culturopoing.com Contre">Cu2.</th>
+                                <th title="Note des Dernières Nouvelles d'Alsace">DN.</th>
+                                <th title="Note de Dvdrama">Dv.</th>
+                                <th title="Note d'Ecran Large">Ec.</th>
+                                <th title="Note d'Ecran Large Contre">Ec2.</th>
+                                <th title="Note d'Elle">EL.</th>
+                                <th title="Note d'Elle Contre">EL2.</th>
+                                <th title="Note de Excessif">Ex.</th>
+                                <th title="Note de Femme Actuelle">FA.</th>
+                                <th title="Note de FHM">FHM.</th>
+                                <th title="Note de Filmsactu">Fi.</th>
+                                <th title="Note de Fluctuat.net">Fl.</th>
+                                <th title="Note de France Soir">FS.</th>
+                                <th title="Note de Gala">Ga.</th>
+                                <th title="Note de GQ">GQ.</th>
+                                <th title="Note de IGN France">IGN.</th>
+                                <th title="Note de Impact">Im.</th>
+                                <th title="Note de L'Aurore">Au.</th>
+                                <th title="Note de L'Ecran Fantastique">EF.</th>
+                                <th title="Note de L'Ecran Fantastique Contre">EF2.</th>
+                                <th title="Note de L'Evénement">Ev.</th>
+                                <th title="Note de L'Evènement du Jeudi">EJ.</th>
+                                <th title="Note de L'Express">Ex.</th>
+                                <th title="Note de L'Express Contre">Ex2.</th>
+                                <th title="Note de L'Humanité">LH.</th>
+                                <th title="Note de L'Humanité Contre">LH2.</th>
+                                <th title="Note L'Observateur d'aujourd'hui">Oa.</th>
+                                <th title="Note de LCI">LCI.</th>
+                                <th title="Note du nouveaucinema.com">Le.</th>
+                                <th title="Note de La Croix">LC.</th>
+                                <th title="Note de La Croix Contre">LC2.</th>
+                                <th title="Note de La Septième Obsession">LS.</th>
+                                <th title="Note de La Voix du Nord">VN.</th>
+                                <th title="Note du Dauphiné Libéré">DL.</th>
+                                <th title="Note du Figaro">LF.</th>
+                                <th title="Note du Figaro Contre">LF2.</th>
+                                <th title="Note du Journal du Dimanche">JD.</th>
+                                <th title="Note du Journal du Dimanche Contre">JD2.</th>
+                                <th title="Note du Journal du Geek">JG.</th>
+                                <th title="Note du Monde">LM.</th>
+                                <th title="Note du Monde Contre">LM2.</th>
+                                <th title="Note du Nouvel Observateur">NO.</th>
+                                <th title="Note du Nouvel Observateur Contre">NO2.</th>
+                                <th title="Note du Parisien">Pa.</th>
+                                <th title="Note du Parisien Contre">Pa2.</th>
+                                <th title="Note du Point">LP.</th>
+                                <th title="Note du Point Contre">LP2.</th>
+                                <th title="Note du Quotidien de Paris">QP.</th>
+                                <th title="Note du Soir">LS.</th>
+                                <th title="Note des Echos">LE.</th>
+                                <th title="Note des Fiches du Cinéma">FC.</th>
+                                <th title="Note des Fiches du Cinéma Contre">FC2.</th>
+                                <th title="Note des Inrockuptibles">In.</th>
+                                <th title="Note des Inrockuptibles Contre">In2.</th>
+                                <th title="Note des Lettres Françaises">LF.</th>
+                                <th title="Note de Libération">Li.</th>
+                                <th title="Note de Libération Contre">Li2.</th>
+                                <th title="Note de MCinéma.com">MCi.</th>
+                                <th title="Note de MCinéma.com Contre">MCi2.</th>
+                                <th title="Note de Mad Movies">MM.</th>
+                                <th title="Note de Mad Movies Contre">MM2.</th>
+                                <th title="Note de Marianne">Ma.</th>
+                                <th title="Note de Marie Claire">MC.</th>
+                                <th title="Note de Marie Claire Contre">MC2.</th>
+                                <th title="Note de Metro">Me.</th>
+                                <th title="Note de Metro Contre">Me2.</th>
+                                <th title="Note de Nice-Matin">NM.</th>
+                                <th title="Note de Novaplanet.com">No.</th>
+                                <th title="Note d'Obejctif-Cinema.com">OC.</th>
+                                <th title="Note d'Obejctif-Cinema.com Contre">OC2.</th>
+                                <th title="Note de Ouest France">OF.</th>
+                                <th title="Note de Ouest France Contre">OF2.</th>
+                                <th title="Note de Ouirock.com">Ou.</th>
+                                <th title="Note de Paris Match">PM.</th>
+                                <th title="Note de Paris Match Contre">PM2.</th>
+                                <th title="Note de Planetcinema.com">Pl.</th>
+                                <th title="Note de Positif">Po.</th>
+                                <th title="Note de Positif Contre">Po2.</th>
+                                <th title="Note de Première">Pr.</th>
+                                <th title="Note de Première Contre">Pr2.</th>
+                                <th title="Note de Public">Pu.</th>
+                                <th title="Note de Repérages">Re.</th>
+                                <th title="Note de Rolling Stone">RS.</th>
+                                <th title="Note de Score">Sc.</th>
+                                <th title="Note de Starfix">Sx.</th>
+                                <th title="Note de Studio Ciné Live">St.</th>
+                                <th title="Note de Studio Ciné Live Contre">St2.</th>
+                                <th title="Note de Studio Magazine">SM.</th>
+                                <th title="Note de Studio Magazine Contre">SM2.</th>
+                                <th title="Note de So Film">SF.</th>
+                                <th title="Note de Sud Ouest">SO.</th>
+                                <th title="Note de Sud Ouest Contre">SO2.</th>
+                                <th title="Note de Synopsis">Sy.</th>
+                                <th title="Note de Technikart">Te.</th>
+                                <th title="Note de Time Out Paris">TO.</th>
+                                <th title="Note de The Hollywood Reporter">HR.</th>
+                                <th title="Note de Transfuge">Tr.</th>
+                                <th title="Note de TéléCinéObs">TC.</th>
+                                <th title="Note de TéléCinéObs Contre">TC2.</th>
+                                <th title="Note de Télé 2 semaines">TS.</th>
+                                <th title="Note de Télé 7 Jours">TJ.</th>
+                                <th title="Note de Télé Loisirs">TL.</th>
+                                <th title="Note de Télérama">Té.</th>
+                                <th title="Note de Télérama Contre">Té2.</th>
+                                <th title="Note de TF1 News">TN.</th>
+                                <th title="Note de Urbuz">Ur.</th>
+                                <th title="Note de Variety">Va.</th>
+                                <th title="Note de Voici">Vo.</th>
+                                <th title="Note de VSD">VSD.</th>
+                                <th title="Note de VSD Contre">VSD2.</th>
+                                <th title="Note d'aVoir-aLire.com">VL.</th>
+                                <th title="Note de Zurban">Zu.</th>
+                                <th><i class="far fa-newspaper" title="Note de la presse"></i></th>
+                                <th><i class="fas fa-users" title="Note des spectateurs"></i></th>
+                                <th><i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i></th>
+                            </tr>
+                        </thead>
+                    </table>
 
-                <div id="quotes"></div>
+                    <div id="quotes"></div>
 
-            </div>
+                </div>
 
-            <div id="credits">
-                <span id="leftSpan">
-                    <i class="fab fa-twitter fa-lg"></i><a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiauciné,yqac,cinéma,films,actuellementensalles">Partager</a>
-                    <i class="fab fa-youtube fa-lg"></i><a href="https://toucheradiostation.com/recent" target="_blank">Playlist</a>
-                    <i class="fab fa-github fa-lg"></i><a href="https://github.com/pierrevano/yaquoiaucine" target="_blank">GitHub</a>
-                </span>
-                <span id="inputSearchSpan">
-                    <input type="text" id="inputSearch" placeholder="Rechercher un titre de film"><i class="fas fa-search fa-lg"></i>
-                </span>
-            </div>
+                <div id="credits">
+                    <span id="leftSpan">
+                        <i class="fab fa-twitter fa-lg"></i><a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiauciné,yqac,cinéma,films,actuellementensalles">Partager</a>
+                        <i class="fab fa-youtube fa-lg"></i><a href="https://toucheradiostation.com/recent" target="_blank">Playlist</a>
+                        <i class="fab fa-github fa-lg"></i><a href="https://github.com/pierrevano/yaquoiaucine" target="_blank">GitHub</a>
+                    </span>
+                    <span id="inputSearchSpan">
+                        <input type="text" id="inputSearch" placeholder="Rechercher un titre de film"><i class="fas fa-search fa-lg"></i>
+                    </span>
+                </div>
 
-            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160321234-1"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
+                <script async src="https://www.googletagmanager.com/gtag/js?id=UA-160321234-1"></script>
+                <script>
+                    window.dataLayer = window.dataLayer || [];
 
-                function gtag() {
-                    dataLayer.push(arguments);
-                }
-                gtag('js', new Date());
+                    function gtag() {
+                        dataLayer.push(arguments);
+                    }
+                    gtag('js', new Date());
 
-                gtag('config', 'UA-160321234-1');
-            </script>
+                    gtag('config', 'UA-160321234-1');
+                </script>
+    </div>
 </body>
 
 </html>

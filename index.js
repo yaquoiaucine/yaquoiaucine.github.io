@@ -83,7 +83,8 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "Adam",
                 "Harry Potter à l'école des sorciers",
                 "Dragons",
-                "Family Romance, LLC"
+                "Family Romance, LLC",
+                "Calvaire"
             ],
             excludeCriticnames = [
                 "20 Minutes2",
@@ -91,6 +92,7 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "Cahiers du Cinéma2",
                 "Charlie Hebdo2",
                 "Chronic&#039;art.com2",
+                "CinemaTeaser2",
                 "Culturopoing.com2",
                 "Ecran Large2",
                 "Elle2",
@@ -108,8 +110,10 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "Inrockuptibles2",
                 "Libération2",
                 "MCinéma.com2",
+                "Mad Movies2",
                 "Marie Claire2",
                 "Metro2",
+                "Obejctif-Cinema.com2",
                 "Ouest France2",
                 "Paris Match2",
                 "Positif2",
@@ -117,7 +121,9 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "Studio Ciné Live2",
                 "Studio Magazine2",
                 "Sud Ouest2",
-                "Télérama2"
+                "TéléCinéObs2",
+                "Télérama2",
+                "VSD2"
             ],
             criticNamesObject = data.data[i].criticNames,
             criticNamesObjectLength = Object.keys(criticNamesObject).length,

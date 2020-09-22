@@ -12,12 +12,25 @@ a {
     -webkit-text-size-adjust: none;
 }
 
-h1,
+body.noscroll {
+    overflow: hidden;
+}
+
+.mainContent {
+    visibility: hidden;
+}
+
+h1>a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h1>a,
 #quotes {
     font-family: Windsor;
 }
 
-h1,
+h1>a,
 p {
     margin-inline-start: 8px;
 }
@@ -54,16 +67,91 @@ ul {
 
 #loadingOverlayImg {
     position: relative;
-    margin: 192px 0 0 -8px;
-    text-align: center;
+    margin-top: 37.48370273794003vh;
     z-index: 2;
 }
 
 #loadingOverlayImg>img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     width: 96px;
     height: 96px;
-    margin-bottom: 20px;
-    vertical-align: middle;
+}
+
+#loadingOverlayImg>figcaption {
+    position: absolute;
+    font-size: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 116px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    white-space: nowrap;
+}
+
+#loadingOverlayImg>figcaption .one {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0s;
+}
+
+#loadingOverlayImg>figcaption .two {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.2s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.2s;
+}
+
+#loadingOverlayImg>figcaption .three {
+    opacity: 0;
+    -webkit-animation: dot 1.3s infinite;
+    -webkit-animation-delay: 0.3s;
+    animation: dot 1.3s infinite;
+    animation-delay: 0.3s;
+}
+
+@-webkit-keyframes dot {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes dot {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+figcaption#clearLocalStorage {
+    margin-top: 145px;
+    display: none;
+}
+
+figcaption#clearLocalStorage span {
+    font-style: italic;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 button,
@@ -80,11 +168,11 @@ button,
     font-family: Helvetica;
     font-size: 12px;
     font-weight: bold;
-    margin-bottom: 5px;
-
+    margin: 0 5px 5px 0;
 }
 
 .dt-buttons {
+    font-size: 0;
     margin-bottom: 10px;
     padding: 10px 10px 5px 10px;
 }
@@ -165,7 +253,6 @@ div[role=menu]>button.active:hover {
 }
 
 input[type=text] {
-    visibility: visible;
     width: 350px;
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
@@ -176,6 +263,7 @@ input[type=text] {
     border-radius: 0;
     margin: 0 5px 0 0;
     color: rgba(255, 255, 255, 0.9);
+    padding: 1px;
 }
 
 input[type=text]::placeholder {
@@ -186,6 +274,14 @@ input[type=text]::placeholder {
 .fa-search,
 .fa-times-circle {
     margin-left: 5px;
+}
+
+#leftSpan>i.fa-lg {
+    vertical-align: -0.1em;
+}
+
+#inputSearchSpan>i.fa-lg {
+    vertical-align: -0.15em;
 }
 
 .fa-twitter.hideicon,
@@ -219,6 +315,10 @@ table.dataTable.display tbody td.highlightElement,
 .highlightElement {
     position: relative;
     z-index: 99999;
+}
+
+.DTFC_ScrollWrapper {
+    background-color: rgba(25, 25, 25, 0.8);
 }
 
 #overlay {
@@ -337,13 +437,17 @@ table.DTFC_Cloned tr,
 }
 
 .modal-content {
-    margin: 25px;
+    margin: 20px;
+}
+
+.modal.noscroll {
+    overflow: hidden;
 }
 
 .close {
     position: absolute;
-    right: -20px;
-    top: -20px;
+    right: -4px;
+    top: -42px;
     z-index: 9999;
     font-size: 2rem;
     font-weight: normal;
@@ -371,7 +475,12 @@ table.DTFC_Cloned tr,
     background: #fecc00;
 }
 
-@media (max-width:767px) {
+div.DTFC_LeftHeadWrapper table,
+div.DTFC_RightHeadWrapper table {
+    background-color: transparent;
+}
+
+@media (max-width:1290px) {
 
     #detailsTable,
     #summaryTable {
@@ -397,6 +506,7 @@ table.DTFC_Cloned tr,
 
     #credits {
         display: flex;
+        align-items: center;
         justify-content: space-between;
     }
 
@@ -416,7 +526,7 @@ table.DTFC_Cloned tr,
     }
 }
 
-@media (min-width:768px) {
+@media (min-width:1291px) {
     #containerTable {
         display: table;
         width: 100%;
@@ -445,9 +555,9 @@ table.DTFC_Cloned tr,
     }
 
     #quotes {
-        padding: 0 50px 0 50px;
+        padding: 0 50px;
         text-align: center;
-        vertical-align: middle;
+        vertical-align: top;
         font-weight: bold;
     }
 
@@ -471,7 +581,7 @@ table.DTFC_Cloned tr,
 #credits {
     background-color: #000;
     position: fixed;
-    padding: 10px 0 5px 0;
+    padding: 8px 0;
     width: 100%;
     bottom: 0;
     margin: 0;
@@ -792,10 +902,6 @@ table.dataTable.order-column.hover tbody tr:hover.selected>.sorting_3 {
     background-color: #a5b2cb;
 }
 
-table.dataTable.no-footer {
-    border-bottom: 1px solid #111;
-}
-
 table.dataTable.compact thead th,
 table.dataTable.compact thead td {
     padding: 4px 17px 4px 4px;
@@ -1045,10 +1151,6 @@ table.dataTable td {
     overflow: hidden;
     margin: 0 !important;
     padding: 0 !important;
-}
-
-.dataTables_wrapper.no-footer .dataTables_scrollBody {
-    border-bottom: 1px solid #111;
 }
 
 .dataTables_wrapper.no-footer div.dataTables_scrollHead table.dataTable,
@@ -1302,7 +1404,7 @@ div.dtr-modal div.dtr-modal-background {
     color: rgba(255, 255, 255, .8);
     width: auto;
     height: auto;
-    margin: 0 0 32px 8px;
+    margin: 0 0 37px 8px;
     padding: 0;
     display: block;
     position: relative;

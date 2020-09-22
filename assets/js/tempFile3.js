@@ -63,6 +63,9 @@
         ],
         "dom": "Brtip",
         "stateSave": true,
+        "stateSaveParams": function(settings, data) {
+            data.search.search = "";
+        },
         "stateSaveCallback": function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
         },
@@ -111,9 +114,49 @@
                         }
                     },
                     {
+                        "text": "Les 90 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "90");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + buttonYear,
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", buttonYear);
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 1),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 1));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 2),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 2));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 3),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 3));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
                         "text": "Depuis toujours",
                         "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "36500");
+                            window.localStorage.setItem("filterValue", "365000");
                             setInputsDates(node);
                             table.draw();
                         }
@@ -148,11 +191,8 @@
             {
                 "text": "Effacer les préférences",
                 "action": function(e, dt, node, config) {
-                    localStorage.removeItem("DataTables_table");
-                    localStorage.removeItem("filterValue");
-                    localStorage.removeItem("uniqueRandomNumber");
+                    clearLocalStorage();
                     window.location.reload(true);
-
                 }
             }
         ],
@@ -169,9 +209,23 @@
         },
         "initComplete": function(data) {
 
-            // Hide loading screen when table loaded
-            $("#loadingOverlay").fadeOut();
-            $("#loadingOverlayImg").fadeOut();
+            // If small width ignore span.sr-only
+            if (width <= 1290) {
+                $(".mainContent").css("visibility", "visible");
+                $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+                $("body").removeClass("noscroll");
+            }
+
+            // Set and/or retrieve table version
+            var localTableVersion = window.localStorage.getItem("tableVersion");
+
+            // If localTableVersion doesn't exist set it to current version
+            if (!localTableVersion) window.localStorage.setItem("tableVersion", tableVersion);
+
+            if (localTableVersion !== tableVersion) {
+                window.localStorage.setItem("tableVersion", tableVersion);
+                window.location.reload(true);
+            }
 
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
@@ -189,10 +243,6 @@
                 }
             });
 
-            var filterValue = window.localStorage.getItem("filterValue");
-
-            if (filterValue == 36500) table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
             // Adjust column sizing and redraw
             table.columns.adjust().draw();
         }
@@ -207,7 +257,7 @@
         table.search($(this).val()).draw();
     });
 
-    if (width < 768) {
+    if (width <= 1290) {
         $(".fa-search").on("click", function() {
             if ($(".fa-twitter").hasClass("hideicon")) {
                 setTimeout(function() {
@@ -236,15 +286,14 @@
         });
     }
 
+    // Change font-size for really small devices
     if (width < 350) {
-      $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
-      $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
+        $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
+        $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
     }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-        localStorage.removeItem("DataTables_table");
-        localStorage.removeItem("filterValue");
-        localStorage.removeItem("uniqueRandomNumber");
+        clearLocalStorage();
         window.location.reload(true);
     };
 
@@ -257,7 +306,7 @@
 
             if (
                 (min == "" || max == "") ||
-                (moment(releaseDate).isSameOrAfter(min) && moment(releaseDate).isSameOrBefore(max))
+                (dayjs(releaseDate).isSameOrAfter(min) && dayjs(releaseDate).isSameOrBefore(max))
             ) {
                 return true;
             }
@@ -290,6 +339,7 @@
     $(".customButton, .periodListArrayButton").on("click", function(e) {
 
         var filterValue = window.localStorage.getItem("filterValue");
+
         switch (filterValue) {
             case "7":
                 var childNumber = 0;
@@ -303,8 +353,23 @@
             case "30":
                 var childNumber = 3;
                 break;
-            case "36500":
+            case "90":
                 var childNumber = 4;
+                break;
+            case String(buttonYear):
+                var childNumber = 5;
+                break;
+            case String(buttonYear - 1):
+                var childNumber = 6;
+                break;
+            case String(buttonYear - 2):
+                var childNumber = 7;
+                break;
+            case String(buttonYear - 3):
+                var childNumber = 8;
+                break;
+            case "365000":
+                var childNumber = 9;
                 break;
         }
 
@@ -442,7 +507,32 @@ var width = $(window).width(),
 
 if (uniqueRandomNumber === null) uniqueRandomNumber = [];
 
+if (width > 1290) {
+    $(document).arrive("div.DTFC_RightHeadWrapper table thead tr th.sorting_desc span.sr-only", function() {
+        // Adjust column width and hide loading overlay
+        $("div.DTFC_RightHeadWrapper").find("span.sr-only:eq(2)").click().click();
+        $(".mainContent").css("visibility", "visible");
+        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+        $("body").removeClass("noscroll");
+        Arrive.unbindAllArrive();
+    });
+}
+
 $(document).ready(function() {
+
+    // Disable scroll until loading is complet
+    $("body").addClass("noscroll");
+
+    setTimeout(function() {
+        $("figcaption#clearLocalStorage").css("display", "block");
+    }, 5000);
+
+    $("figcaption#clearLocalStorage span").on("click", function() {
+        clearLocalStorage();
+        $(".mainContent").css("visibility", "visible");
+        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+        Arrive.unbindAllArrive();
+    });
 
     var filterValue = window.localStorage.getItem("filterValue");
 
@@ -450,7 +540,6 @@ $(document).ready(function() {
 
     setInputsDates();
 
-    // If width > 1290
     if (width > 1290) {
 
         // Display movies quotes
@@ -500,9 +589,17 @@ $(document).ready(function() {
         if ($(this).parent().next().find(".secondTd").find("ul").text() === "") $(this).parent().next().find(".secondTd").remove();
         if ($(this).parent().next().find(".secondTd").find("li").text() === " ") $(this).parent().next().find(".secondTd").remove();
         if ($(this).parent().next().find(".secondTd").prev().find("li").length === 0) {
-          $(this).parent().next().find(".secondTd").find("p").html("<strong>Informations techniques :</strong>");
-          $(this).parent().next().find(".secondTd").prev().remove();
+            $(this).parent().next().find(".secondTd").find("p").html("<strong>Informations techniques :</strong>");
+            $(this).parent().next().find(".secondTd").prev().remove();
         }
+    });
+
+    $("#myModal").on("show.bs.modal", function(e) {
+        $("body, .modal").addClass("noscroll");
+    });
+
+    $("#myModal").on("hide.bs.modal", function(e) {
+        $("body, .modal").removeClass("noscroll");
     });
 
     $(".tutorial").on("click", tutorialShow);
@@ -512,10 +609,16 @@ $(document).ready(function() {
 
         if (e.target.id === "overlay") tutorialHide();
 
-        if (elementClass === "modal fade") $("#video").prop("src", "");
+        if (elementClass === "modal fade" || elementClass === "fa fa-times-circle") $("#video").prop("src", "");
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
     });
+
+    function keyPress(e) {
+        if (e.key === "Escape") {
+            $("#video").prop("src", "");
+        }
+    }
 
     $(window).scroll(function() {
         if ($(this).scrollTop() > 10) {

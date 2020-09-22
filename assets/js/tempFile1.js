@@ -1,3 +1,6 @@
+// Table version
+var tableVersion="1.01-20200922";
+
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
     var indexes = [];
@@ -43,9 +46,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
         .replace(/Charlie Hebdo2/g, "Charlie Hebdo Contre")
         .replace(/Chronic&#039;art.com2/g, "Chronic&#039;art.com Contre")
+        .replace(/CinemaTeaser2/g, "CinemaTeaser Contre")
         .replace(/Culturopoing.com2/g, "Culturopoing.com Contre")
-        .replace(/d&#039;Ecran Large2/g, "d&#039;Ecran Large Contre")
-        .replace(/d&#039;Elle2/g, "d&#039;Elle Contre")
+        .replace(/Ecran Large2/g, "Ecran Large Contre")
+        .replace(/Elle2/g, "Elle Contre")
         .replace(/L&#039;Ecran Fantastique2/g, "L&#039;Ecran Fantastique Contre")
         .replace(/L&#039;Express2/g, "L&#039;Express Contre")
         .replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre")
@@ -60,8 +64,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
         .replace(/MCinéma.com2/g, "MCinéma.com Contre")
+        .replace(/Mad Movies2/g, "Mad Movies Contre")
         .replace(/Marie Claire2/g, "Marie Claire Contre")
         .replace(/Metro2/g, "Metro Contre")
+        .replace(/Obejctif-Cinema.com2/g, "Objectif-Cinema.com Contre")
         .replace(/Ouest France2/g, "Ouest France Contre")
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
@@ -69,7 +75,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
         .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
+        .replace(/TéléCinéObs2/g, "TéléCinéObs Contre")
         .replace(/Télérama2/g, "Télérama Contre")
+        .replace(/VSD2/g, "VSD Contre")
+        .replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com")
         .replace(/&#039;/g, "'");
 }
 
@@ -98,6 +107,9 @@ function splitUp(arr, n) {
     return result;
 }
 
+var buttonYearTemp = new Date(),
+    buttonYear = buttonYearTemp.getFullYear();
+
 // Set inputs filter dates
 function setInputsDates(node) {
     $("*").removeClass("clickedFilter");
@@ -118,6 +130,19 @@ function setInputsDates(node) {
 
     todayStart = mmStart + "/" + ddStart + "/" + yyyyStart;
     todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd;
+
+    if (numberDays == buttonYear) {
+        todayStart = "1/1/" + buttonYear;
+    } else if (numberDays == buttonYear - 1) {
+        todayStart = "1/1/" + parseInt(buttonYear - 1);
+        todayEnd = "12/31/" + parseInt(buttonYear - 1);
+    } else if (numberDays == buttonYear - 2) {
+        todayStart = "1/1/" + parseInt(buttonYear - 2);
+        todayEnd = "12/31/" + parseInt(buttonYear - 2);
+    } else if (numberDays == buttonYear - 3) {
+        todayStart = "1/1/" + parseInt(buttonYear - 3);
+        todayEnd = "12/31/" + parseInt(buttonYear - 3);
+    }
 
     document.getElementById("min").value = todayStart;
     document.getElementById("max").value = todayEnd;
@@ -170,6 +195,12 @@ function splitDate(date) {
     }
 
     return newDate[1] + "/" + newDate[0] + "/" + newDate[2];
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem("DataTables_table");
+    localStorage.removeItem("filterValue");
+    localStorage.removeItem("uniqueRandomNumber");
 }
 
 // Display extra information for every movie
@@ -296,7 +327,7 @@ function format(data) {
         ulNew = (i === 1) ? "</ul></td><td class=\"secondTd\"><p>&nbsp;</p><ul>" : "";
 
         for (var j = 0; j < movieDetailsTempArrayDivideChild.length; j++) {
-            if (j === 0 && width > 767) text += ulNew;
+            if (j === 0 && width > 1290) text += ulNew;
 
             if (movieDetailsTempArrayDivideChild[j][1] !== "" && movieDetailsTempArrayDivideChild[j][1] !== "-") {
                 text += "<li>" + movieDetailsTempArrayDivideChild[j][0] + movieDetailsTempArrayDivideChild[j][1] + "</li>";
@@ -305,7 +336,7 @@ function format(data) {
         }
     }
 
-    if (liNumber % 2 !== 0 && width > 767) text += "<li>&nbsp;</li>";
+    if (liNumber % 2 !== 0 && width > 1290) text += "<li>&nbsp;</li>";
 
     text += "</ul></td></tr></table>";
 
@@ -335,7 +366,7 @@ function format(data) {
             var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
                 criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
 
-            if (j === 0 && width > 767) text += ulNew;
+            if (j === 0 && width > 1290) text += ulNew;
 
             switch (criticRatingNumber) {
                 case "1":
@@ -358,7 +389,7 @@ function format(data) {
                     break;
             }
 
-            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 767) text += liNew;
+            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 1290) text += liNew;
         }
     }
 
@@ -423,7 +454,6 @@ function tutorialHide() {
 
 // Main table function
 function mainTable(data) {
-
     // Get window height
     var height = $(window).height();
 
@@ -467,8 +497,8 @@ function mainTable(data) {
         columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
     }
 
-    // If width > 767, fix the last 3 columns
-    rightColumns = (width > 767) ? 3 : 0;
+    // If width > 1290, fix the last 3 columns
+    var rightColumns = (width > 1290) ? 3 : 0;
 
     // Set datatables data
     var data = {

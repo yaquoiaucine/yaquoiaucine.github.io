@@ -28,15 +28,18 @@
     <meta property="og:title" content="Y'a quoi au ciné ?" />
     <meta property="og:description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
 
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.bootstrap4.min.css">
-    <link rel="stylesheet" href="./assets/css/styles.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/fc-3.3.0/datatables.min.js"></script>
-    <script src="https://momentjs.com/downloads/moment.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/dayjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/plugin/isSameOrAfter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.35/plugin/isSameOrBefore.min.js"></script>
+    <script>dayjs.extend(window.dayjs_plugin_isSameOrAfter)</script>
+    <script>dayjs.extend(window.dayjs_plugin_isSameOrBefore)</script>
 
     <script src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
@@ -45,53 +48,56 @@
     <script src="./assets/js/datatables.js"></script>
 </head>
 
-<div id="loadingOverlay"></div>
-<figure id="loadingOverlayImg">
-    <img src="assets/pictures/homepageicon.png" alt="Chargement" />
-    <figcaption>Chargement...</figcaption>
-</figure>
-
 <body>
-    <div class="container">
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa fa-times-circle" aria-hidden="true"></i>
-                        </button>
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+
+    <div id="loadingOverlay"></div>
+    <figure id="loadingOverlayImg">
+        <img src="assets/pictures/homepageicon.png" alt="Chargement" />
+        <figcaption>Chargement<span class="one">.</span><span class="two">.</span><span class="three">.</span></figcaption>
+        <figcaption id="clearLocalStorage">Ça prend trop de temps ?<span>Cliquez ici</span></figcaption>
+    </figure>
+
+    <div class="mainContent">
+        <div class="container">
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                            </button>
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always" allow="autoplay"></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <h1>Y'a quoi au ciné ?</h1>
-    <p class="description"><i>"T'as vu quoi récemment ?", "C'est quoi le meilleur film au ciné ?", "Tu me recommandes quoi en ce moment ?"<br /></i> - Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma.<p>
-            <p id="info">
-              <i class="far fa-newspaper" title="Note de la presse"></i> <i> Note de la presse,</i>
-              <i class="fas fa-users" title="Note des spectateurs"></i> <i> Note des spectateurs,</i>
-              <i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i> <i> Moyenne de la presse et des spectateurs</i>
-            </p>
-            <table border="0" cellspacing="5" cellpadding="5">
-                <tbody>
-                    <tr class="dateRange">
-                        <td>Date de début :</td>
-                        <td><input type="text" id="min" name="min"></td>
-                    </tr>
-                    <tr class="dateRange">
-                        <td>Date de fin :</td>
-                        <td><input type="text" id="max" name="max"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div id="containerTable">
-                <table id="table" class="display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Titre du film</th>
-                            <th id="releaseDateColumn">Date de sortie</th>
+        <h1><a href="index.html">Y'a quoi au ciné ?</a></h1>
+        <p class="description"><i>"T'as vu quoi récemment ?", "C'est quoi le meilleur film au ciné ?", "Tu me recommandes quoi en ce moment ?"<br /></i> - Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma.<p>
+                <p id="info">
+                    <i class="far fa-newspaper" title="Note de la presse"></i> <i> Note de la presse,</i>
+                    <i class="fas fa-users" title="Note des spectateurs"></i> <i> Note des spectateurs,</i>
+                    <i class="fas fa-equals" title="Moyenne de la presse et des spectateurs"></i> <i> Moyenne de la presse et des spectateurs</i>
+                </p>
+                <table border="0" cellspacing="5" cellpadding="5">
+                    <tbody>
+                        <tr class="dateRange">
+                            <td>Date de début :</td>
+                            <td><input type="text" id="min" name="min"></td>
+                        </tr>
+                        <tr class="dateRange">
+                            <td>Date de fin :</td>
+                            <td><input type="text" id="max" name="max"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="containerTable">
+                    <table id="table" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Titre du film</th>
+                                <th id="releaseDateColumn">Date de sortie</th>

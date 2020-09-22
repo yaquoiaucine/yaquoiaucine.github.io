@@ -15,6 +15,7 @@ Chronic&#039;art.com,de Chronic'art.com,Ca
 Chronic&#039;art.com,de Chronic'art.com Contre,Ca2
 Cinéastes,de Cinéastes,Cin
 CinemaTeaser,de CinemaTeaser,CT
+CinemaTeaser,de CinemaTeaser Contre,CT2
 Cinopsis.com,de Cinopsis.com,Ci
 Cine Libre,de Cine Libre,CLi
 Ciné Live,de Ciné Live,CL
@@ -84,6 +85,7 @@ Libération,de Libération Contre,Li2
 MCinéma.com,de MCinéma.com,MCi
 MCinéma.com,de MCinéma.com Contre,MCi2
 Mad Movies,de Mad Movies,MM
+Mad Movies,de Mad Movies Contre,MM2
 Marianne,de Marianne,Ma
 Marie Claire,de Marie Claire,MC
 Marie Claire,de Marie Claire Contre,MC2
@@ -92,6 +94,7 @@ Metro,de Metro Contre,Me2
 Nice-Matin,de Nice-Matin,NM
 Novaplanet.com,de Novaplanet.com,No
 Obejctif-Cinema.com,d'Obejctif-Cinema.com,OC
+Obejctif-Cinema.com,d'Obejctif-Cinema.com Contre,OC2
 Ouest France,de Ouest France,OF
 Ouest France,de Ouest France Contre,OF2
 Ouirock.com,de Ouirock.com,Ou
@@ -120,6 +123,7 @@ Time Out Paris,de Time Out Paris,TO
 The Hollywood Reporter,de The Hollywood Reporter,HR
 Transfuge,de Transfuge,Tr
 TéléCinéObs,de TéléCinéObs,TC
+TéléCinéObs,de TéléCinéObs Contre,TC2
 Télé 2 semaines,de Télé 2 semaines,TS
 Télé 7 Jours,de Télé 7 Jours,TJ
 Télé Loisirs,de Télé Loisirs,TL
@@ -130,5 +134,6 @@ Urbuz,de Urbuz,Ur
 Variety,de Variety,Va
 Voici,de Voici,Vo
 VSD,de VSD,VSD
+VSD,de VSD Contre,VSD2
 aVoir-aLire.com,d'aVoir-aLire.com,VL
 Zurban,de Zurban,Zu

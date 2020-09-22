@@ -1,3 +1,6 @@
+// Table version
+var tableVersion = "1.01-20200922";
+
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
     var indexes = [];
@@ -43,9 +46,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
         .replace(/Charlie Hebdo2/g, "Charlie Hebdo Contre")
         .replace(/Chronic&#039;art.com2/g, "Chronic&#039;art.com Contre")
+        .replace(/CinemaTeaser2/g, "CinemaTeaser Contre")
         .replace(/Culturopoing.com2/g, "Culturopoing.com Contre")
-        .replace(/d&#039;Ecran Large2/g, "d&#039;Ecran Large Contre")
-        .replace(/d&#039;Elle2/g, "d&#039;Elle Contre")
+        .replace(/Ecran Large2/g, "Ecran Large Contre")
+        .replace(/Elle2/g, "Elle Contre")
         .replace(/L&#039;Ecran Fantastique2/g, "L&#039;Ecran Fantastique Contre")
         .replace(/L&#039;Express2/g, "L&#039;Express Contre")
         .replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre")
@@ -60,8 +64,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
         .replace(/MCinéma.com2/g, "MCinéma.com Contre")
+        .replace(/Mad Movies2/g, "Mad Movies Contre")
         .replace(/Marie Claire2/g, "Marie Claire Contre")
         .replace(/Metro2/g, "Metro Contre")
+        .replace(/Obejctif-Cinema.com2/g, "Objectif-Cinema.com Contre")
         .replace(/Ouest France2/g, "Ouest France Contre")
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
@@ -69,7 +75,10 @@ function replaceCriticsTitle(critic) {
         .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
         .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
+        .replace(/TéléCinéObs2/g, "TéléCinéObs Contre")
         .replace(/Télérama2/g, "Télérama Contre")
+        .replace(/VSD2/g, "VSD Contre")
+        .replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com")
         .replace(/&#039;/g, "'");
 }
 
@@ -98,6 +107,9 @@ function splitUp(arr, n) {
     return result;
 }
 
+var buttonYearTemp = new Date(),
+    buttonYear = buttonYearTemp.getFullYear();
+
 // Set inputs filter dates
 function setInputsDates(node) {
     $("*").removeClass("clickedFilter");
@@ -118,6 +130,19 @@ function setInputsDates(node) {
 
     todayStart = mmStart + "/" + ddStart + "/" + yyyyStart;
     todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd;
+
+    if (numberDays == buttonYear) {
+        todayStart = "1/1/" + buttonYear;
+    } else if (numberDays == buttonYear - 1) {
+        todayStart = "1/1/" + parseInt(buttonYear - 1);
+        todayEnd = "12/31/" + parseInt(buttonYear - 1);
+    } else if (numberDays == buttonYear - 2) {
+        todayStart = "1/1/" + parseInt(buttonYear - 2);
+        todayEnd = "12/31/" + parseInt(buttonYear - 2);
+    } else if (numberDays == buttonYear - 3) {
+        todayStart = "1/1/" + parseInt(buttonYear - 3);
+        todayEnd = "12/31/" + parseInt(buttonYear - 3);
+    }
 
     document.getElementById("min").value = todayStart;
     document.getElementById("max").value = todayEnd;
@@ -170,6 +195,12 @@ function splitDate(date) {
     }
 
     return newDate[1] + "/" + newDate[0] + "/" + newDate[2];
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem("DataTables_table");
+    localStorage.removeItem("filterValue");
+    localStorage.removeItem("uniqueRandomNumber");
 }
 
 // Display extra information for every movie
@@ -296,7 +327,7 @@ function format(data) {
         ulNew = (i === 1) ? "</ul></td><td class=\"secondTd\"><p>&nbsp;</p><ul>" : "";
 
         for (var j = 0; j < movieDetailsTempArrayDivideChild.length; j++) {
-            if (j === 0 && width > 767) text += ulNew;
+            if (j === 0 && width > 1290) text += ulNew;
 
             if (movieDetailsTempArrayDivideChild[j][1] !== "" && movieDetailsTempArrayDivideChild[j][1] !== "-") {
                 text += "<li>" + movieDetailsTempArrayDivideChild[j][0] + movieDetailsTempArrayDivideChild[j][1] + "</li>";
@@ -305,7 +336,7 @@ function format(data) {
         }
     }
 
-    if (liNumber % 2 !== 0 && width > 767) text += "<li>&nbsp;</li>";
+    if (liNumber % 2 !== 0 && width > 1290) text += "<li>&nbsp;</li>";
 
     text += "</ul></td></tr></table>";
 
@@ -335,7 +366,7 @@ function format(data) {
             var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
                 criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
 
-            if (j === 0 && width > 767) text += ulNew;
+            if (j === 0 && width > 1290) text += ulNew;
 
             switch (criticRatingNumber) {
                 case "1":
@@ -358,7 +389,7 @@ function format(data) {
                     break;
             }
 
-            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 767) text += liNew;
+            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 1290) text += liNew;
         }
     }
 
@@ -423,7 +454,6 @@ function tutorialHide() {
 
 // Main table function
 function mainTable(data) {
-
     // Get window height
     var height = $(window).height();
 
@@ -467,8 +497,8 @@ function mainTable(data) {
         columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
     }
 
-    // If width > 767, fix the last 3 columns
-    rightColumns = (width > 767) ? 3 : 0;
+    // If width > 1290, fix the last 3 columns
+    var rightColumns = (width > 1290) ? 3 : 0;
 
     // Set datatables data
     var data = {
@@ -2497,6 +2527,81 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[134]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[135]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[136]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[137]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[138]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
                 "render": function(data, type, row) {
                     var res = 0,
                         columnsKeyNameLength = 0;
@@ -2560,6 +2665,9 @@ function mainTable(data) {
         ],
         "dom": "Brtip",
         "stateSave": true,
+        "stateSaveParams": function(settings, data) {
+            data.search.search = "";
+        },
         "stateSaveCallback": function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
         },
@@ -2608,9 +2716,49 @@ function mainTable(data) {
                         }
                     },
                     {
+                        "text": "Les 90 derniers jours",
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", "90");
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + buttonYear,
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", buttonYear);
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 1),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 1));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 2),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 2));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
+                        "text": "En " + parseInt(buttonYear - 3),
+                        "action": function(e, dt, node, config) {
+                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 3));
+                            setInputsDates(node);
+                            table.draw();
+                        }
+                    },
+                    {
                         "text": "Depuis toujours",
                         "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "36500");
+                            window.localStorage.setItem("filterValue", "365000");
                             setInputsDates(node);
                             table.draw();
                         }
@@ -2645,11 +2793,8 @@ function mainTable(data) {
             {
                 "text": "Effacer les préférences",
                 "action": function(e, dt, node, config) {
-                    localStorage.removeItem("DataTables_table");
-                    localStorage.removeItem("filterValue");
-                    localStorage.removeItem("uniqueRandomNumber");
+                    clearLocalStorage();
                     window.location.reload(true);
-
                 }
             }
         ],
@@ -2666,9 +2811,23 @@ function mainTable(data) {
         },
         "initComplete": function(data) {
 
-            // Hide loading screen when table loaded
-            $("#loadingOverlay").fadeOut();
-            $("#loadingOverlayImg").fadeOut();
+            // If small width ignore span.sr-only
+            if (width <= 1290) {
+                $(".mainContent").css("visibility", "visible");
+                $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+                $("body").removeClass("noscroll");
+            }
+
+            // Set and/or retrieve table version
+            var localTableVersion = window.localStorage.getItem("tableVersion");
+
+            // If localTableVersion doesn't exist set it to current version
+            if (!localTableVersion) window.localStorage.setItem("tableVersion", tableVersion);
+
+            if (localTableVersion !== tableVersion) {
+                window.localStorage.setItem("tableVersion", tableVersion);
+                window.location.reload(true);
+            }
 
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
@@ -2686,10 +2845,6 @@ function mainTable(data) {
                 }
             });
 
-            var filterValue = window.localStorage.getItem("filterValue");
-
-            if (filterValue == 36500) table.ajax.url("https://yaquoiaucine.fr/assets/js/data.json").load();
-
             // Adjust column sizing and redraw
             table.columns.adjust().draw();
         }
@@ -2704,7 +2859,7 @@ function mainTable(data) {
         table.search($(this).val()).draw();
     });
 
-    if (width < 768) {
+    if (width <= 1290) {
         $(".fa-search").on("click", function() {
             if ($(".fa-twitter").hasClass("hideicon")) {
                 setTimeout(function() {
@@ -2733,15 +2888,14 @@ function mainTable(data) {
         });
     }
 
+    // Change font-size for really small devices
     if (width < 350) {
         $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
         $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
     }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-        localStorage.removeItem("DataTables_table");
-        localStorage.removeItem("filterValue");
-        localStorage.removeItem("uniqueRandomNumber");
+        clearLocalStorage();
         window.location.reload(true);
     };
 
@@ -2754,7 +2908,7 @@ function mainTable(data) {
 
             if (
                 (min == "" || max == "") ||
-                (moment(releaseDate).isSameOrAfter(min) && moment(releaseDate).isSameOrBefore(max))
+                (dayjs(releaseDate).isSameOrAfter(min) && dayjs(releaseDate).isSameOrBefore(max))
             ) {
                 return true;
             }
@@ -2787,6 +2941,7 @@ function mainTable(data) {
     $(".customButton, .periodListArrayButton").on("click", function(e) {
 
         var filterValue = window.localStorage.getItem("filterValue");
+
         switch (filterValue) {
             case "7":
                 var childNumber = 0;
@@ -2800,8 +2955,23 @@ function mainTable(data) {
             case "30":
                 var childNumber = 3;
                 break;
-            case "36500":
+            case "90":
                 var childNumber = 4;
+                break;
+            case String(buttonYear):
+                var childNumber = 5;
+                break;
+            case String(buttonYear - 1):
+                var childNumber = 6;
+                break;
+            case String(buttonYear - 2):
+                var childNumber = 7;
+                break;
+            case String(buttonYear - 3):
+                var childNumber = 8;
+                break;
+            case "365000":
+                var childNumber = 9;
                 break;
         }
 
@@ -2939,7 +3109,32 @@ var width = $(window).width(),
 
 if (uniqueRandomNumber === null) uniqueRandomNumber = [];
 
+if (width > 1290) {
+    $(document).arrive("div.DTFC_RightHeadWrapper table thead tr th.sorting_desc span.sr-only", function() {
+        // Adjust column width and hide loading overlay
+        $("div.DTFC_RightHeadWrapper").find("span.sr-only:eq(2)").click().click();
+        $(".mainContent").css("visibility", "visible");
+        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+        $("body").removeClass("noscroll");
+        Arrive.unbindAllArrive();
+    });
+}
+
 $(document).ready(function() {
+
+    // Disable scroll until loading is complet
+    $("body").addClass("noscroll");
+
+    setTimeout(function() {
+        $("figcaption#clearLocalStorage").css("display", "block");
+    }, 5000);
+
+    $("figcaption#clearLocalStorage span").on("click", function() {
+        clearLocalStorage();
+        $(".mainContent").css("visibility", "visible");
+        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+        Arrive.unbindAllArrive();
+    });
 
     var filterValue = window.localStorage.getItem("filterValue");
 
@@ -2947,7 +3142,6 @@ $(document).ready(function() {
 
     setInputsDates();
 
-    // If width > 1290
     if (width > 1290) {
 
         // Display movies quotes
@@ -3002,6 +3196,14 @@ $(document).ready(function() {
         }
     });
 
+    $("#myModal").on("show.bs.modal", function(e) {
+        $("body, .modal").addClass("noscroll");
+    });
+
+    $("#myModal").on("hide.bs.modal", function(e) {
+        $("body, .modal").removeClass("noscroll");
+    });
+
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
@@ -3009,10 +3211,16 @@ $(document).ready(function() {
 
         if (e.target.id === "overlay") tutorialHide();
 
-        if (elementClass === "modal fade") $("#video").prop("src", "");
+        if (elementClass === "modal fade" || elementClass === "fa fa-times-circle") $("#video").prop("src", "");
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
     });
+
+    function keyPress(e) {
+        if (e.key === "Escape") {
+            $("#video").prop("src", "");
+        }
+    }
 
     $(window).scroll(function() {
         if ($(this).scrollTop() > 10) {
