@@ -35,6 +35,7 @@ if [ $diffjs -eq 0 ] && [ $diffhtml -eq 0 ]; then
   rm -f ./assets/js/data.json
   rm -f ./assets/js/critics.json
   rm -f ./temp*
+  rm -f ./log*
   rm -f ./assets/sh/critics*.txt
   git add . && git commit -m "$commit" && git push
 else

@@ -12,7 +12,8 @@ a {
     -webkit-text-size-adjust: none;
 }
 
-body.noscroll {
+body.noscroll,
+iframe.noscroll {
     overflow: hidden;
 }
 
@@ -47,6 +48,32 @@ ul {
     list-style: none;
     padding: 0;
     margin: 8px;
+}
+
+.ui-widget-content {
+    border: none;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    background: rgba(25, 25, 25, 1);
+    color: #fff;
+    padding-top: 3px;
+    width: 115px;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0 5px 5px 0;
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: none;
+    background: #28a745;
+    color: #fff;
 }
 
 .dateRange {
@@ -304,11 +331,17 @@ input[type=text]::placeholder {
     color: #28a745;
 }
 
-tbody>tr>td>p a {
+tbody>tr>td>p a,
+#showtimesInfo>p a {
     background-color: rgba(25, 25, 25, 1);
     text-decoration: none;
     cursor: pointer;
     color: #fff;
+}
+
+#showtimesInfo>p {
+    max-width: 500px;
+    white-space: normal;
 }
 
 table.dataTable.display tbody td.highlightElement,
@@ -437,7 +470,7 @@ table.DTFC_Cloned tr,
 }
 
 .modal-content {
-    margin: 20px;
+    margin: 15px;
 }
 
 .modal.noscroll {
@@ -446,7 +479,7 @@ table.DTFC_Cloned tr,
 
 .close {
     position: absolute;
-    right: -4px;
+    right: -8px;
     top: -42px;
     z-index: 9999;
     font-size: 2rem;
@@ -461,7 +494,7 @@ table.DTFC_Cloned tr,
 
 .close>.fa-times-circle::after {
     position: absolute;
-    content: '';
+    content: "";
     background: #fff;
     z-index: -1;
     top: 1px;
@@ -480,6 +513,37 @@ div.DTFC_RightHeadWrapper table {
     background-color: transparent;
 }
 
+#credits {
+    background-color: #000;
+    position: fixed;
+    padding: 8px 0;
+    width: 899px;
+    bottom: 0;
+    margin: 0;
+    border-top: 1px solid rgba(40, 167, 69, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#zipCodeInput {
+    visibility: hidden;
+    width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#zipCodeInput.expanded {
+    visibility: visible;
+    width: 115px;
+    margin: 0 0 0 5px;
+}
+
+#dateValue,
+#zipCodeValue {
+    color: #fff;
+}
+
 @media (max-width:1290px) {
 
     #detailsTable,
@@ -492,22 +556,17 @@ div.DTFC_RightHeadWrapper table {
         width: 100%;
     }
 
-    tbody>tr>td>p {
-        font-size: 13px;
-    }
-
     #loading h2 {
         font-size: 14px;
     }
 
-    .critic {
+    .critic,
+    #quotes {
         display: none;
     }
 
     #credits {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        width: 100%;
     }
 
     #inputSearchSpan {
@@ -546,8 +605,30 @@ div.DTFC_RightHeadWrapper table {
     }
 
     tbody>tr>td>p,
-    .td_picture {
+    .td_picture,
+    .hover_td_picture {
         width: 223px;
+    }
+
+    .hover_td_picture {
+        position: absolute;
+        top: -91px;
+        left: 360px;
+        border: 2px solid #fff;
+        z-index: 2;
+    }
+
+    .arrow {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 37px;
+        right: 538px;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #fff;
     }
 
     tbody>tr>td>p {
@@ -578,15 +659,6 @@ div.DTFC_RightHeadWrapper table {
     }
 }
 
-#credits {
-    background-color: #000;
-    position: fixed;
-    padding: 8px 0;
-    width: 100%;
-    bottom: 0;
-    margin: 0;
-}
-
 #leftSpan {
     margin-left: 8px;
 }
@@ -596,7 +668,10 @@ div.DTFC_RightHeadWrapper table {
     margin: 0 15px 0 5px;
 }
 
-#leftSpan>a:hover {
+#leftSpan>a:hover,
+#showtimesInfo>p a:hover,
+#zipcodeLink:hover,
+#defaultDate:hover {
     text-decoration: underline;
 }
 

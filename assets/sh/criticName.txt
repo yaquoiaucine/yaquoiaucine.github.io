@@ -37,6 +37,7 @@ Femme Actuelle,de Femme Actuelle,FA
 FHM,de FHM,FHM
 Filmsactu,de Filmsactu,Fi
 Fluctuat.net,de Fluctuat.net,Fl
+France-Observateur,de France-Observateur,FO
 France Soir,de France Soir,FS
 Gala,de Gala,Ga
 GQ,de GQ,GQ
@@ -75,6 +76,7 @@ Le Point,du Point Contre,LP2
 Le Quotidien de Paris,du Quotidien de Paris,QP
 Le Soir,du Soir,LS
 Les Echos,des Echos,LE
+Les Echos,des Echos Contre,LE2
 Les Fiches du Cinéma,des Fiches du Cinéma,FC
 Les Fiches du Cinéma,des Fiches du Cinéma Contre,FC2
 Les Inrockuptibles,des Inrockuptibles,In
@@ -108,8 +110,10 @@ Première,de Première Contre,Pr2
 Public,de Public,Pu
 Repérages,de Repérages,Re
 Rolling Stone,de Rolling Stone,RS
+Rolling Stone,de Rolling Stone Contre,RS2
 Score,de Score,Sc
 Starfix,de Starfix,Sx
+Starfix,de Starfix Contre,Sx2
 Studio Ciné Live,de Studio Ciné Live,St
 Studio Ciné Live,de Studio Ciné Live Contre,St2
 Studio Magazine,de Studio Magazine,SM
@@ -137,3 +141,4 @@ VSD,de VSD,VSD
 VSD,de VSD Contre,VSD2
 aVoir-aLire.com,d'aVoir-aLire.com,VL
 Zurban,de Zurban,Zu
+Zurban,de Zurban Contre,Zu2

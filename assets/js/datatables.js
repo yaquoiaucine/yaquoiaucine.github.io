@@ -1,5 +1,5 @@
 // Table version
-var tableVersion = "1.01-20200922";
+var tableVersion = "1.01-20201104";
 
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
@@ -60,6 +60,7 @@ function replaceCriticsTitle(critic) {
         .replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre")
         .replace(/Le Parisien2/g, "Le Parisien Contre")
         .replace(/Le Point2/g, "Le Point Contre")
+        .replace(/Les Echos2/g, "Les Echos Contre")
         .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
         .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
@@ -72,12 +73,15 @@ function replaceCriticsTitle(critic) {
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
         .replace(/Première2/g, "Première Contre")
+        .replace(/Rolling Stone2/g, "Rolling Stone Contre")
+        .replace(/Starfix2/g, "Starfix Contre")
         .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
         .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
         .replace(/TéléCinéObs2/g, "TéléCinéObs Contre")
         .replace(/Télérama2/g, "Télérama Contre")
         .replace(/VSD2/g, "VSD Contre")
+        .replace(/Zurban2/g, "Zurban Contre")
         .replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com")
         .replace(/&#039;/g, "'");
 }
@@ -201,10 +205,76 @@ function clearLocalStorage() {
     localStorage.removeItem("DataTables_table");
     localStorage.removeItem("filterValue");
     localStorage.removeItem("uniqueRandomNumber");
+    localStorage.removeItem("zipCode");
+}
+
+var arrayHeight = new Array();
+
+function getAllBefore(current) {
+    var i = arrayHeight.indexOf(current) + 1;
+
+    return i > -1 ? arrayHeight.slice(0, i) : [];
+}
+
+function hoverFormat(data) {
+    var text = "<table id=\"hoverDetailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><span class=\"arrow\"></span><img class=\"hover_td_picture\" src=\"" + data.picture + "\"></td>" +
+        "</tr></table>";
+
+    return text;
+}
+
+function autoComplete() {
+    if (document.getElementById("zipCodeInput").value != "") {
+        $.getJSON("https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/localization_city/" + document.getElementById("zipCodeInput").value, function(data) {
+            var autoComplete = [];
+            data = data.values.cities;
+
+            for (var i = 0; i < data.length; i++) {
+                if (i < 10) {
+                    autoComplete.push(data[i].node.name);
+                }
+            }
+
+            $("#zipCodeInput").autocomplete({
+                source: autoComplete
+            });
+        });
+    }
+};
+
+function filterValueFunction() {
+    var filterValue = window.localStorage.getItem("filterValue");
+
+    if (!filterValue) {
+        window.localStorage.setItem("filterValue", "7");
+        var zipCode = window.localStorage.getItem("filterValue");
+    }
+
+    if (filterValue == "7") {
+        dateValue = "Les 7 derniers jours";
+    } else if (filterValue == "14") {
+        dateValue = "Les 2 dernières semaines";
+    } else if (filterValue == "21") {
+        dateValue = "Les 3 dernières semaines";
+    } else if (filterValue == "30") {
+        dateValue = "Les 30 derniers jours";
+    } else if (filterValue == "90") {
+        dateValue = "Les 90 derniers jours";
+    } else if (parseInt(filterValue) > 2000 && parseInt(filterValue) < 2050) {
+        dateValue = "En " + filterValue;
+    } else {
+        dateValue = "Depuis toujours";
+    }
+
+    $("#dateValue").text(dateValue);
 }
 
 // Display extra information for every movie
 function format(data) {
+    var zipCode = window.localStorage.getItem("zipCode");
+
     var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-keyboard=\"true\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
@@ -298,6 +368,11 @@ function format(data) {
     }
 
     text += "</td></tr></table>";
+
+    text += "<table id=\"showtimesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><span><p><strong>Séances à proximité de : " + zipCode + "</strong></p></span>" +
+        "<span id=\"showtimesInfo\"></span></td></tr></table>";
 
     if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
@@ -2602,6 +2677,81 @@ function mainTable(data) {
             },
             {
                 "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[139]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[140]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[141]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[142]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
+                "className": "critic",
+                "render": function(data, type, row) {
+                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[143]];
+
+                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
+                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
+                    } else {
+                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
+                    }
+
+                    return res;
+                }
+            },
+            {
+                "data": null,
                 "render": function(data, type, row) {
                     var res = 0,
                         columnsKeyNameLength = 0;
@@ -2807,7 +2957,9 @@ function mainTable(data) {
         "info": false,
         "destroy": true,
         "language": {
-            "emptyTable": "Chargement, veuillez patienter..."
+            "emptyTable": "Chargement, veuillez patienter...",
+            "infoEmpty": "Aucun film correspondant, veuillez réessayer...",
+            "zeroRecords": "Aucun film correspondant, veuillez réessayer..."
         },
         "initComplete": function(data) {
 
@@ -2939,6 +3091,7 @@ function mainTable(data) {
     var increment = 0;
 
     $(".customButton, .periodListArrayButton").on("click", function(e) {
+        $("button.dt-button").on("click", filterValueFunction);
 
         var filterValue = window.localStorage.getItem("filterValue");
 
@@ -3009,7 +3162,7 @@ function mainTable(data) {
                 $(e.target).is(".dt-button.buttons-columnVisibility") ||
                 $(e.target).is('div[role="menu"]')) {
 
-                if (!$(".customButton").hasClass("customButtonSubmit")) {
+                if (!$(".customButton").hasClass("customButtonSubmit") && $(e.target).parent().attr("class") != "dt-button-collection four-column") {
                     $(".customButton").addClass("customButtonSubmit");
                     $(".customButton span").html("Valider la sélection ?");
                     $(".customButton").addClass("pulse");
@@ -3138,7 +3291,19 @@ $(document).ready(function() {
 
     var filterValue = window.localStorage.getItem("filterValue");
 
-    if (!filterValue) window.localStorage.setItem("filterValue", "7");
+    if (!filterValue) {
+        window.localStorage.setItem("filterValue", "7");
+        var zipCode = window.localStorage.getItem("filterValue");
+    }
+
+    filterValueFunction();
+
+    var zipCode = window.localStorage.getItem("zipCode");
+    if (!zipCode) {
+        window.localStorage.setItem("zipCode", "Paris");
+        var zipCode = window.localStorage.getItem("zipCode");
+    }
+    $("#zipCodeValue").text(zipCode);
 
     setInputsDates();
 
@@ -3158,10 +3323,63 @@ $(document).ready(function() {
         });
 
         window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
+
+        $("#table").on("mouseover", "td.noVis", function(e) {
+            $("table#hoverDetailsTable").remove();
+
+            // Get DataTable API instance
+            var table = $("#table").DataTable(),
+                tr = $(this).closest("tr"),
+                row = table.row(tr),
+                previousSiblingClass = $(e.target).prev().attr("class"),
+                parentHoverClass = $(e.target).parent().attr("class"),
+                trIndex = parseInt(tr.index()),
+                trShownIndex = parseInt($(this).parent().prevAll("tr.odd.shown:first, tr.even.shown:first").index("tr.odd.shown, tr.even.shown")),
+                trOddHeight = parseInt($('tr.odd[role="row"]').css("height")),
+                trHeight = parseInt($('tr[role="row"]').css("height")),
+                trShownHeight = $(this).parent().prevAll("tr.odd.shown:first, tr.even.shown:first").next().height();
+
+            if (previousSiblingClass == " details" && (parentHoverClass == "odd" || parentHoverClass == "even")) {
+                if (trShownHeight > 100) {
+                    arrayHeight.splice(trShownIndex, 1, trShownHeight);
+
+                    newTrShownHeight = getAllBefore(trShownHeight);
+                    newSumTrShownHeightTemp = newTrShownHeight.reduce((a, b) => a + b, 0);
+                    newSumTrShownHeight = newSumTrShownHeightTemp - ((trShownIndex + 1) * trOddHeight);
+
+                    $(".dataTables_scroll").append(hoverFormat(row.data()));
+                    $("table#hoverDetailsTable").find("span").css("top", trIndex * trOddHeight + 37 + newSumTrShownHeight);
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 + newSumTrShownHeight);
+                } else {
+                    $(".dataTables_scroll").append(hoverFormat(row.data()));
+                    $("table#hoverDetailsTable").find("span").css("top", trIndex * trOddHeight + 37);
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5);
+                }
+
+                if (tr.is(":nth-last-child(1)")) {
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 4));
+                }
+                if (tr.is(":nth-last-child(2)")) {
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 3));
+                }
+                if (tr.is(":nth-last-child(3)")) {
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 2));
+                }
+                if (tr.is(":nth-last-child(4)")) {
+                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 1));
+                }
+            }
+        });
+
+        $("#table").on("mouseleave", "td.noVis", function() {
+            $("table#hoverDetailsTable").remove();
+        });
     }
 
     // Display movie details
     $("#table").on("click", "td.details, td.noVis", function() {
+        if ($("table#hoverDetailsTable").length > 0) $("table#hoverDetailsTable").remove();
+
         setTimeout(function() {
             var dataTables_scrollBody = $("div.dataTables_scrollBody").height();
             $("div.DTFC_RightBodyWrapper").height(dataTables_scrollBody);
@@ -3188,6 +3406,77 @@ $(document).ready(function() {
             });
         }
 
+        const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        const localization_city_url = "https://www.allocine.fr/_/localization_city/";
+        const showtimes_url = "https://www.allocine.fr/_/showtimes/movie-";
+        const postalCode = window.localStorage.getItem("zipCode");
+        var html = "";
+
+        var getPostalCode = async () => {
+            var requestAllocineCities = await fetch(proxyurl + localization_city_url + postalCode);
+            var data = await requestAllocineCities.json();
+
+            return data.values.cities[0].node.id;
+        };
+
+        var getTheaterInfo = async () => {
+            var cityId = await getPostalCode();
+            var url = row.data().url;
+            var movieId = url.substring(
+                url.lastIndexOf("=") + 1,
+                url.lastIndexOf(".")
+            );
+
+            var requestAllocineShowtimes = await fetch(proxyurl + showtimes_url + movieId + "/near-" + cityId + "/d-0/");
+            var dataAllocine = await requestAllocineShowtimes.json();
+            var results = dataAllocine.results;
+
+            if (results.length > 0) {
+                for (var i = 0; i < results.length; i++) {
+                    if (i < 5) {
+                        html += "<p>Cinéma : <a href=\"https://www.allocine.fr/seance/salle_gen_csalle=" + results[i].theater.internalId + ".html\" target=\"_blank\">" + results[i].theater.name +
+                            "</a><br />Adresse : <a href=\"http://maps.google.com/maps?q=" + results[i].theater.location.address + " " + results[i].theater.location.city + "\" target=\"_blank\">" + results[i].theater.location.address + " à " + results[i].theater.location.city +
+                            "</a><br />Horaires pour aujourd'hui : ";
+
+                        for (var j = 0; j < results[i].showtimes.multiple.length; j++) {
+                            var startsAt = results[i].showtimes.multiple[j].startsAt.substring(
+                                results[i].showtimes.multiple[j].startsAt.lastIndexOf("T") + 1,
+                                results[i].showtimes.multiple[j].startsAt.lastIndexOf(":")
+                            )
+
+                            var d = new Date();
+                            var m = d.getMinutes();
+                            var h = d.getHours();
+                            if (h == "0") h = 24;
+                            var currentTime = h + "." + m;
+
+                            var time = startsAt.split(":");
+                            var hour = time[0];
+                            var min = time[1];
+                            var inputTime = hour + "." + min;
+
+                            var totalTime = currentTime - inputTime;
+
+                            if (results[i].showtimes.multiple[j].data.ticketing.length > 0 && results[i].showtimes.multiple[j].data.ticketing[0].urls[0] !== "" && totalTime < 0) {
+                                html += "<a href=\"" + results[i].showtimes.multiple[j].data.ticketing[0].urls + "\" target=\"_blank\">" + startsAt + "</a> / ";
+                            } else {
+                                html += startsAt + " / ";
+                            }
+                        }
+
+                        html = html.replace(/\s\/\s*$/, "");
+                        html += "</p>";
+                    }
+                }
+            } else {
+                html += "<p>Aucunes séances à proximité de : " + postalCode + "</p>"
+            }
+
+            $(this).parent().next().find("span#showtimesInfo").html(html);
+        };
+
+        getTheaterInfo();
+
         if ($(this).parent().next().find(".secondTd").find("ul").text() === "") $(this).parent().next().find(".secondTd").remove();
         if ($(this).parent().next().find(".secondTd").find("li").text() === " ") $(this).parent().next().find(".secondTd").remove();
         if ($(this).parent().next().find(".secondTd").prev().find("li").length === 0) {
@@ -3204,6 +3493,26 @@ $(document).ready(function() {
         $("body, .modal").removeClass("noscroll");
     });
 
+    $("#zipcodeLink").on("click", function() {
+        $("#zipCodeInput").toggleClass("expanded");
+        document.getElementById("zipCodeInput").focus();
+    });
+
+    $("#defaultDate").on("click", function(e) {
+        $("button.periodListArrayButton").click();
+        if (e) e.stopPropagation();
+    });
+
+    $("#zipCodeInput").on("change paste keyup", function() {
+        if (event.key === "Enter") {
+            var input = document.getElementById("zipCodeInput").value;
+            window.localStorage.setItem("zipCode", input);
+            window.location.reload(true);
+        } else {
+            autoComplete();
+        }
+    });
+
     $(".tutorial").on("click", tutorialShow);
 
     $("body").on("click", function(e) {
@@ -3215,12 +3524,6 @@ $(document).ready(function() {
         if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
         if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
     });
-
-    function keyPress(e) {
-        if (e.key === "Escape") {
-            $("#video").prop("src", "");
-        }
-    }
 
     $(window).scroll(function() {
         if ($(this).scrollTop() > 10) {

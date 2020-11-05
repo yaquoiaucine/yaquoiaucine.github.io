@@ -1,5 +1,5 @@
 # Y'a quoi au ciné ?
 
-![homepage](https://user-images.githubusercontent.com/1529169/92334532-334e9900-f08f-11ea-97c4-5a4aaeea08a4.png)
+![homepagepreview](https://user-images.githubusercontent.com/1529169/93860341-41bbc800-fcbf-11ea-9ec8-23b489d4a083.png)
 
 https://yaquoiaucine.fr

@@ -2,11 +2,15 @@
 echo "{\"data\":[{" > ./assets/js/data.json
 
 # Define Allociné baseUrl
-baseUrl=http://www.allocine.fr/film/aucinema/
+baseUrl=https://www.allocine.fr/film/aucinema/
 curl -s $baseUrl > temp
 
 # Get Allociné baseUrl movies number
 moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
+
+# Debug
+# moviesNumber=1
+
 if [ $moviesNumber -lt 15 ]; then
   # Define Allociné baseUrl pages number to 1
   pagesNumber=1
@@ -48,16 +52,20 @@ do
 
     # Get Allociné movie url
     url=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4)
-    curl -s http://www.allocine.fr$url > temp2
+
+    # Debug
+    # url="/film/fichefilm_gen_cfilm=XXXXX.html"
+
+    curl -s https://www.allocine.fr$url > temp2
     completeUrl=https://www.allocine.fr$url
     echo "\"url\": \"$completeUrl\"," >> ./assets/js/data.json
 
     # Extract movie title
-    title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/')
+    title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/' | sed 's/[[:blank:]]*$//')
     echo "\"title\": \"$title\"," >> ./assets/js/data.json
 
     # Extract movie picture
-    picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4 | sed 's/http/https/')
+    picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4)
     echo "\"picture\": \"$picture\"," >> ./assets/js/data.json
 
     # Extract movie date and link
@@ -220,8 +228,11 @@ do
 
     # Extract video player link
     movieId=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4 | cut -d'=' -f2 | cut -d'.' -f1)
-    curl -s http://www.allocine.fr/videos/fichefilm-$movieId/toutes/ > temp3
-    curl -s http://www.allocine.fr/film/fichefilm-$movieId/critiques/presse/ > temp4
+    curl -s https://www.allocine.fr/videos/fichefilm-$movieId/toutes/ > temp3
+    curl -s https://www.allocine.fr/film/fichefilm-$movieId/critiques/presse/ > temp4
+
+    # Debug
+    # curl -s https://www.allocine.fr/film/fichefilm-XXXXX/critiques/presse/ > temp4
 
     movieTrailerId=$(cat temp3 | grep -m1 "<a class=\"meta-title-link\" href=\"/video/player_gen_cmedia=" | cut -d'=' -f4 | cut -d'&' -f1)
     if [ ! -z $movieTrailerId ]; then
@@ -245,16 +256,18 @@ do
 
       criticName=$(echo $criticName | cut -d',' -f1)
       criticNameFirst=$(echo $criticName | cut -d',' -f1)
-      criticRatingNumber=$(cat temp2 | grep "js-anchor-link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
+      criticRatingNumber=$(cat temp4 | grep "js-anchor-link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
 
       if [ "$criticNameFirst" != "$criticNameTemp" ]; then
         if [ $criticRatingNumber -gt 0 ]; then
           for k in $( eval echo {1..$criticRatingNumber} )
           do
-          criticRating=$(cat temp2 | grep -m$k "js-anchor-link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
-          if [ $k -gt 1 ]; then
-            criticName="$criticName$k"
-          fi
+          criticRating=$(cat temp4 | grep -m$k "js-anchor-link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
+
+            if [ $k -gt 1 ]; then
+              criticNameTemp="$criticName"
+              criticName="$criticName$k"
+            fi
 
             case $criticRating in
               "Chef-d&#039;oeuvre")
@@ -276,6 +289,11 @@ do
                 echo "\"$criticName\": \"\"," >> ./assets/js/data.json
                 ;;
             esac
+
+            if [ $k -gt 1 ]; then
+              criticName="$criticNameTemp"
+            fi
+
           done
         fi
       fi
@@ -301,7 +319,7 @@ do
     echo "\"distributeur\": \"$distributeur\"," >> ./assets/js/data.json
 
     # Extract recompenses
-    recompenses=$(cat temp2 | grep -A2 "<span class=\"what light\">Récompenses<\/span>" | tail -1 | sed 's/^ *//')
+    recompenses=$(cat temp2 | grep -A2 "<span class=\"what light\">Récompense*<\/span>" | tail -1 | sed 's/^ *//')
     echo "\"recompenses\": \"$recompenses\"," >> ./assets/js/data.json
 
     echo "}," >> ./assets/js/data.json

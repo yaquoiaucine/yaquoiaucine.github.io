@@ -1,5 +1,5 @@
 // Table version
-var tableVersion="1.01-20200922";
+var tableVersion="1.01-20201104";
 
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
@@ -60,6 +60,7 @@ function replaceCriticsTitle(critic) {
         .replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre")
         .replace(/Le Parisien2/g, "Le Parisien Contre")
         .replace(/Le Point2/g, "Le Point Contre")
+        .replace(/Les Echos2/g, "Les Echos Contre")
         .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
         .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
         .replace(/Libération2/g, "Libération Contre")
@@ -72,12 +73,15 @@ function replaceCriticsTitle(critic) {
         .replace(/Paris Match2/g, "Paris Match Contre")
         .replace(/Positif2/g, "Positif Contre")
         .replace(/Première2/g, "Première Contre")
+        .replace(/Rolling Stone2/g, "Rolling Stone Contre")
+        .replace(/Starfix2/g, "Starfix Contre")
         .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
         .replace(/Studio Magazine2/g, "Studio Magazine Contre")
         .replace(/Sud Ouest2/g, "Sud Ouest Contre")
         .replace(/TéléCinéObs2/g, "TéléCinéObs Contre")
         .replace(/Télérama2/g, "Télérama Contre")
         .replace(/VSD2/g, "VSD Contre")
+        .replace(/Zurban2/g, "Zurban Contre")
         .replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com")
         .replace(/&#039;/g, "'");
 }
@@ -201,10 +205,76 @@ function clearLocalStorage() {
     localStorage.removeItem("DataTables_table");
     localStorage.removeItem("filterValue");
     localStorage.removeItem("uniqueRandomNumber");
+    localStorage.removeItem("zipCode");
+}
+
+var arrayHeight = new Array();
+
+function getAllBefore(current) {
+    var i = arrayHeight.indexOf(current) + 1;
+
+    return i > -1 ? arrayHeight.slice(0, i) : [];
+}
+
+function hoverFormat(data) {
+    var text = "<table id=\"hoverDetailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><span class=\"arrow\"></span><img class=\"hover_td_picture\" src=\"" + data.picture + "\"></td>" +
+        "</tr></table>";
+
+    return text;
+}
+
+function autoComplete() {
+    if (document.getElementById("zipCodeInput").value != "") {
+        $.getJSON("https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/localization_city/" + document.getElementById("zipCodeInput").value, function(data) {
+            var autoComplete = [];
+            data = data.values.cities;
+
+            for (var i = 0; i < data.length; i++) {
+                if (i < 10) {
+                    autoComplete.push(data[i].node.name);
+                }
+            }
+
+            $("#zipCodeInput").autocomplete({
+                source: autoComplete
+            });
+        });
+    }
+};
+
+function filterValueFunction() {
+    var filterValue = window.localStorage.getItem("filterValue");
+
+    if (!filterValue) {
+        window.localStorage.setItem("filterValue", "7");
+        var zipCode = window.localStorage.getItem("filterValue");
+    }
+
+    if (filterValue == "7") {
+        dateValue = "Les 7 derniers jours";
+    } else if (filterValue == "14") {
+        dateValue = "Les 2 dernières semaines";
+    } else if (filterValue == "21") {
+        dateValue = "Les 3 dernières semaines";
+    } else if (filterValue == "30") {
+        dateValue = "Les 30 derniers jours";
+    } else if (filterValue == "90") {
+        dateValue = "Les 90 derniers jours";
+    } else if (parseInt(filterValue) > 2000 && parseInt(filterValue) < 2050) {
+        dateValue = "En " + filterValue;
+    } else {
+        dateValue = "Depuis toujours";
+    }
+
+    $("#dateValue").text(dateValue);
 }
 
 // Display extra information for every movie
 function format(data) {
+    var zipCode = window.localStorage.getItem("zipCode");
+
     var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
         "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-keyboard=\"true\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
@@ -298,6 +368,11 @@ function format(data) {
     }
 
     text += "</td></tr></table>";
+
+    text += "<table id=\"showtimesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
+        "<tr role=\"row\">" +
+        "<td><span><p><strong>Séances à proximité de : " + zipCode + "</strong></p></span>" +
+        "<span id=\"showtimesInfo\"></span></td></tr></table>";
 
     if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
         "<tr role=\"row\">" +
