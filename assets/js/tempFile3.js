@@ -191,8 +191,7 @@
             {
                 "text": "Effacer les préférences",
                 "action": function(e, dt, node, config) {
-                    clearLocalStorage();
-                    window.location.reload(true);
+                    clearLocalStorage(this);
                 }
             }
         ],
@@ -224,10 +223,37 @@
             // If localTableVersion doesn't exist set it to current version
             if (!localTableVersion) window.localStorage.setItem("tableVersion", tableVersion);
 
-            if (localTableVersion !== tableVersion) {
+            if (localTableVersion != tableVersion) {
                 window.localStorage.setItem("tableVersion", tableVersion);
-                window.location.reload(true);
+                clearLocalStorage(this);
             }
+
+            $("*").on("click", function(e) {
+              if ($(e.target).attr("class") != "customButton" && $("button.deactivate").length > 0) $("button.deactivate").remove();
+            });
+
+            $("button.customButton").on("click", function(e) {
+                if ($("button.deactivate").length == 0) {
+                    $("<button class=\"dt-button buttons-collection deactivate\" tabindex=\"0\" aria-controls=\"table\" type=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\"><span>Désélectionner toutes les notes</span></button>").insertBefore('div[role="menu"] button:first-child');
+                }
+
+                $("button.deactivate").on("click", function() {
+                    $(".mainContent").css("visibility", "hidden");
+                    $("#loadingOverlay, #loadingOverlayImg").css("display", "block");
+                    $("body").addClass("noscroll");
+                    $("#loadingOverlayImg figcaption#clearLocalStorage").html("Votre sélection est en cours<br>de mise à jour, veuillez patienter.")
+
+                    setTimeout(function() {
+                        $(".dt-button.buttons-columnVisibility.active").click();
+                    }, 100);
+
+                    setTimeout(function() {
+                        $(".mainContent").css("visibility", "visible");
+                        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
+                        $("body").removeClass("noscroll");
+                    }, 100);
+                });
+            });
 
             // Hide columns with no data
             table.columns(".critic").every(function(index) {
@@ -295,8 +321,8 @@
     }
 
     $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-        clearLocalStorage();
-        window.location.reload(true);
+        window.localStorage.setItem("tableVersion", tableVersion);
+        clearLocalStorage(this);
     };
 
     // Extend dataTables search
@@ -376,7 +402,13 @@
                 break;
         }
 
-        if (!$(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").hasClass("clickedFilter")) $(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
+        if ($(".periodListArrayButton").next().attr("class") == "dt-button buttons-collection buttons-colvis customButton") {
+          var dtbuttonChild = $(".periodListArrayButton").next().next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
+        }
+        else {
+          dtbuttonChild = $(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
+        }
+        if (!$(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").hasClass("clickedFilter")) dtbuttonChild;
 
         // Add margin top
         $(".dt-button-collection.four-column").css("margin-top", "5px");
@@ -530,8 +562,8 @@ $(document).ready(function() {
         $("figcaption#clearLocalStorage").css("display", "block");
     }, 5000);
 
-    $("figcaption#clearLocalStorage span").on("click", function() {
-        clearLocalStorage();
+    $("figcaption#clearLocalStorage span").on("click", function(e) {
+        clearLocalStorage(e);
         $(".mainContent").css("visibility", "visible");
         $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
         Arrive.unbindAllArrive();

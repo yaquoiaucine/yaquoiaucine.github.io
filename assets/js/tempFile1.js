@@ -1,5 +1,5 @@
 // Table version
-var tableVersion="1.01-20201104";
+var tableVersion="1.01-20201121";
 
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
@@ -201,11 +201,30 @@ function splitDate(date) {
     return newDate[1] + "/" + newDate[0] + "/" + newDate[2];
 }
 
-function clearLocalStorage() {
-    localStorage.removeItem("DataTables_table");
-    localStorage.removeItem("filterValue");
-    localStorage.removeItem("uniqueRandomNumber");
-    localStorage.removeItem("zipCode");
+function clearLocalStorage(e) {
+    if ($(e.target).parent().attr("id") == "clearLocalStorage") {
+        var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
+
+        if (datatablesData) {
+            var validKeys = ["columns"];
+            Object.keys(datatablesData).forEach((key) => validKeys.includes(key) || delete datatablesData[key]);
+        }
+    } else if ($(e).attr("class") == "display dataTable no-footer") {
+        var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
+
+        if (datatablesData) {
+            var validKeys = ["columns"];
+            Object.keys(datatablesData).forEach((key) => validKeys.includes(key) || delete datatablesData[key]);
+        }
+
+        window.location.reload(true);
+    } else {
+        localStorage.removeItem("DataTables_table");
+        localStorage.removeItem("filterValue");
+        localStorage.removeItem("uniqueRandomNumber");
+        localStorage.removeItem("zipCode");
+        window.location.reload(true);
+    };
 }
 
 var arrayHeight = new Array();
