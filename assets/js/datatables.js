@@ -1,161 +1,146 @@
 // Table version
-var tableVersion = "1.01-20201121";
+var tableVersion = "1.1-20201229"
+
+// Get current date year
+var buttonYearTemp = new Date,
+    buttonYear = buttonYearTemp.getFullYear()
+
+// Define main numbers columns
+var columnNumberStart = 3,
+    extraRightColumns = 4
+
+// Get window width
+var filterValue = window.localStorage.getItem("filterValue"),
+    increment = 0,
+    randomQuotesLength = randomQuotes.quotes.length,
+    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber")),
+    width = $(window).width()
 
 // Define indexes prototype of same values between two arrays
 Array.prototype.multiIndexOf = function(element) {
-    var indexes = [];
-    for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i] === element) indexes.unshift(i);
-    }
+    for (var indexes = [], i = this.length - 1; i >= 0; i--) this[i] === element && indexes.unshift(i);
+    return indexes
+}
 
-    return indexes;
-};
+// Remove every localStorage keys but columns
+function clearLocalStorage(e) {
+    var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table")),
+        validKeys;
+    $(e).attr("class") == "display dataTable no-footer" ? datatablesData && (validKeys = ["columns"], Object.keys(datatablesData).forEach(key => validKeys.includes(key) || delete datatablesData[key]), window.location.reload(!0)) : (window.localStorage.clear(), window.localStorage.setItem("tableVersion", tableVersion), window.location.reload(!0))
+}
+
+// Deactivate all critics columns in customButton
+function deactivateAllCriticsColumns() {
+    $(".customButton").on("click", function() {
+        var toastShow2 = window.localStorage.getItem("toastShow2");
+        toastShow2 == null && toastr.info("<br>Les critiques ne possédant pas de notes sont automatiquement désélectionnées.", "Informations"), $("button.deactivate").length == 0 && $('<button class="dt-button buttons-collection deactivate" tabindex="0" aria-controls="table" type="button" aria-haspopup="true" aria-expanded="false"><span><i class=\'fas fa-eye-slash\'></i> Désélectionner toutes les critiques</span></button>').insertBefore('div[role="menu"] button:first-child'), $("button.deactivate").on("click", function() {
+            $(".mainContent").css("visibility", "hidden"), $("#loadingOverlay, #loadingOverlayImg").css("display", "block"), $("#firstCaption").html('Chargement<span class="one">.</span><span class="two">.</span><span class="three">.</span>'), $("#subFigcaption").html("Votre sélection est en cours<br>de mise à jour, veuillez patienter."), $("body").addClass("noscroll"), setTimeout(function() {
+                $("button.active").click()
+            }, 100), setTimeout(function() {
+                $(".mainContent").css("visibility", "visible"), $("#loadingOverlay, #loadingOverlayImg").css("display", "none"), $("body").removeClass("noscroll")
+            }, 100)
+        })
+    })
+}
+
+// Stop propagation on date change id
+function defaultDate() {
+    $("#defaultDate").on("click", function(e) {
+        $("button.periodListArrayButton").click(), e && e.stopPropagation()
+    })
+}
+
+// Return localStorage filter value
+function filterValueFunction() {
+    var filterValue = window.localStorage.getItem("filterValue");
+    filterValue || window.localStorage.setItem("filterValue", "7"), filterValue == "7" ? dateValue = "les 7 derniers jours" : filterValue == "14" ? dateValue = "les 2 dernières semaines" : filterValue == "21" ? dateValue = "les 3 dernières semaines" : filterValue == "30" ? dateValue = "les 30 derniers jours" : filterValue == "90" ? dateValue = "les 90 derniers jours" : parseInt(filterValue) > 2e3 && parseInt(filterValue) < 2050 ? dateValue = "en " + filterValue : dateValue = "depuis toujours", $("#dateValue").text(dateValue)
+}
 
 // Return unique random number for quotes
 function makeRandomNumber() {
-    if (!uniqueRandomNumber.length) {
-        for (var i = 0; i < randomQuotesLength; i++) {
-            uniqueRandomNumber.push(i);
-        }
-    }
-
-    var randomNumber = Math.floor(Math.random() * uniqueRandomNumber.length),
-        newRandomNumber = uniqueRandomNumber[randomNumber];
-
-    uniqueRandomNumber.splice(randomNumber, 1);
-
-    return newRandomNumber;
+    var i, randomNumber, newRandomNumber;
+    if (!uniqueRandomNumber.length)
+        for (i = 0; i < randomQuotesLength; i++) uniqueRandomNumber.push(i);
+    return randomNumber = Math.floor(Math.random() * uniqueRandomNumber.length), newRandomNumber = uniqueRandomNumber[randomNumber], uniqueRandomNumber.splice(randomNumber, 1), newRandomNumber
 }
 
-// Return sorted values in descending order
-function sortCriticsDesc(a, b) {
-    if (a[1] === b[1]) {
-        return 0;
-    } else {
-        return (a[1] > b[1]) ? -1 : 1;
+// Display movies quotes
+function movieQuotesFunction() {
+    if (uniqueRandomNumber === null && (uniqueRandomNumber = []), width > 1290) {
+        var randomQuoteNumber = makeRandomNumber(),
+            random = randomQuotes.quotes[randomQuoteNumber],
+            randomQuotesTitle = '<p><i class="fas fa-2x fa-quote-left"></i><span>' + random.title + "</span>",
+            randomQuotesMovieandYear = '<span id="movieandyear"> - ' + random.movie + ", " + random.year + "</span></p>",
+            randomQuotesPicture = '<p><img src="assets/pictures/picture' + random.id + '.jpg" width="480px"></p>';
+        document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear + randomQuotesPicture, $("#quotes p img").on("error", function() {
+            document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear
+        }), window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber))
     }
+}
+
+// Display dates buttons
+function periodListArrayButton() {
+    $(".customButton, .periodListArrayButton").on("click", function(e) {
+        var filterValue, childNumber, dtButtonBackground, dtButtonCollectionFixedFourColumn;
+        switch ($("button.dt-button").on("click", filterValueFunction), filterValue = window.localStorage.getItem("filterValue"), filterValue) {
+            case "7":
+                childNumber = 0;
+                break;
+            case "14":
+                childNumber = 1;
+                break;
+            case "21":
+                childNumber = 2;
+                break;
+            case "30":
+                childNumber = 3;
+                break;
+            case "90":
+                childNumber = 4;
+                break;
+            case String(buttonYear):
+                childNumber = 5;
+                break;
+            case String(buttonYear - 1):
+                childNumber = 6;
+                break;
+            case String(buttonYear - 2):
+                childNumber = 7;
+                break;
+            case String(buttonYear - 3):
+                childNumber = 8;
+                break;
+            case "365000":
+                childNumber = 9;
+                break
+        }
+        $(this).attr("class") == "dt-button buttons-collection buttons-colvis customButton" && $("*").removeClass("clickedFilter"), $(this).attr("class") == "dt-button buttons-collection periodListArrayButton" && ($("button.deactivate").length > 0 && $("button.deactivate").remove(), $(".dt-button-collection.four-column").find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter")), $(".dt-button-collection.four-column").css("margin-top", "5px"), increment++, increment === 2 && (dtButtonBackground = document.querySelector("div.dt-button-background"), dtButtonCollectionFixedFourColumn = document.querySelector("div.four-column"), dtButtonBackground.parentNode.removeChild(dtButtonBackground), dtButtonCollectionFixedFourColumn.parentNode.removeChild(dtButtonCollectionFixedFourColumn), increment = 0), $(document).on("click", function(e) {
+            var parentClass = $(e.target).parent().attr("class"),
+                parentParentClass = $(e.target).parent().parent().attr("class");
+            if (parentClass === "dt-button buttons-columnVisibility active" || parentClass === "dt-button buttons-columnVisibility" || parentClass === "dt-button-collection four-column" || $(e.target).is(".dt-button.buttons-columnVisibility.active") || $(e.target).is(".dt-button.buttons-columnVisibility") || $(e.target).is('div[role="menu"]')) !$(".customButton").hasClass("customButtonSubmit") && $(e.target).parent().attr("class") != "dt-button-collection four-column" && ($(".customButton").addClass("customButtonSubmit"), $(".customButton span").html("<i class=\"fas fa-check\"></i> Valider la sélection ?"), $(".customButton").addClass("pulse"));
+            else {
+                if (parentParentClass === "dt-buttons" || parentParentClass === "dt-button buttons-collection buttons-colvis customButton customButtonSubmit") return;
+                $(".customButton").hasClass("customButtonSubmit") && ($(".customButton span").html("<i class='fas fa-tasks'></i> Mes critiques"), $(".customButton").removeClass("customButtonSubmit"), $(".customButton").removeClass("pulse"), $(".customButton").addClass("customButtonNotSubmit")), increment = 0
+            }
+        }), $(".customButton").hasClass("customButtonSubmit") && window.location.reload(!0), $(".customButton").hasClass("customButtonNotSubmit") && ($(".customButton").addClass("customButtonSubmit"), $(".customButton span").html("<i class=\"fas fa-check\"></i> Valider la sélection ?"), $(".customButton").addClass("pulse"))
+    })
 }
 
 // Replace critics titles
 function replaceCriticsTitle(critic) {
     var s = String(critic);
-
-    return s
-        .replace(/20 Minutes2/g, "20 Minutes Contre")
-        .replace(/CNews2/g, "CNews Contre")
-        .replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre")
-        .replace(/Charlie Hebdo2/g, "Charlie Hebdo Contre")
-        .replace(/Chronic&#039;art.com2/g, "Chronic&#039;art.com Contre")
-        .replace(/CinemaTeaser2/g, "CinemaTeaser Contre")
-        .replace(/Culturopoing.com2/g, "Culturopoing.com Contre")
-        .replace(/Ecran Large2/g, "Ecran Large Contre")
-        .replace(/Elle2/g, "Elle Contre")
-        .replace(/L&#039;Ecran Fantastique2/g, "L&#039;Ecran Fantastique Contre")
-        .replace(/L&#039;Express2/g, "L&#039;Express Contre")
-        .replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre")
-        .replace(/La Croix2/g, "La Croix Contre")
-        .replace(/Le Figaro2/g, "Le Figaro Contre")
-        .replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre")
-        .replace(/Le Monde2/g, "Le Monde Contre")
-        .replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre")
-        .replace(/Le Parisien2/g, "Le Parisien Contre")
-        .replace(/Le Point2/g, "Le Point Contre")
-        .replace(/Les Echos2/g, "Les Echos Contre")
-        .replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre")
-        .replace(/Inrockuptibles2/g, "Inrockuptibles Contre")
-        .replace(/Libération2/g, "Libération Contre")
-        .replace(/MCinéma.com2/g, "MCinéma.com Contre")
-        .replace(/Mad Movies2/g, "Mad Movies Contre")
-        .replace(/Marie Claire2/g, "Marie Claire Contre")
-        .replace(/Metro2/g, "Metro Contre")
-        .replace(/Obejctif-Cinema.com2/g, "Objectif-Cinema.com Contre")
-        .replace(/Ouest France2/g, "Ouest France Contre")
-        .replace(/Paris Match2/g, "Paris Match Contre")
-        .replace(/Positif2/g, "Positif Contre")
-        .replace(/Première2/g, "Première Contre")
-        .replace(/Rolling Stone2/g, "Rolling Stone Contre")
-        .replace(/Starfix2/g, "Starfix Contre")
-        .replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre")
-        .replace(/Studio Magazine2/g, "Studio Magazine Contre")
-        .replace(/Sud Ouest2/g, "Sud Ouest Contre")
-        .replace(/TéléCinéObs2/g, "TéléCinéObs Contre")
-        .replace(/Télérama2/g, "Télérama Contre")
-        .replace(/VSD2/g, "VSD Contre")
-        .replace(/Zurban2/g, "Zurban Contre")
-        .replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com")
-        .replace(/&#039;/g, "'");
+    return s.replace(/20 Minutes2/g, "20 Minutes Contre").replace(/CNews2/g, "CNews Contre").replace(/Cahiers du Cinéma2/g, "Cahiers du Cinéma Contre").replace(/Charlie Hebdo2/g, "Charlie Hebdo Contre").replace(/Chronic&#039;art.com2/g, "Chronic&#039;art.com Contre").replace(/CinemaTeaser2/g, "CinemaTeaser Contre").replace(/Culturopoing.com2/g, "Culturopoing.com Contre").replace(/Ecran Large2/g, "Ecran Large Contre").replace(/Elle2/g, "Elle Contre").replace(/L&#039;Ecran Fantastique2/g, "L&#039;Ecran Fantastique Contre").replace(/L&#039;Express2/g, "L&#039;Express Contre").replace(/L&#039;Humanité2/g, "L&#039;Humanité Contre").replace(/La Croix2/g, "La Croix Contre").replace(/Le Figaro2/g, "Le Figaro Contre").replace(/Le Journal du Dimanche2/g, "Le Journal du Dimanche Contre").replace(/Le Monde2/g, "Le Monde Contre").replace(/Le Nouvel Observateur2/g, "Le Nouvel Observateur Contre").replace(/Le Parisien2/g, "Le Parisien Contre").replace(/Le Point2/g, "Le Point Contre").replace(/Les Echos2/g, "Les Echos Contre").replace(/Les Fiches du Cinéma2/g, "Les Fiches du Cinéma Contre").replace(/Inrockuptibles2/g, "Inrockuptibles Contre").replace(/Libération2/g, "Libération Contre").replace(/MCinéma.com2/g, "MCinéma.com Contre").replace(/Mad Movies2/g, "Mad Movies Contre").replace(/Marie Claire2/g, "Marie Claire Contre").replace(/Metro2/g, "Metro Contre").replace(/Obejctif-Cinema.com2/g, "Objectif-Cinema.com Contre").replace(/Ouest France2/g, "Ouest France Contre").replace(/Paris Match2/g, "Paris Match Contre").replace(/Positif2/g, "Positif Contre").replace(/Première2/g, "Première Contre").replace(/Rolling Stone2/g, "Rolling Stone Contre").replace(/Starfix2/g, "Starfix Contre").replace(/Studio Ciné Live2/g, "Studio Ciné Live Contre").replace(/Studio Magazine2/g, "Studio Magazine Contre").replace(/Sud Ouest2/g, "Sud Ouest Contre").replace(/TéléCinéObs2/g, "TéléCinéObs Contre").replace(/Télérama2/g, "Télérama Contre").replace(/VSD2/g, "VSD Contre").replace(/Zurban2/g, "Zurban Contre").replace(/Obejctif-Cinema.com/g, "Objectif-Cinema.com").replace(/&#039;/g, "'")
 }
-
-// Split array in even or odd number
-function splitUp(arr, n) {
-    var rest = arr.length % n,
-        restUsed = rest,
-        partLength = Math.floor(arr.length / n),
-        result = [];
-
-    for (var i = 0; i < arr.length; i += partLength) {
-        var end = partLength + i,
-            add = false;
-
-        if (rest !== 0 && restUsed) {
-            end++;
-            restUsed--;
-            add = true;
-        }
-
-        result.push(arr.slice(i, end));
-
-        if (add) i++;
-    }
-
-    return result;
-}
-
-var buttonYearTemp = new Date(),
-    buttonYear = buttonYearTemp.getFullYear();
 
 // Set inputs filter dates
 function setInputsDates(node) {
-    $("*").removeClass("clickedFilter");
-    $(node).addClass("clickedFilter");
-
-    var numberDays = window.localStorage.getItem("filterValue"),
-        todayStart = new Date(),
-        todayEnd = new Date(),
-        ddEnd = String(todayEnd.getDate()).padStart(2, "0"),
-        mmEnd = String(todayEnd.getMonth() + 1).padStart(2, "0"),
-        yyyyEnd = todayEnd.getFullYear();
-
-    todayStart.setDate(todayStart.getDate() - parseInt(numberDays));
-
-    var ddStart = String(todayStart.getDate()).padStart(2, "0"),
-        mmStart = String(todayStart.getMonth() + 1).padStart(2, "0"),
-        yyyyStart = todayStart.getFullYear();
-
-    todayStart = mmStart + "/" + ddStart + "/" + yyyyStart;
-    todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd;
-
-    if (numberDays == buttonYear) {
-        todayStart = "1/1/" + buttonYear;
-    } else if (numberDays == buttonYear - 1) {
-        todayStart = "1/1/" + parseInt(buttonYear - 1);
-        todayEnd = "12/31/" + parseInt(buttonYear - 1);
-    } else if (numberDays == buttonYear - 2) {
-        todayStart = "1/1/" + parseInt(buttonYear - 2);
-        todayEnd = "12/31/" + parseInt(buttonYear - 2);
-    } else if (numberDays == buttonYear - 3) {
-        todayStart = "1/1/" + parseInt(buttonYear - 3);
-        todayEnd = "12/31/" + parseInt(buttonYear - 3);
-    }
-
-    document.getElementById("min").value = todayStart;
-    document.getElementById("max").value = todayEnd;
+    var numberDays, todayStart, todayEnd, ddEnd, mmEnd, yyyyEnd, ddStart, mmStart, yyyyStart;
+    $("*").removeClass("clickedFilter"), $(node).addClass("clickedFilter"), numberDays = window.localStorage.getItem("filterValue"), todayStart = new Date, todayEnd = new Date, ddEnd = String(todayEnd.getDate()).padStart(2, "0"), mmEnd = String(todayEnd.getMonth() + 1).padStart(2, "0"), yyyyEnd = todayEnd.getFullYear(), todayStart.setDate(todayStart.getDate() - parseInt(numberDays)), ddStart = String(todayStart.getDate()).padStart(2, "0"), mmStart = String(todayStart.getMonth() + 1).padStart(2, "0"), yyyyStart = todayStart.getFullYear(), todayStart = mmStart + "/" + ddStart + "/" + yyyyStart, todayEnd = mmEnd + "/" + ddEnd + "/" + yyyyEnd, numberDays == buttonYear ? todayStart = "1/1/" + buttonYear : numberDays == buttonYear - 1 ? (todayStart = "1/1/" + parseInt(buttonYear - 1), todayEnd = "12/31/" + parseInt(buttonYear - 1)) : numberDays == buttonYear - 2 ? (todayStart = "1/1/" + parseInt(buttonYear - 2), todayEnd = "12/31/" + parseInt(buttonYear - 2)) : numberDays == buttonYear - 3 && (todayStart = "1/1/" + parseInt(buttonYear - 3), todayEnd = "12/31/" + parseInt(buttonYear - 3)), document.getElementById("min").value = todayStart, document.getElementById("max").value = todayEnd
 }
 
 // Change french date format to mm/dd/yyyy
 function splitDate(date) {
     var newDate = date.split(" ");
-
     switch (newDate[1]) {
         case "janvier":
             newDate[1] = "01";
@@ -195,3394 +180,1488 @@ function splitDate(date) {
             break;
         default:
             newDate[1] = "";
-            break;
+            break
     }
-
-    return newDate[1] + "/" + newDate[0] + "/" + newDate[2];
+    return newDate[1] + "/" + newDate[0] + "/" + newDate[2]
 }
 
-function clearLocalStorage(e) {
-    if ($(e.target).parent().attr("id") == "clearLocalStorage") {
-        var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
+function typewriter() {
+    var app = document.getElementById("typewriter");
 
-        if (datatablesData) {
-            var validKeys = ["columns"];
-            Object.keys(datatablesData).forEach((key) => validKeys.includes(key) || delete datatablesData[key]);
-        }
-    } else if ($(e).attr("class") == "display dataTable no-footer") {
-        var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
-
-        if (datatablesData) {
-            var validKeys = ["columns"];
-            Object.keys(datatablesData).forEach((key) => validKeys.includes(key) || delete datatablesData[key]);
-        }
-
-        window.location.reload(true);
-    } else {
-        localStorage.removeItem("DataTables_table");
-        localStorage.removeItem("filterValue");
-        localStorage.removeItem("uniqueRandomNumber");
-        localStorage.removeItem("zipCode");
-        window.location.reload(true);
-    };
-}
-
-var arrayHeight = new Array();
-
-function getAllBefore(current) {
-    var i = arrayHeight.indexOf(current) + 1;
-
-    return i > -1 ? arrayHeight.slice(0, i) : [];
-}
-
-function hoverFormat(data) {
-    var text = "<table id=\"hoverDetailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><span class=\"arrow\"></span><img class=\"hover_td_picture\" src=\"" + data.picture + "\"></td>" +
-        "</tr></table>";
-
-    return text;
-}
-
-function autoComplete() {
-    if (document.getElementById("zipCodeInput").value != "") {
-        $.getJSON("https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/localization_city/" + document.getElementById("zipCodeInput").value, function(data) {
-            var autoComplete = [];
-            data = data.values.cities;
-
-            for (var i = 0; i < data.length; i++) {
-                if (i < 10) {
-                    autoComplete.push(data[i].node.name);
-                }
-            }
-
-            $("#zipCodeInput").autocomplete({
-                source: autoComplete
-            });
-        });
-    }
-};
-
-function filterValueFunction() {
-    var filterValue = window.localStorage.getItem("filterValue");
-
-    if (!filterValue) {
-        window.localStorage.setItem("filterValue", "7");
-        var zipCode = window.localStorage.getItem("filterValue");
-    }
-
-    if (filterValue == "7") {
-        dateValue = "Les 7 derniers jours";
-    } else if (filterValue == "14") {
-        dateValue = "Les 2 dernières semaines";
-    } else if (filterValue == "21") {
-        dateValue = "Les 3 dernières semaines";
-    } else if (filterValue == "30") {
-        dateValue = "Les 30 derniers jours";
-    } else if (filterValue == "90") {
-        dateValue = "Les 90 derniers jours";
-    } else if (parseInt(filterValue) > 2000 && parseInt(filterValue) < 2050) {
-        dateValue = "En " + filterValue;
-    } else {
-        dateValue = "Depuis toujours";
-    }
-
-    $("#dateValue").text(dateValue);
-}
-
-// Display extra information for every movie
-function format(data) {
-    var zipCode = window.localStorage.getItem("zipCode");
-
-    var text = "<table id=\"detailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><div class=\"video-thumbnail\" data-toggle=\"modal\" data-src=\"" + data.player + "\" data-keyboard=\"true\" data-target=\"#myModal\"><img class=\"td_picture\" src=\"" + data.picture + "\"></div></td>" +
-        "<td><p><a href=\"" + data.url + "\" target=\"_blank\">Fiche Allociné</a></p>";
-
-    text += "<p>";
-    if (data.date[0].dateLink !== "") {
-        var dateLink = "<a href=\"" + data.date[0].dateLink + "\" target=\"_blank\">" + data.date[0].dateName + "</a>";
-    } else {
-        dateLink = data.date[0].dateName;
-    }
-    if (data.date[0].dateName !== "") text += "Date de sortie : " + dateLink + "<br />";
-
-    if (data.duration !== "") text += "Durée : " + data.duration + "<br />";
-
-    if (data.genre !== undefined) {
-        var genreLink = "";
-        if (data.genre.length > 1) {
-            genreText = "Genres";
-        } else {
-            genreText = "Genre";
-        }
-
-        for (var i = 0; i < data.genre.length; i++) {
-            if (data.genre[i].genreLink !== undefined) {
-                genreLink += "<a href=\"" + data.genre[i].genreLink + "\" target=\"_blank\">" + data.genre[i].genreName + "</a>, ";
-            } else {
-                genreLink += data.genre[i].genreName + ", ";
-            }
-        }
-
-        text += genreText + " : " + genreLink;
-        text = text.replace(/,\s*$/, "");
-    }
-    text += "</p>";
-
-    if (data.director !== undefined) {
-        text += "<p>De : ";
-
-        var directorLink = "";
-        for (var i = 0; i < data.director.length; i++) {
-            if (data.director[i].directorLink !== undefined) {
-                directorLink += "<a href=\"" + data.director[i].directorLink + "\" target=\"_blank\">" + data.director[i].directorName + "</a>, ";
-            } else {
-                directorLink += data.director[i].directorName + ", ";
-            }
-        }
-
-        text += directorLink;
-        text = text.replace(/,\s*$/, "");
-        text += "</p>";
-    }
-
-    if (data.mainActors !== undefined) {
-        text += "<p>Avec : ";
-
-        var mainActorsLink = "";
-        for (var i = 0; i < data.mainActors.length; i++) {
-            if (data.mainActors[i].mainActorsLink !== undefined) {
-                mainActorsLink += "<a href=\"" + data.mainActors[i].mainActorsLink + "\" target=\"_blank\">" + data.mainActors[i].mainActorsName + "</a>, ";
-            } else {
-                mainActorsLink += data.mainActors[i].mainActorsName + ", ";
-            }
-        }
-
-        text += mainActorsLink;
-        text = text.replace(/,\s*$/, "");
-        text += "</p>";
-    }
-
-    if (data.nationality !== undefined) {
-        if (data.nationality.length > 1) {
-            nationalityText = "Nationalités";
-        } else {
-            nationalityText = "Nationalité";
-        }
-        text += "<p>" + nationalityText + " : ";
-
-        var nationalityLink = "";
-        for (var i = 0; i < data.nationality.length; i++) {
-            if (data.nationality[i].nationalityLink !== undefined) {
-                nationalityLink += "<a href=\"" + data.nationality[i].nationalityLink + "\" target=\"_blank\">" + data.nationality[i].nationalityName + "</a>, ";
-            } else {
-                nationalityLink += data.nationality[i].nationalityName + ", ";
-            }
-        }
-
-        text += nationalityLink;
-        text = text.replace(/,\s*$/, "");
-        text += "</p>";
-    }
-
-    text += "</td></tr></table>";
-
-    text += "<table id=\"showtimesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><span><p><strong>Séances à proximité de : " + zipCode + "</strong></p></span>" +
-        "<span id=\"showtimesInfo\"></span></td></tr></table>";
-
-    if (data.summary !== "") text += "<table id=\"summaryTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><p><strong>Synopsis :</strong></p>" +
-        "<div id=\"summary\"><p>" + data.summary + "</p></div></td></tr></table>";
-
-    if (!$.isEmptyObject(data.movieDetails)) text += "<table id=\"movieDetailsTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><p><strong>Informations techniques :</strong></p><ul>";
-
-    var movieDetails = data.movieDetails,
-        movieDetailsTempArray = [],
-        index = 0,
-        movieDetailsWording = ["Titre original : ", "Distributeur : ", "Récompenses : "];
-
-    for (var detail in movieDetails) {
-        movieDetailsTempArray.push([movieDetailsWording[index], movieDetails[detail]]);
-        index++;
-    }
-
-    movieDetailsTempArrayDivide = splitUp(movieDetailsTempArray, 2);
-
-    var liNumber = 0;
-
-    for (var i = 0; i < movieDetailsTempArrayDivide.length; i++) {
-        var movieDetailsTempArrayDivideChild = movieDetailsTempArrayDivide[i];
-        ulNew = (i === 1) ? "</ul></td><td class=\"secondTd\"><p>&nbsp;</p><ul>" : "";
-
-        for (var j = 0; j < movieDetailsTempArrayDivideChild.length; j++) {
-            if (j === 0 && width > 1290) text += ulNew;
-
-            if (movieDetailsTempArrayDivideChild[j][1] !== "" && movieDetailsTempArrayDivideChild[j][1] !== "-") {
-                text += "<li>" + movieDetailsTempArrayDivideChild[j][0] + movieDetailsTempArrayDivideChild[j][1] + "</li>";
-                liNumber++;
-            }
-        }
-    }
-
-    if (liNumber % 2 !== 0 && width > 1290) text += "<li>&nbsp;</li>";
-
-    text += "</ul></td></tr></table>";
-
-    if (!$.isEmptyObject(data.criticNames)) text += "<table id=\"criticNamesTable\" cellpadding=\"5\" cellspacing=\"0\" border=\"0\">" +
-        "<tr role=\"row\">" +
-        "<td><p><strong>Notes de la presse :</strong></p><ul>";
-
-    var criticNames = data.criticNames,
-        criticNamesTempArray = [],
-        criticNamesSortArray = [];
-
-    for (var critic in criticNames) {
-        criticNamesTempArray.push([critic, criticNames[critic]]);
-    }
-
-    criticNamesSortArray = criticNamesTempArray.sort(sortCriticsDesc);
-    criticNamesSortArrayDivide = splitUp(criticNamesSortArray, 2);
-
-    var criticNamesArrayEven = criticNamesSortArray.length % 2 === 0;
-
-    for (var i = 0; i < criticNamesSortArrayDivide.length; i++) {
-        var criticNamesSortArrayDivideChild = criticNamesSortArrayDivide[i];
-        ulNew = (i === 1) ? "</ul></td><td><p>&nbsp;</p><ul>" : "";
-        liNew = (i === 1) ? "<li>&nbsp;</li>" : "";
-
-        for (var j = 0; j < criticNamesSortArrayDivideChild.length; j++) {
-            var criticNamesTitle = replaceCriticsTitle(criticNamesSortArrayDivideChild[j][0]),
-                criticRatingNumber = criticNamesSortArrayDivideChild[j][1];
-
-            if (j === 0 && width > 1290) text += ulNew;
-
-            switch (criticRatingNumber) {
-                case "1":
-                    text += "<li><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
-                    break;
-                case "2":
-                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
-                    break;
-                case "3":
-                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
-                    break;
-                case "4":
-                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"far fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
-                    break;
-                case "5":
-                    text += "<li><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i><i class=\"fas fa-star\"></i>&nbsp;" + criticNamesTitle + "</li>";
-                    break;
-                default:
-                    text += "";
-                    break;
-            }
-
-            if (j === criticNamesSortArrayDivideChild.length - 1 && criticNamesArrayEven === false && width > 1290) text += liNew;
-        }
-    }
-
-    text += "</ul></td></tr></table>";
-
-    return text;
-}
-
-function tutorialStepCritics(e) {
-    $(".dt-button.buttons-collection.buttons-colvis.customButton").click();
-    if (e) e.stopPropagation();
-
-    $("#overlay").fadeIn("fast");
-    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Choisissez vos critiques préférées · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
-    $(".dt-buttons").addClass("highlightElement");
-    $(".dt-buttons").css("border", "2px solid #fff");
-}
-
-function tutorialStepMovie() {
-    $("tr.shown:first").next().find("td:first table tbody tr td").addClass("tdElement");
-
-    if ($(".tdElement").closest("table").closest("tr").prev().hasClass("shown")) {
-        $("td.details:first").click().click();
-    } else {
-        $("td.details:first").click();
-    }
-
-    $("tr.shown:first").next().find("td:first table tbody tr td").addClass("tdElement");
-
-    $("#overlay").fadeIn("fast");
-    $("body").append("<div id=\"overlay\"><h2><span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Aperçu d'un film · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span></h2></div>");
-    $(".tdElement").addClass("highlightElement");
-    $(".tdElement:first").css({
-        "border-top": "2px solid #fff",
-        "border-left": "2px solid #fff"
+    var typewriter = new Typewriter(app, {
+        loop: true,
+        delay: 50
     });
-    $(".tdElement:first").next().css({
-        "border-top": "2px solid #fff",
-        "border-right": "2px solid #fff"
-    });
-    $(".tdElement:first").closest("table").next().find("td").css({
-        "border-left": "2px solid #fff",
-        "border-bottom": "2px solid #fff",
-        "border-right": "2px solid #fff"
-    });
-}
 
-function tutorialShow(e) {
-    tutorialStepCritics(e);
-}
-
-function removeCss() {
-    $(".dt-buttons, .tdElement").removeClass("highlightElement");
-    $(".dt-buttons, .tdElement").css("border", "none");
-}
-
-function tutorialHide() {
-    $("#overlay").fadeOut("fast");
-    $("#overlay").remove();
-    removeCss();
+    typewriter.typeString("T'as vu quoi récemment ?")
+        .pauseFor(2500)
+        .deleteAll()
+        .typeString("C'est quoi le meilleur film au ciné ?")
+        .pauseFor(2500)
+        .deleteAll()
+        .typeString("Tu me recommandes quoi en ce moment ?")
+        .pauseFor(2500)
+        .start();
 }
 
 // Main table function
 function mainTable(data) {
     // Get window height
-    var height = $(window).height();
+    var height = $(window).height()
 
     // Get table localStorage object
-    var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"));
+    var datatablesData = JSON.parse(window.localStorage.getItem("DataTables_table"))
 
     // If datatablesData get datatablesData columns
-    if (datatablesData) var columns = datatablesData.columns;
+    if (datatablesData) var columns = datatablesData.columns
 
-    var criticNamesArray = [],
-        criticNamesArrayLength = Object.keys(data.critics).length;
-
-    for (var i = 0; i < criticNamesArrayLength; i++) {
-        criticNamesArray.push(data.critics[i][i])
-    }
+    // Define criticNamesArray
+    for (var criticNamesArray = [], criticNamesArrayLength = Object.keys(data.critics).length, i = 0; i < criticNamesArrayLength; i++) criticNamesArray.push(data.critics[i][i])
 
     // Define columns critic names
     var columnsVisibleState = [],
         columnsKeyNameDynamic = criticNamesArray,
-        columnsKeyName = columnsKeyNameDynamic.slice();
+        columnsKeyName = columnsKeyNameDynamic.slice()
+
+    // Define extra columns number
+    var extraColumns = columnNumberStart + extraRightColumns - 1
 
     // Define total columns number
-    var columnNumberOrder = columnsKeyNameDynamic.length + 5;
+    var columnNumberOrder = columnsKeyNameDynamic.length + extraColumns
 
     // Define last critic column number
-    var columnNumber = columnNumberOrder - 3;
+    var columnNumber = columnNumberOrder - extraRightColumns
 
-    // Define number of columns at the beginning
-    var columnNumberStart = 3;
+    // Define target array
+    var targetsArray = [columnNumberStart - 3, columnNumberStart - 2, columnNumberStart - 1, columnNumber + 1, columnNumber + 2, columnNumber + 3, columnNumber + 4]
 
     // Get columns visible state array
-    for (var column in columns) {
-        if (columns.hasOwnProperty(column) && column >= columnNumberStart && column <= columnNumber) columnsVisibleState.push(columns[column].visible);
-    }
+    for (var column in columns) columns.hasOwnProperty(column) && column >= columnNumberStart && column <= columnNumber && columnsVisibleState.push(columns[column].visible)
 
     // Get columns not visible indexes
-    columnsNotVisibleIndexes = columnsVisibleState.multiIndexOf(false);
+    columnsNotVisibleIndexes = columnsVisibleState.multiIndexOf(false)
 
     // Get new array with only visible critic
-    for (var i = columnsNotVisibleIndexes.length - 1; i >= 0; i--) {
-        columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1);
-    }
+    for (var i = columnsNotVisibleIndexes.length - 1; i >= 0; i--) columnsKeyNameDynamic.splice(columnsNotVisibleIndexes[i], 1)
 
-    // If width > 1290, fix the last 3 columns
-    var rightColumns = (width > 1290) ? 3 : 0;
+    // If width > 1290, fix the last extra right columns
+    var rightColumns = width > 1290 ? extraRightColumns : 0
 
     // Set datatables data
     var data = {
-        "ajax": "https://yaquoiaucine.fr/assets/js/data.json",
-        "columns": [{
-                "className": "details",
-                "orderable": false,
-                "data": null,
-                "defaultContent": ""
-            },
-            {
-                "data": "title"
-            },
-            {
-                "data": "date[0].dateName"
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[0]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[1]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[2]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[3]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[4]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[5]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[6]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[7]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[8]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[9]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[10]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[11]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[12]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[13]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[14]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[15]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[16]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[17]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[18]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[19]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[20]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[21]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[22]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[23]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[24]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[25]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[26]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[27]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[28]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[29]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[30]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[31]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[32]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[33]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[34]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[35]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[36]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[37]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[38]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[39]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[40]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[41]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[42]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[43]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[44]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[45]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[46]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[47]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[48]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[49]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[50]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[51]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[52]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[53]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[54]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[55]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[56]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[57]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[58]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[59]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[60]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[61]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[62]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[63]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[64]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[65]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[66]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[67]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[68]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[69]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[70]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[71]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[72]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[73]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[74]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[75]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[76]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[77]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[78]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[79]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[80]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[81]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[82]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[83]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[84]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[85]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[86]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[87]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[88]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[89]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[90]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[91]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[92]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[93]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[94]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[95]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[96]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[97]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[98]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[99]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[100]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[101]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[102]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[103]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[104]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[105]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[106]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[107]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[108]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[109]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[110]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[111]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[112]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[113]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[114]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[115]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[116]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[117]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[118]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[119]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[120]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[121]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[122]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[123]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[124]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[125]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[126]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[127]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[128]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[129]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[130]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[131]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[132]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[133]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[134]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[135]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[136]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[137]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[138]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[139]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[140]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[141]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[142]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "className": "critic",
-                "render": function(data, type, row) {
-                    var rowcolumnsKeyName = row.criticNames[columnsKeyName[143]];
-
-                    if (rowcolumnsKeyName !== undefined && rowcolumnsKeyName !== "") {
-                        var res = parseFloat(rowcolumnsKeyName).toFixed(1);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "render": function(data, type, row) {
-                    var res = 0,
-                        columnsKeyNameLength = 0;
-
-                    for (var i = 0; i < columnsKeyNameDynamic.length; i++) {
-                        if (row.criticNames[columnsKeyNameDynamic[i]] !== undefined && row.criticNames[columnsKeyNameDynamic[i]] !== "") {
-                            res += parseFloat(row.criticNames[columnsKeyNameDynamic[i]]);
-                            columnsKeyNameLength += 1;
-                        }
-                    }
-
-                    if (res === 0) {
-                        resTotal = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                        return resTotal;
-                    } else {
-                        resTotal = res / columnsKeyNameLength;
-                        return resTotal.toFixed(2);
-                    }
-                }
-            },
-            {
-                "data": null,
-                "render": function(data, type, row) {
-                    if (row.user !== undefined && row.user !== "") {
-                        var res = parseFloat(row.user).toFixed(2);
-                    } else {
-                        var res = "&nbsp;&nbsp;-&nbsp;&nbsp;";
-                    }
-
-                    return res;
-                }
-            },
-            {
-                "data": null,
-                "render": function(data, type, row) {
-                    var resBis = 0,
-                        columnsKeyNameLengthBis = 0;
-
-                    for (var i = 0; i < columnsKeyNameDynamic.length; i++) {
-                        if (row.criticNames[columnsKeyNameDynamic[i]] !== undefined && row.criticNames[columnsKeyNameDynamic[i]] !== "") {
-                            resBis += parseFloat(row.criticNames[columnsKeyNameDynamic[i]]);
-                            columnsKeyNameLengthBis += 1;
-                        }
-                    }
-
-                    var resCritic = resBis / columnsKeyNameLengthBis;
-
-                    if (resBis === 0 && row.user === "") {
-                        var resTotal = parseFloat(0);
-                    } else if (resBis === 0) {
-                        var resTotal = parseFloat(row.user);
-                    } else if (row.user === "") {
-                        var resTotal = parseFloat(resCritic);
-                    } else {
-                        var resTotal = (parseFloat(resCritic) + parseFloat(row.user)) / 2;
-                    }
-
-                    return resTotal.toFixed(2);
-                }
+        ajax: "https://yaquoiaucine.fr/assets/js/data.json",
+        columns: [{
+            className: "moviesRank",
+            orderable: !1,
+            data: null
+        }, {
+            data: null,
+            render: function(data, type, row) {
+                var res;
+                return data.title !== void 0 && data.title !== "" ? res = '<a href="' + data.url + '" target="_blank">' + data.title + "</a>" : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
             }
-        ],
-        "dom": "Brtip",
-        "stateSave": true,
-        "stateSaveParams": function(settings, data) {
-            data.search.search = "";
+        }, {
+            data: "date[0].dateName"
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[0]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[1]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[2]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[3]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[4]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[5]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[6]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[7]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[8]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[9]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[10]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[11]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[12]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[13]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[14]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[15]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[16]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[17]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[18]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[19]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[20]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[21]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[22]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[23]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[24]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[25]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[26]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[27]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[28]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[29]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[30]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[31]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[32]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[33]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[34]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[35]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[36]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[37]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[38]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[39]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[40]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[41]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[42]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[43]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[44]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[45]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[46]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[47]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[48]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[49]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[50]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[51]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[52]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[53]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[54]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[55]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[56]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[57]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[58]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[59]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[60]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[61]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[62]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[63]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[64]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[65]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[66]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[67]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[68]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[69]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[70]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[71]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[72]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[73]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[74]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[75]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[76]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[77]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[78]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[79]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[80]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[81]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[82]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[83]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[84]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[85]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[86]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[87]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[88]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[89]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[90]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[91]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[92]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[93]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[94]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[95]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[96]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[97]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[98]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[99]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[100]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[101]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[102]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[103]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[104]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[105]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[106]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[107]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[108]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[109]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[110]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[111]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[112]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[113]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[114]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[115]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[116]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[117]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[118]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[119]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[120]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[121]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[122]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[123]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[124]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[125]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[126]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[127]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[128]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[129]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[130]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[131]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[132]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[133]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[134]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[135]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[136]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[137]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[138]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[139]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[140]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[141]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[142]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            className: "critic",
+            render: function(data, type, row) {
+                var rowcolumnsKeyName = row.criticNames[columnsKeyName[143]],
+                    res;
+                return rowcolumnsKeyName !== void 0 && rowcolumnsKeyName !== "" ? res = parseFloat(rowcolumnsKeyName).toFixed(1) : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            render: function(data, type, row) {
+                for (var res = 0, columnsKeyNameLength = 0, id = data.url.match(/=(.*)\./).pop(), i = 0; i < columnsKeyNameDynamic.length; i++) row.criticNames[columnsKeyNameDynamic[i]] !== void 0 && row.criticNames[columnsKeyNameDynamic[i]] !== "" && (res += parseFloat(row.criticNames[columnsKeyNameDynamic[i]]), columnsKeyNameLength += 1);
+                return res !== 0 ? resTotal = resTotal = '<a href="https://www.allocine.fr/film/fichefilm-' + id + '/critiques/presse/" target="_blank">' + (res / columnsKeyNameLength).toFixed(2) + "</a>" : resTotal = "&nbsp;&nbsp;-&nbsp;&nbsp;", resTotal
+            }
+        }, {
+            data: null,
+            render: function(data, type, row) {
+                var id = data.url.match(/=(.*)\./).pop(),
+                    res;
+                return row.user !== void 0 && row.user !== "" ? res = '<a href="https://www.allocine.fr/film/fichefilm-' + id + '/critiques/spectateurs/" target="_blank">' + parseFloat(row.user).toFixed(2) + "</a>" : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            render: function(data, type, row) {
+                var res;
+                return row.imdbRating !== void 0 && row.imdbRating !== "" ? res = '<a href="https://www.imdb.com/title/' + data.imdbId + '" target="_blank">' + parseFloat(row.imdbRating).toFixed(2) / 2 + "</a>" : res = "&nbsp;&nbsp;-&nbsp;&nbsp;", res
+            }
+        }, {
+            data: null,
+            render: function(data, type, row) {
+                for (var resBis = 0, columnsKeyNameLengthBis = 0, i = 0, resCritic, newResCritic, newRowUser, newImdbRating, resTotal; i < columnsKeyNameDynamic.length; i++) row.criticNames[columnsKeyNameDynamic[i]] !== void 0 && row.criticNames[columnsKeyNameDynamic[i]] !== "" && (resBis += parseFloat(row.criticNames[columnsKeyNameDynamic[i]]), columnsKeyNameLengthBis += 1);
+                return resCritic = resBis / columnsKeyNameLengthBis, newResCritic = parseFloat(resCritic), newRowUser = parseFloat(row.user), newImdbRating = parseFloat(row.imdbRating) / 2, resBis != 0 && row.user != "" && row.imdbRating != "" ? resTotal = (newResCritic + newRowUser + newImdbRating) / 3 : resBis != 0 && row.user != "" && row.imdbRating == "" ? resTotal = (newResCritic + newRowUser) / 2 : resBis == 0 && row.user !== "" && row.imdbRating != "" ? resTotal = (newRowUser + newImdbRating) / 2 : resBis != 0 && row.user == "" && row.imdbRating != "" ? resTotal = (newResCritic + newImdbRating) / 2 : resBis != 0 && row.user == "" && row.imdbRating == "" ? resTotal = newResCritic : resBis == 0 && row.user != "" && row.imdbRating == "" ? resTotal = newRowUser : resBis == 0 && row.user == "" && row.imdbRating != "" ? resTotal = newImdbRating : resTotal = parseFloat(0), resTotal.toFixed(2)
+            }
+        }],
+        dom: "Brtip",
+        stateSave: !0,
+        stateSaveParams: function(settings, data) {
+            data.search.search = ""
         },
-        "stateSaveCallback": function(settings, data) {
+        stateSaveCallback: function(settings, data) {
             localStorage.setItem("DataTables_" + settings.sInstance, JSON.stringify(data))
         },
-        "stateLoadCallback": function(settings) {
+        stateLoadCallback: function(settings) {
             return JSON.parse(localStorage.getItem("DataTables_" + settings.sInstance))
         },
-        "columnDefs": [{
-            "targets": [0, 1, 2, columnNumber + 1, columnNumber + 2, columnNumber + 3],
-            "className": "noVis"
-        }],
-        "buttons": [{
-                "extend": "collection",
-                "className": "periodListArrayButton",
-                "collectionLayout": "four-column",
-                "text": "Filtrer par date de sortie",
-                "buttons": [{
-                        "text": "Les 7 derniers jours",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "7");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "Les 2 dernières semaines",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "14");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "Les 3 dernières semaines",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "21");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "Les 30 derniers jours",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "30");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "Les 90 derniers jours",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "90");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "En " + buttonYear,
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", buttonYear);
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "En " + parseInt(buttonYear - 1),
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 1));
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "En " + parseInt(buttonYear - 2),
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 2));
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "En " + parseInt(buttonYear - 3),
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", parseInt(buttonYear - 3));
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    },
-                    {
-                        "text": "Depuis toujours",
-                        "action": function(e, dt, node, config) {
-                            window.localStorage.setItem("filterValue", "365000");
-                            setInputsDates(node);
-                            table.draw();
-                        }
-                    }
-                ]
+        buttons: [{
+            extend: "collection",
+            className: "periodListArrayButton",
+            collectionLayout: "four-column",
+            text: "<i class='far fa-calendar-alt'></i> Période",
+            buttons: [{
+                text: "Les 7 derniers jours",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "7"), setInputsDates(node), table.columns.adjust().draw()
+                }
             }, {
-                "extend": "colvis",
-                "columnText": function(dt, idx, title) {
-                    var columnsKeyNameButton = [];
-
-                    for (var i = 0; i < columnsKeyName.length; i++) {
-                        columnsKeyNameButton[i] = replaceCriticsTitle(columnsKeyName[i]);
-                    }
-
-                    return columnsKeyNameButton[idx - 3];
-                },
-                "columns": ":not(.noVis)",
-                "collectionLayout": "four-column",
-                "text": "Sélectionner les notes",
-                "className": "customButton"
-            },
-            {
-                "text": "Afficher toutes les notes",
-                "className": "customButtonDisplay",
-                "action": function(e, dt, node, config) {}
-            },
-            {
-                "text": "Masquer toutes les notes",
-                "className": "customButtonHide",
-                "action": function(e, dt, node, config) {}
-            },
-            {
-                "text": "Effacer les préférences",
-                "action": function(e, dt, node, config) {
-                    clearLocalStorage(this);
+                text: "Les 2 dernières semaines",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "14"), setInputsDates(node), table.columns.adjust().draw()
                 }
-            }
-        ],
-        "scrollX": true,
-        "fixedColumns": {
-            "leftColumns": 0,
-            "rightColumns": rightColumns
-        },
-        "paging": false,
-        "info": false,
-        "destroy": true,
-        "language": {
-            "emptyTable": "Chargement, veuillez patienter...",
-            "infoEmpty": "Aucun film correspondant, veuillez réessayer...",
-            "zeroRecords": "Aucun film correspondant, veuillez réessayer..."
-        },
-        "initComplete": function(data) {
-
-            // If small width ignore span.sr-only
-            if (width <= 1290) {
-                $(".mainContent").css("visibility", "visible");
-                $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
-                $("body").removeClass("noscroll");
-            }
-
-            // Set and/or retrieve table version
-            var localTableVersion = window.localStorage.getItem("tableVersion");
-
-            // If localTableVersion doesn't exist set it to current version
-            if (!localTableVersion) window.localStorage.setItem("tableVersion", tableVersion);
-
-            if (localTableVersion != tableVersion) {
-                window.localStorage.setItem("tableVersion", tableVersion);
-                clearLocalStorage(this);
-            }
-
-            $("*").on("click", function(e) {
-                if ($(e.target).attr("class") != "customButton" && $("button.deactivate").length > 0) $("button.deactivate").remove();
-            });
-
-            $("button.customButton").on("click", function(e) {
-                if ($("button.deactivate").length == 0) {
-                    $("<button class=\"dt-button buttons-collection deactivate\" tabindex=\"0\" aria-controls=\"table\" type=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\"><span>Désélectionner toutes les notes</span></button>").insertBefore('div[role="menu"] button:first-child');
+            }, {
+                text: "Les 3 dernières semaines",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "21"), setInputsDates(node), table.columns.adjust().draw()
                 }
-
-                $("button.deactivate").on("click", function() {
-                    $(".mainContent").css("visibility", "hidden");
-                    $("#loadingOverlay, #loadingOverlayImg").css("display", "block");
-                    $("body").addClass("noscroll");
-                    $("#loadingOverlayImg figcaption#clearLocalStorage").html("Votre sélection est en cours<br>de mise à jour, veuillez patienter.")
-
-                    setTimeout(function() {
-                        $(".dt-button.buttons-columnVisibility.active").click();
-                    }, 100);
-
-                    setTimeout(function() {
-                        $(".mainContent").css("visibility", "visible");
-                        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
-                        $("body").removeClass("noscroll");
-                    }, 100);
-                });
-            });
-
-            // Hide columns with no data
-            table.columns(".critic").every(function(index) {
+            }, {
+                text: "Les 30 derniers jours",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "30"), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "Les 90 derniers jours",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "90"), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "En " + buttonYear,
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", buttonYear), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "En " + parseInt(buttonYear - 1),
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", parseInt(buttonYear - 1)), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "En " + parseInt(buttonYear - 2),
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", parseInt(buttonYear - 2)), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "En " + parseInt(buttonYear - 3),
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", parseInt(buttonYear - 3)), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }, {
+                text: "Depuis toujours",
+                action: function(e, dt, node, config) {
+                    window.localStorage.setItem("filterValue", "365000"), setInputsDates(node), table.columns.adjust().draw()
+                }
+            }]
+        }, {
+            extend: "colvis",
+            columnText: function(dt, idx, title) {
+                for (var columnsKeyNameButton = [], i = 0; i < columnsKeyName.length; i++) columnsKeyNameButton[i] = replaceCriticsTitle(columnsKeyName[i]);
+                return columnsKeyNameButton[idx - columnNumberStart]
+            },
+            columns: ":not(.noVis)",
+            collectionLayout: "four-column",
+            text: "<i class='fas fa-tasks'></i> Mes critiques",
+            className: "customButton"
+        }, {
+            text: "<i class='fas fa-eye'></i> Toutes les critiques",
+            className: "customButtonDisplay",
+            action: function(e, dt, node, config) {}
+        }, {
+            text: "<i class='fas fa-eye-slash'></i> Aucunes critiques",
+            className: "customButtonHide",
+            action: function(e, dt, node, config) {}
+        }, {
+            text: "<i class='fas fa-trash-alt'></i> Remettre à zéro",
+            action: function(e, dt, node, config) {
+                clearLocalStorage(this)
+            }
+        }],
+        columnDefs: [{
+            targets: targetsArray,
+            className: "noVis"
+        }],
+        paging: !1,
+        info: !1,
+        destroy: !0,
+        language: {
+            emptyTable: '<p style="margin: 10px auto">Chargement, veuillez patienter<span class="one">.</span><span class="two">.</span><span class="three">.</span></p>',
+            infoEmpty: "Aucun film trouvé, veuillez réessayer...",
+            zeroRecords: "Aucun film trouvé, veuillez réessayer..."
+        },
+        initComplete: function(data) {
+            var localTableVersion = window.localStorage.getItem("tableVersion"),
+                toastShow1;
+            localTableVersion || window.localStorage.setItem("tableVersion", tableVersion), localTableVersion != tableVersion && (window.localStorage.setItem("tableVersion", tableVersion), clearLocalStorage(this)), table.columns(".critic").every(function(index) {
+                var data, res, i;
                 if (index <= columnNumber - columnNumberStart) {
-                    var data = this.data(),
-                        res = 0;
-
-                    for (var i = 0; i < data.length; i++) {
-                        newIndex = index - columnNumberStart;
-
-                        if (data[i].criticNames[columnsKeyName[newIndex]] !== undefined) res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]);
-                    }
-
-                    if (res === 0) table.column(index).visible(false, false);
+                    data = this.data(), res = 0;
+                    for (i = 0; i < data.length; i++) newIndex = index - columnNumberStart, data[i].criticNames[columnsKeyName[newIndex]] !== void 0 && (res += parseFloat(data[i].criticNames[columnsKeyName[newIndex]]));
+                    res === 0 && table.column(index).visible(!1, !1)
                 }
-            });
-
-            // Adjust column sizing and redraw
-            table.columns.adjust().draw();
+            }), toastShow1 = window.localStorage.getItem("toastShow1"), toastShow1 == null && toastr.info("<br>Légende : <i class='far fa-newspaper' title='Notes de la presse'></i>  Notes de la presse, <i class='fas fa-users' title='Notes des spectateurs'></i>  Notes des spectateurs, <i class='fab fa-imdb' title='Notes IMDb'></i>  Notes IMDb, <i class='fas fa-equals' title='Moyenne de la presse et des spectateurs'></i>  Moyenne de la presse et des spectateurs.<br><br>Les notes de la presse sont calculées à partir des critiques sélectionnées dans <i>Mes critiques</i>.<br><br>Les notes IMDb sont rapportées sur 5.", "Informations")
+            typewriter()
         }
     }
 
     // Display table
-    var table = $("#table").DataTable(data);
+    var table = $("#table").DataTable(data)
 
-    table.columns("#releaseDateColumn").visible(false);
-
-    $("#inputSearch").keyup(function() {
-        table.search($(this).val()).draw();
-    });
-
-    if (width <= 1290) {
-        $(".fa-search").on("click", function() {
-            if ($(".fa-twitter").hasClass("hideicon")) {
-                setTimeout(function() {
-                    $("#inputSearchSpan").toggleClass("expanded");
-                    $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
-                }, 400);
-            } else {
-                $("#inputSearchSpan").toggleClass("expanded");
-                $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon");
-            }
-
-            if ($(".fa-search").hasClass("fa-search")) {
-                $("#inputSearch").css({
-                    "visibility": "visible",
-                    "width": "100%"
-                });
-            } else {
-                $("#inputSearch").css({
-                    "visibility": "hidden",
-                    "width": "0"
-                });
-            }
-
-            $("#inputSearch").focus();
-            $(this).toggleClass("fa-search fa-times-circle");
-        });
-    }
-
-    // Change font-size for really small devices
-    if (width < 350) {
-        $(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg");
-        $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px");
-    }
-
-    $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
-        window.localStorage.setItem("tableVersion", tableVersion);
-        clearLocalStorage(this);
-    };
-
-    // Extend dataTables search
-    $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-            var min = $("#min").val(),
-                max = $("#max").val(),
-                releaseDate = splitDate(data[2]) || 0;
-
-            if (
-                (min == "" || max == "") ||
-                (dayjs(releaseDate).isSameOrAfter(min) && dayjs(releaseDate).isSameOrBefore(max))
-            ) {
-                return true;
-            }
-            return false;
-        }
-    );
+    // Hide release date on load
+    table.columns("#releaseDateColumn").visible(!1)
 
     // Sort table last column
-    table.column(columnNumberOrder).order("desc").draw();
+    table.column(columnNumberOrder).order("desc").draw()
 
-    if (width > 1290) {
-        $("#table, #table_wrapper").css("max-width", width - 516);
-        $("#quotes").css("width", 500);
-    } else {
-        $("#table, #table_wrapper").css("max-width", 1274);
+    // Display movies rank on order and search
+    table.on("order.dt search.dt", function() {
+        table.column(0, {
+            search: "applied",
+            order: "applied"
+        }).nodes().each(function(cell, i) {
+            cell.innerHTML = i + 1
+        })
+    }).draw()
+
+    // Clear localStorage on datatables errors
+    $.fn.dataTable.ext.errMode = function(settings, helpPage, message) {
+        var localTableVersion = window.localStorage.getItem("tableVersion");
+        localTableVersion || window.localStorage.setItem("tableVersion", tableVersion), localTableVersion != tableVersion && (window.localStorage.setItem("tableVersion", tableVersion), clearLocalStorage(this))
     }
 
-    var h1Height = $("h1").height(),
-        descriptionHeight = $("p.description").height(),
-        descriptionHeightBis = $("p.description").closest("p").height(),
-        dtButtonsHeight = $("div.dt-buttons").height(),
-        creditsHeight = $("p#credits").height(),
-        newHeight = height - (h1Height + descriptionHeight + descriptionHeightBis + dtButtonsHeight + creditsHeight);
+    // Extend dataTables search
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var min = $("#min").val(),
+            max = $("#max").val(),
+            releaseDate = splitDate(data[2]) || 0;
+        return !!(min == "" || max == "" || dayjs(releaseDate).isSameOrAfter(min) && dayjs(releaseDate).isSameOrBefore(max))
+    })
 
-    // Set height for Y scroll body
-    $("div.dataTables_scroll").height(newHeight);
+    // Trigger search on input key up
+    $("#inputSearch").keyup(function() {
+        table.search($(this).val()).draw()
+    })
 
-    var increment = 0;
-
-    $(".customButton, .periodListArrayButton").on("click", function(e) {
-        $("button.dt-button").on("click", filterValueFunction);
-
-        var filterValue = window.localStorage.getItem("filterValue");
-
-        switch (filterValue) {
-            case "7":
-                var childNumber = 0;
-                break;
-            case "14":
-                var childNumber = 1;
-                break;
-            case "21":
-                var childNumber = 2;
-                break;
-            case "30":
-                var childNumber = 3;
-                break;
-            case "90":
-                var childNumber = 4;
-                break;
-            case String(buttonYear):
-                var childNumber = 5;
-                break;
-            case String(buttonYear - 1):
-                var childNumber = 6;
-                break;
-            case String(buttonYear - 2):
-                var childNumber = 7;
-                break;
-            case String(buttonYear - 3):
-                var childNumber = 8;
-                break;
-            case "365000":
-                var childNumber = 9;
-                break;
-        }
-
-        if ($(".periodListArrayButton").next().attr("class") == "dt-button buttons-collection buttons-colvis customButton") {
-            var dtbuttonChild = $(".periodListArrayButton").next().next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
-        } else {
-            dtbuttonChild = $(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").addClass("clickedFilter");
-        }
-        if (!$(".periodListArrayButton").next().next().find(".dt-button:eq(" + childNumber + ")").hasClass("clickedFilter")) dtbuttonChild;
-
-        // Add margin top
-        $(".dt-button-collection.four-column").css("margin-top", "5px");
-
-        increment++;
-
-        if (increment === 2) {
-
-            // Remove extra buttons for original state
-            var dtButtonBackground = document.querySelector("div.dt-button-background"),
-                dtButtonCollectionFixedFourColumn = document.querySelector("div.four-column");
-
-            dtButtonBackground.parentNode.removeChild(dtButtonBackground);
-            dtButtonCollectionFixedFourColumn.parentNode.removeChild(dtButtonCollectionFixedFourColumn);
-
-            increment = 0;
-        }
-
-        // If element target is in the critic menu
-        $(document).on("click", function(e) {
-
-            // Get target parent class
-            var parentClass = $(e.target).parent().attr("class"),
-                parentParentClass = $(e.target).parent().parent().attr("class");
-
-            if (
-                parentClass === "dt-button buttons-columnVisibility active" ||
-                parentClass === "dt-button buttons-columnVisibility" ||
-                parentClass === "dt-button-collection four-column" ||
-                $(e.target).is(".dt-button.buttons-columnVisibility.active") ||
-                $(e.target).is(".dt-button.buttons-columnVisibility") ||
-                $(e.target).is('div[role="menu"]')) {
-
-                if (!$(".customButton").hasClass("customButtonSubmit") && $(e.target).parent().attr("class") != "dt-button-collection four-column") {
-                    $(".customButton").addClass("customButtonSubmit");
-                    $(".customButton span").html("Valider la sélection ?");
-                    $(".customButton").addClass("pulse");
-                }
-
-            } else {
-                if (parentParentClass === "dt-buttons" ||
-                    parentParentClass === "dt-button buttons-collection buttons-colvis customButton customButtonSubmit" ||
-                    $(e.target).is("td.details")) return;
-
-                if ($(".customButton").hasClass("customButtonSubmit")) {
-                    $(".customButton span").html("Sélectionner les notes");
-                    $(".customButton").removeClass("customButtonSubmit");
-                    $(".customButton").removeClass("pulse");
-                    $(".customButton").addClass("customButtonNotSubmit");
-                }
-
-                increment = 0;
-            }
-        });
-
-        if ($(".customButton").hasClass("customButtonSubmit")) {
-            setTimeout(function() {
-                $("button, td.details").prop("disabled", true);
-                $(".customButton span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
-                $(".customButton").removeClass("pulse");
-            }, 100);
-            setTimeout(function() {
-                $(".customButton span").html("Sélection validée <i class=\"fas fa-check\"></i>");
-            }, 4000);
-            setTimeout(function() {
-                $(".customButton span").html("Sélectionner les notes");
-                $(".customButton").removeClass("customButtonSubmit");
-                $(".customButton").removeClass("customButtonNotSubmit");
-                window.location.reload(true);
-            }, 7000);
-        }
-
-        if ($(".customButton").hasClass("customButtonNotSubmit")) {
-            $(".customButton").addClass("customButtonSubmit");
-            $(".customButton span").html("Valider la sélection ?");
-            $(".customButton").addClass("pulse");
-        }
-    });
-
+    // Unhide all critics columns
     $(".customButtonDisplay").on("click", function() {
-        $("tr.shown").children().click();
+        table.columns(".critic").visible(!0), window.location.reload(!0)
+    })
 
-        setTimeout(function() {
-            $("button, td.details").prop("disabled", true);
-            $(".customButtonDisplay").addClass("customButtonSubmit");
-            $(".customButtonDisplay").addClass("pulse");
-            $(".customButtonDisplay span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
-            $(".customButtonDisplay").removeClass("pulse");
-        }, 100);
-        setTimeout(function() {
-            table.columns(".critic").visible(true);
-        }, 1000);
-        setTimeout(function() {
-            $(".customButtonDisplay span").html("Sélection validée <i class=\"fas fa-check\"></i>");
-        }, 7000)
-        setTimeout(function() {
-            $(".customButtonDisplay span").html("Afficher toutes les notes");
-            $(".customButtonDisplay").removeClass("customButtonSubmit");
-            window.location.reload(true);
-        }, 10000);
-    });
-
+    // Hide all critics columns
     $(".customButtonHide").on("click", function() {
-        $("tr.shown").children().click();
+        table.columns(".critic").visible(!1), window.location.reload(!0)
+    })
 
-        setTimeout(function() {
-            $("button, td.details").prop("disabled", true);
-            $(".customButtonHide").addClass("customButtonSubmit");
-            $(".customButtonHide").addClass("pulse");
-            $(".customButtonHide span").html("Chargement... <i class=\"fas fa-circle-notch fa-spin\"></i>");
-            $(".customButtonHide").removeClass("pulse");
-        }, 100);
-        setTimeout(function() {
-            table.columns(".critic").visible(false);
-        }, 1000);
-        setTimeout(function() {
-            $(".customButtonHide span").html("Sélection validée <i class=\"fas fa-check\"></i>");
-        }, 7000)
-        setTimeout(function() {
-            $(".customButtonHide span").html("Masquer toutes les notes");
-            $(".customButtonHide").removeClass("customButtonSubmit");
-            window.location.reload(true);
-        }, 10000);
-    });
+    /* Custom css rules */
+    // Search options with device width
+    width <= 1290 && $(".fa-search").on("click", function() {
+        $(".fa-twitter").hasClass("hideicon") ? setTimeout(function() {
+            $("#inputSearchSpan").toggleClass("expanded"), $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon")
+        }, 400) : ($("#inputSearchSpan").toggleClass("expanded"), $(".fa-twitter, .fa-youtube, .fa-github, #credits a, .vertical").toggleClass("hideicon")), $(".fa-search").hasClass("fa-search") ? $("#inputSearch").css({
+            visibility: "visible",
+            width: "100%"
+        }) : $("#inputSearch").css({
+            visibility: "hidden",
+            width: "0"
+        }), $("#inputSearch").focus(), $(this).toggleClass("fa-search fa-times-circle")
+    })
+
+    // Change font-size for really small devices
+    width < 350 && ($(".fa-twitter, .fa-youtube, .fa-github, .fa-search, .fa-times-circle").removeClass("fa-lg"), $(".fa-twitter, .fa-youtube, .fa-github").next().css("font-size", "14px"))
+
+    // Set custom table width regarding device width
+    width > 1290 ? ($("#table, #table_wrapper").css("max-width", width - 516), $("#quotes").css("width", 500), $("#credits").css("width", $("#table").width())) : $("#table, #table_wrapper").css("max-width", 1274)
+
+    // Toastr options
+    toastr.options = {
+        closeButton: !0,
+        debug: !1,
+        newestOnTop: !1,
+        progressBar: !0,
+        positionClass: "toast-top-right",
+        preventDuplicates: !1,
+        onclick: null,
+        showDuration: "300",
+        hideDuration: "1000",
+        timeOut: "0",
+        extendedTimeOut: "0",
+        showEasing: "swing",
+        hideEasing: "linear",
+        showMethod: "fadeIn",
+        hideMethod: "fadeOut",
+        onCloseClick: function() {
+            toastMessage = $(".toast-message").text(), toastMessage == "Légende : Notes de la presse  Notes de la presse, Notes des spectateurs  Notes des spectateurs, Notes IMDb  Notes IMDb, Moyenne de la presse et des spectateurs  Moyenne de la presse et des spectateurs.Les notes de la presse sont calculées à partir des critiques sélectionnées dans Mes critiques.Les notes IMDb sont rapportées sur 5." ? window.localStorage.setItem("toastShow1", "closed") : toastMessage == "Les critiques ne possédant pas de notes sont automatiquement désélectionnées." && window.localStorage.setItem("toastShow2", "closed")
+        }
+    }
+
+    // Set default filterValue if doesn't exist
+    filterValue || window.localStorage.setItem("filterValue", "7")
+    filterValueFunction()
+
+    deactivateAllCriticsColumns()
+    defaultDate()
+    movieQuotesFunction()
+    periodListArrayButton()
+    setInputsDates()
 }
 
-// Get window width
-var width = $(window).width(),
-    randomQuotesLength = randomQuotes.quotes.length,
-    uniqueRandomNumber = JSON.parse(window.localStorage.getItem("uniqueRandomNumber"));
-
-if (uniqueRandomNumber === null) uniqueRandomNumber = [];
-
-if (width > 1290) {
-    $(document).arrive("div.DTFC_RightHeadWrapper table thead tr th.sorting_desc span.sr-only", function() {
-        // Adjust column width and hide loading overlay
-        $("div.DTFC_RightHeadWrapper").find("span.sr-only:eq(2)").click().click();
-        $(".mainContent").css("visibility", "visible");
-        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
-        $("body").removeClass("noscroll");
-        Arrive.unbindAllArrive();
-    });
-}
-
+// Display logo screen and call main function
 $(document).ready(function() {
-
-    // Disable scroll until loading is complet
-    $("body").addClass("noscroll");
-
-    setTimeout(function() {
-        $("figcaption#clearLocalStorage").css("display", "block");
-    }, 5000);
-
-    $("figcaption#clearLocalStorage span").on("click", function(e) {
-        clearLocalStorage(e);
-        $(".mainContent").css("visibility", "visible");
-        $("#loadingOverlay, #loadingOverlayImg").css("display", "none");
-        Arrive.unbindAllArrive();
-    });
-
-    var filterValue = window.localStorage.getItem("filterValue");
-
-    if (!filterValue) {
-        window.localStorage.setItem("filterValue", "7");
-        var zipCode = window.localStorage.getItem("filterValue");
-    }
-
-    filterValueFunction();
-
-    var zipCode = window.localStorage.getItem("zipCode");
-    if (!zipCode) {
-        window.localStorage.setItem("zipCode", "Paris");
-        var zipCode = window.localStorage.getItem("zipCode");
-    }
-    $("#zipCodeValue").text(zipCode);
-
-    setInputsDates();
-
-    if (width > 1290) {
-
-        // Display movies quotes
-        var randomQuoteNumber = makeRandomNumber(),
-            random = randomQuotes.quotes[randomQuoteNumber],
-            randomQuotesTitle = "<p><i class=\"fas fa-2x fa-quote-left\"></i><span>" + random.title + "</span>",
-            randomQuotesMovieandYear = "<span id=\"movieandyear\"> - " + random.movie + ", " + random.year + "</span></p>",
-            randomQuotesPicture = "<p><img src=\"assets/pictures/picture" + random.id + ".jpg\" width=\"374px\"></p>";
-
-        document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear + randomQuotesPicture;
-
-        $("#quotes p img").on("error", function() {
-            document.getElementById("quotes").innerHTML = randomQuotesTitle + randomQuotesMovieandYear;
-        });
-
-        window.localStorage.setItem("uniqueRandomNumber", JSON.stringify(uniqueRandomNumber));
-
-        $("#table").on("mouseover", "td.noVis", function(e) {
-            $("table#hoverDetailsTable").remove();
-
-            // Get DataTable API instance
-            var table = $("#table").DataTable(),
-                tr = $(this).closest("tr"),
-                row = table.row(tr),
-                previousSiblingClass = $(e.target).prev().attr("class"),
-                parentHoverClass = $(e.target).parent().attr("class"),
-                trIndex = parseInt(tr.index()),
-                trShownIndex = parseInt($(this).parent().prevAll("tr.odd.shown:first, tr.even.shown:first").index("tr.odd.shown, tr.even.shown")),
-                trOddHeight = parseInt($('tr.odd[role="row"]').css("height")),
-                trHeight = parseInt($('tr[role="row"]').css("height")),
-                trShownHeight = $(this).parent().prevAll("tr.odd.shown:first, tr.even.shown:first").next().height();
-
-            if (previousSiblingClass == " details" && (parentHoverClass == "odd" || parentHoverClass == "even")) {
-                if (trShownHeight > 100) {
-                    arrayHeight.splice(trShownIndex, 1, trShownHeight);
-
-                    newTrShownHeight = getAllBefore(trShownHeight);
-                    newSumTrShownHeightTemp = newTrShownHeight.reduce((a, b) => a + b, 0);
-                    newSumTrShownHeight = newSumTrShownHeightTemp - ((trShownIndex + 1) * trOddHeight);
-
-                    $(".dataTables_scroll").append(hoverFormat(row.data()));
-                    $("table#hoverDetailsTable").find("span").css("top", trIndex * trOddHeight + 37 + newSumTrShownHeight);
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 + newSumTrShownHeight);
-                } else {
-                    $(".dataTables_scroll").append(hoverFormat(row.data()));
-                    $("table#hoverDetailsTable").find("span").css("top", trIndex * trOddHeight + 37);
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5);
-                }
-
-                if (tr.is(":nth-last-child(1)")) {
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 4));
-                }
-                if (tr.is(":nth-last-child(2)")) {
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 3));
-                }
-                if (tr.is(":nth-last-child(3)")) {
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 2));
-                }
-                if (tr.is(":nth-last-child(4)")) {
-                    $("table#hoverDetailsTable").find("img").css("top", trIndex * trOddHeight - 103.5 - (trOddHeight * 1));
-                }
-            }
-        });
-
-        $("#table").on("mouseleave", "td.noVis", function() {
-            $("table#hoverDetailsTable").remove();
-        });
-    }
-
-    // Display movie details
-    $("#table").on("click", "td.details, td.noVis", function() {
-        if ($("table#hoverDetailsTable").length > 0) $("table#hoverDetailsTable").remove();
-
-        setTimeout(function() {
-            var dataTables_scrollBody = $("div.dataTables_scrollBody").height();
-            $("div.DTFC_RightBodyWrapper").height(dataTables_scrollBody);
-        }, 500);
-
-        // Get DataTable API instance
-        var table = $("#table").DataTable(),
-            tr = $(this).closest("tr"),
-            row = table.row(tr),
-            player = row.data().player;
-
-        if (row.child.isShown()) {
-            row.child.hide();
-            tr.removeClass("shown");
-        } else {
-            row.child(format(row.data())).show();
-            tr.addClass("shown");
-
-            var videoThumbnail = $(this).closest("tr").next().find("div.video-thumbnail");
-
-            videoThumbnail.hide();
-            videoThumbnail.find("img").on("load", function() {
-                videoThumbnail.show(1);
-            });
-        }
-
-        const proxyurl = "https://cors-anywhere.herokuapp.com/";
-        const localization_city_url = "https://www.allocine.fr/_/localization_city/";
-        const showtimes_url = "https://www.allocine.fr/_/showtimes/movie-";
-        const postalCode = window.localStorage.getItem("zipCode");
-        var html = "";
-
-        var getPostalCode = async () => {
-            var requestAllocineCities = await fetch(proxyurl + localization_city_url + postalCode);
-            var data = await requestAllocineCities.json();
-
-            return data.values.cities[0].node.id;
-        };
-
-        var getTheaterInfo = async () => {
-            var cityId = await getPostalCode();
-            var url = row.data().url;
-            var movieId = url.substring(
-                url.lastIndexOf("=") + 1,
-                url.lastIndexOf(".")
-            );
-
-            var requestAllocineShowtimes = await fetch(proxyurl + showtimes_url + movieId + "/near-" + cityId + "/d-0/");
-            var dataAllocine = await requestAllocineShowtimes.json();
-            var results = dataAllocine.results;
-
-            if (results.length > 0) {
-                for (var i = 0; i < results.length; i++) {
-                    if (i < 5) {
-                        html += "<p>Cinéma : <a href=\"https://www.allocine.fr/seance/salle_gen_csalle=" + results[i].theater.internalId + ".html\" target=\"_blank\">" + results[i].theater.name +
-                            "</a><br />Adresse : <a href=\"http://maps.google.com/maps?q=" + results[i].theater.location.address + " " + results[i].theater.location.city + "\" target=\"_blank\">" + results[i].theater.location.address + " à " + results[i].theater.location.city +
-                            "</a><br />Horaires pour aujourd'hui : ";
-
-                        for (var j = 0; j < results[i].showtimes.multiple.length; j++) {
-                            var startsAt = results[i].showtimes.multiple[j].startsAt.substring(
-                                results[i].showtimes.multiple[j].startsAt.lastIndexOf("T") + 1,
-                                results[i].showtimes.multiple[j].startsAt.lastIndexOf(":")
-                            )
-
-                            var d = new Date();
-                            var m = d.getMinutes();
-                            var h = d.getHours();
-                            if (h == "0") h = 24;
-                            var currentTime = h + "." + m;
-
-                            var time = startsAt.split(":");
-                            var hour = time[0];
-                            var min = time[1];
-                            var inputTime = hour + "." + min;
-
-                            var totalTime = currentTime - inputTime;
-
-                            if (results[i].showtimes.multiple[j].data.ticketing.length > 0 && results[i].showtimes.multiple[j].data.ticketing[0].urls[0] !== "" && totalTime < 0) {
-                                html += "<a href=\"" + results[i].showtimes.multiple[j].data.ticketing[0].urls + "\" target=\"_blank\">" + startsAt + "</a> / ";
-                            } else {
-                                html += startsAt + " / ";
-                            }
-                        }
-
-                        html = html.replace(/\s\/\s*$/, "");
-                        html += "</p>";
-                    }
-                }
-            } else {
-                html += "<p>Aucunes séances à proximité de : " + postalCode + "</p>"
-            }
-
-            $(this).parent().next().find("span#showtimesInfo").html(html);
-        };
-
-        getTheaterInfo();
-
-        if ($(this).parent().next().find(".secondTd").find("ul").text() === "") $(this).parent().next().find(".secondTd").remove();
-        if ($(this).parent().next().find(".secondTd").find("li").text() === " ") $(this).parent().next().find(".secondTd").remove();
-        if ($(this).parent().next().find(".secondTd").prev().find("li").length === 0) {
-            $(this).parent().next().find(".secondTd").find("p").html("<strong>Informations techniques :</strong>");
-            $(this).parent().next().find(".secondTd").prev().remove();
-        }
-    });
-
-    $("#myModal").on("show.bs.modal", function(e) {
-        $("body, .modal").addClass("noscroll");
-    });
-
-    $("#myModal").on("hide.bs.modal", function(e) {
-        $("body, .modal").removeClass("noscroll");
-    });
-
-    $("#zipcodeLink").on("click", function() {
-        $("#zipCodeInput").toggleClass("expanded");
-        document.getElementById("zipCodeInput").focus();
-    });
-
-    $("#defaultDate").on("click", function(e) {
-        $("button.periodListArrayButton").click();
-        if (e) e.stopPropagation();
-    });
-
-    $("#zipCodeInput").on("change paste keyup", function() {
-        if (event.key === "Enter") {
-            var input = document.getElementById("zipCodeInput").value;
-            window.localStorage.setItem("zipCode", input);
-            window.location.reload(true);
-        } else {
-            autoComplete();
-        }
-    });
-
-    $(".tutorial").on("click", tutorialShow);
-
-    $("body").on("click", function(e) {
-        elementClass = $(e.target).attr("class");
-
-        if (e.target.id === "overlay") tutorialHide();
-
-        if (elementClass === "modal fade" || elementClass === "fa fa-times-circle") $("#video").prop("src", "");
-        if (elementClass === "td_picture") $("#video").prop("src", $(e.target).parent().attr("data-src"));
-        if (elementClass === "video-thumbnail") $("#video").prop("src", $(e.target).attr("data-src"));
-    });
-
-    $(window).scroll(function() {
-        if ($(this).scrollTop() > 10) {
-            $("#overlay h2").html("");
-        } else {
-            $("#overlay h2").html("<span class=\"fa-stack\"><span class=\"fa fa-circle-o fa-stack-2x\"></span><strong class=\"fa-stack-1x\">1</strong></span>Choisissez vos critiques préférées · <a class=\"nextTutorial\" href=\"#\">Suivant <i class=\"fas fa-arrow-alt-circle-right\"></i></a></span>");
-        }
-    });
-
-    // Call main function
-    $.getJSON("https://yaquoiaucine.fr/assets/js/critics.json", mainTable);
-});
+    $("body").addClass("noscroll"), setTimeout(function() {
+        $(".mainContent").css("visibility", "visible"), $("#loadingOverlay, #loadingOverlayImg").css("display", "none"), $("body").removeClass("noscroll")
+    }, 1e3), $.getJSON("https://yaquoiaucine.fr/assets/js/critics.json", mainTable)
+})

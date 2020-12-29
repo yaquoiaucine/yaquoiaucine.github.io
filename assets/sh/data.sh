@@ -308,6 +308,17 @@ do
     user=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ note*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
     echo "\"user\": \"$user\"," >> ./assets/js/data.json
 
+    # Extract IMDb rating
+    titleLower=$(echo ${title// /%20} | tr '[:upper:]' '[:lower:]')
+
+    curl -s "https://www.imdb.com/find?q=$titleLower&s=tt" > temp5
+    imdbId=$(cat temp5 | grep -m1 "result_text" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | sed "s/.*title\///g")
+    curl -s https://www.imdb.com/title/$imdbId/ > temp6
+    imdbRating=$(cat temp6 | grep -m1 "ratingValue" | cut -d'"' -f4)
+
+    echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
+    echo "\"imdbRating\": \"$imdbRating\"," >> ./assets/js/data.json
+
     echo "\"movieDetails\":{" >> ./assets/js/data.json
 
     # Extract original title

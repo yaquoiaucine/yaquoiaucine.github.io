@@ -81,10 +81,11 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
     for (var i = 0; i < dataLength; i++) {
         var excludeTitles = [
                 "Adam",
-                "Harry Potter à l'école des sorciers",
+                "Calvaire",
                 "Dragons",
                 "Family Romance, LLC",
-                "Calvaire",
+                "Harry Potter à l'école des sorciers",
+                "Raoul Taburin",
                 "Shrek 2"
             ],
             excludeCriticnames = [

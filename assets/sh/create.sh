@@ -34,7 +34,7 @@ while IFS= read -r criticName <&3; do
   firstPart=$(echo $criticName | cut -d',' -f2)
   secondPart=$(echo $criticName | cut -d',' -f3)
 
-  echo "<th title=\"Note $firstPart\">$secondPart.</th>" >> ./assets/html/tempFile2.html
+  echo "<th title=\"Notes $firstPart\">$secondPart.</th>" >> ./assets/html/tempFile2.html
 
 done 3<$dataFile
 
