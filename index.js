@@ -131,22 +131,22 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
                 "VSD2",
                 "Zurban2"
             ],
-            criticNamesObject = data.data[i].criticNames,
+            criticNamesObject = data.data[i].allocineData.criticNames,
             criticNamesObjectLength = Object.keys(criticNamesObject).length,
-            criticNamesRealLength = data.data[i].criticNumber,
+            criticNamesRealLength = data.data[i].allocineData.criticNumber,
             criticBis = "2",
             sum = 0,
             columnNumber = 0,
             newSum = 0;
 
         if (criticNamesObjectLength != criticNamesRealLength) {
-            text += "<li><a href=\"" + data.data[i].url + "\">" + data.data[i].title + "</a> : " + criticNamesObjectLength + " sur " + criticNamesRealLength + "</li>";
+            text += "<li><a href=\"" + data.data[i].allocineData.url + "\">" + data.data[i].allocineData.title + "</a> : " + criticNamesObjectLength + " sur " + criticNamesRealLength + "</li>";
         }
 
         if (criticNamesObjectLength > 0) {
-            for (var key in data.data[i].criticNames) {
-                if (data.data[i].criticNames[key] !== undefined && data.data[i].criticNames[key] !== "") {
-                    sum += parseInt(data.data[i].criticNames[key]);
+            for (var key in data.data[i].allocineData.criticNames) {
+                if (data.data[i].allocineData.criticNames[key] !== undefined && data.data[i].allocineData.criticNames[key] !== "") {
+                    sum += parseInt(data.data[i].allocineData.criticNames[key]);
                     columnNumber += 1;
                 }
 
@@ -160,8 +160,8 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
             newSum = 0;
         }
 
-        if (data.data[i].critic != newSum && !excludeTitles.some(str => data.data[i].title.includes(str))) {
-            text += "<li><a href=\"" + data.data[i].url + "\">" + data.data[i].title + "</a> : " + (sum / columnNumber) + " / " + newSum + " / " + data.data[i].critic + "</li>";
+        if (data.data[i].allocineData.critic != newSum && !excludeTitles.some(str => data.data[i].allocineData.title.includes(str))) {
+            text += "<li><a href=\"" + data.data[i].allocineData.url + "\">" + data.data[i].allocineData.title + "</a> : " + (sum / columnNumber) + " / " + newSum + " / " + data.data[i].allocineData.critic + "</li>";
         }
     }
 
@@ -181,46 +181,42 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
             console.log(body);
         });
     }
-
-    var resDataTemp1 = data.data.filter((resDataTemp2, index, self) =>
-        index === self.findIndex((t) => (t.url === resDataTemp2.url)));
-
-    for (var i = 0; i < numberDaysArray.length; i++) {
-        var numberDays = numberDaysArray[i];
-        var endDate = new Date();
-        var startDate = new Date();
-        startDate.setDate(endDate.getDate() - parseInt(numberDays));
-
-        var resDataTemp3 = resDataTemp1.filter(function(d) {
-            var date = splitDate(d.date[0].dateName);
-            var newDate = new Date(date);
-
-            return newDate >= startDate && newDate <= endDate;
-        });
-
-        var resData = JSON.stringify(resDataTemp1);
-        var resData2 = JSON.stringify(resDataTemp3);
-
-        fs.writeFileSync("./assets/js/data.json", resData);
-        var dataFile = fs.readFileSync("./assets/js/data.json");
-        var fd = fs.openSync("./assets/js/data.json", "w+");
-        var insert = Buffer.from("{\"data\":");
-        fs.writeSync(fd, insert, 0, insert.length, 0);
-        fs.writeSync(fd, dataFile, 0, dataFile.length, insert.length);
-        fs.appendFileSync("./assets/js/data.json", "}");
-        fs.close(fd, (err) => {
-            if (err) throw err;
-        });
-
-        fs.writeFileSync("./assets/js/data" + numberDays + ".json", resData2);
-        var dataFile = fs.readFileSync("./assets/js/data" + numberDays + ".json");
-        var fd = fs.openSync("./assets/js/data" + numberDays + ".json", "w+");
-        var insert = Buffer.from("{\"data\":");
-        fs.writeSync(fd, insert, 0, insert.length, 0);
-        fs.writeSync(fd, dataFile, 0, dataFile.length, insert.length);
-        fs.appendFileSync("./assets/js/data" + numberDays + ".json", "}");
-        fs.close(fd, (err) => {
-            if (err) throw err;
-        });
-    }
 });
+
+const compress_images = require("compress-images");
+const INPUT_path_to_your_images = "assets/pictures/*.{jpg,JPG,jpeg,JPEG}";
+const OUTPUT_path = "assets/pictures/new/";
+
+compress_images(INPUT_path_to_your_images, OUTPUT_path, {
+        compress_force: false,
+        statistic: true,
+        autoupdate: true
+    }, false, {
+        jpg: {
+            engine: "mozjpeg",
+            command: ["-quality", "60"]
+        }
+    }, {
+        png: {
+            engine: "pngquant",
+            command: ["--quality=20-50", "-o"]
+        }
+    }, {
+        svg: {
+            engine: "svgo",
+            command: "--multipass"
+        }
+    }, {
+        gif: {
+            engine: "gifsicle",
+            command: ["--colors", "64", "--use-col=web"]
+        }
+    },
+    function(error, completed, statistic) {
+        console.log("-------------");
+        console.log(error);
+        console.log(completed);
+        console.log(statistic);
+        console.log("-------------");
+    }
+);
