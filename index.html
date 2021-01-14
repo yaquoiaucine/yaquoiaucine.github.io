@@ -27,17 +27,473 @@
     <meta property="og:title" content="Y'a quoi au ciné ?" />
     <meta property="og:description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
 
-    <link rel="stylesheet" href="assets/css/shuffle-style.min.css">
-    <link rel="stylesheet" href="assets/css/style.min.css">
+    <link rel="stylesheet" href="assets/css/shuffle-style.min-20210114.css">
+    <link rel="stylesheet" href="assets/css/style.min-20210114.css">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/5.2.3/shuffle.min.js"></script>
     <script type="text/javascript" src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.17.0/core.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
-    <script type="text/javascript" src="assets/js/script.min.js"></script>
+    <script type="text/javascript" src="assets/js/script.min-20210114.js"></script>
 </head>
 
 <body>
+    <div id="burger-menu">
+        <span></span>
+    </div>
+    <div id="menu">
+        <ul>
+            <li class="tg-list-item">
+                <span>Notes de la presse AlloCiné</span>
+                <input class="tgl tgl-flip criticAllocine" id="tgl1" type="checkbox" />
+                <label class="tgl-btn" data-tg-off="Nope" data-tg-on="Yeah!" for="tgl1"></label>
+            </li>
+            <li class="tg-list-item">
+                <span>Notes des spectateurs AlloCiné</span>
+                <input class="tgl tgl-flip usersAllocine" id="tgl2" type="checkbox" />
+                <label class="tgl-btn" data-tg-off="Nope" data-tg-on="Yeah!" for="tgl2"></label>
+            </li>
+        </ul>
+        <div role="menu">
+            <button class="criticButtonAll">
+                <span>
+                    <i class="fas fa-eye-slash"></i> Désélectionner toutes les critiques
+                </span>
+            </button>
+            <button class="criticButton">
+                <span>20 Minutes</span>
+            </button>
+            <button class="criticButton">
+                <span>20 Minutes Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Aden</span>
+            </button>
+            <button class="criticButton">
+                <span>Africultures.com</span>
+            </button>
+            <button class="criticButton">
+                <span>BIBA</span>
+            </button>
+            <button class="criticButton">
+                <span>Bande à part</span>
+            </button>
+            <button class="criticButton">
+                <span>Brazil</span>
+            </button>
+            <button class="criticButton">
+                <span>CNews</span>
+            </button>
+            <button class="criticButton">
+                <span>CNews Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Cahiers du Cinéma</span>
+            </button>
+            <button class="criticButton">
+                <span>Cahiers du Cinéma Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Charlie Hebdo</span>
+            </button>
+            <button class="criticButton">
+                <span>Charlie Hebdo Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Chronic'art.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Chronic'art.com Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Cinéastes</span>
+            </button>
+            <button class="criticButton">
+                <span>CinemaTeaser</span>
+            </button>
+            <button class="criticButton">
+                <span>CinemaTeaser Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Cinopsis.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Cine Libre</span>
+            </button>
+            <button class="criticButton">
+                <span>Ciné Live</span>
+            </button>
+            <button class="criticButton">
+                <span>Closer</span>
+            </button>
+            <button class="criticButton">
+                <span>Combat</span>
+            </button>
+            <button class="criticButton">
+                <span>Cplanet.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Critikat.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Culturebox - France Télévisions</span>
+            </button>
+            <button class="criticButton">
+                <span>Culturopoing.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Culturopoing.com Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Dernières Nouvelles d'Alsace</span>
+            </button>
+            <button class="criticButton">
+                <span>Dvdrama</span>
+            </button>
+            <button class="criticButton">
+                <span>Ecran Large</span>
+            </button>
+            <button class="criticButton">
+                <span>Ecran Large Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Elle</span>
+            </button>
+            <button class="criticButton">
+                <span>Elle Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Excessif</span>
+            </button>
+            <button class="criticButton">
+                <span>Femme Actuelle</span>
+            </button>
+            <button class="criticButton">
+                <span>FHM</span>
+            </button>
+            <button class="criticButton">
+                <span>Filmsactu</span>
+            </button>
+            <button class="criticButton">
+                <span>Fluctuat.net</span>
+            </button>
+            <button class="criticButton">
+                <span>France-Observateur</span>
+            </button>
+            <button class="criticButton">
+                <span>France Soir</span>
+            </button>
+            <button class="criticButton">
+                <span>Gala</span>
+            </button>
+            <button class="criticButton">
+                <span>GQ</span>
+            </button>
+            <button class="criticButton">
+                <span>IGN France</span>
+            </button>
+            <button class="criticButton">
+                <span>Impact</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Aurore</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Ecran Fantastique</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Ecran Fantastique Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Evénement</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Evènement du Jeudi</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Express</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Express Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Humanité</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Humanité Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>L'Observateur d'aujourd'hui</span>
+            </button>
+            <button class="criticButton">
+                <span>LCI</span>
+            </button>
+            <button class="criticButton">
+                <span>Lenouveaucinema.com</span>
+            </button>
+            <button class="criticButton">
+                <span>La Croix</span>
+            </button>
+            <button class="criticButton">
+                <span>La Croix Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>La Septième Obsession</span>
+            </button>
+            <button class="criticButton">
+                <span>La Voix du Nord</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Dauphiné Libéré</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Figaro</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Figaro Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Journal du Dimanche</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Journal du Dimanche Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Journal du Geek</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Monde</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Monde Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Nouvel Observateur</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Nouvel Observateur Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Parisien</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Parisien Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Point</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Point Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Quotidien de Paris</span>
+            </button>
+            <button class="criticButton">
+                <span>Le Soir</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Echos</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Echos Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Fiches du Cinéma</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Fiches du Cinéma Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Inrockuptibles</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Inrockuptibles Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Les Lettres Françaises</span>
+            </button>
+            <button class="criticButton">
+                <span>Libération</span>
+            </button>
+            <button class="criticButton">
+                <span>Libération Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>MCinéma.com</span>
+            </button>
+            <button class="criticButton">
+                <span>MCinéma.com Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Mad Movies</span>
+            </button>
+            <button class="criticButton">
+                <span>Mad Movies Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Marianne</span>
+            </button>
+            <button class="criticButton">
+                <span>Marie Claire</span>
+            </button>
+            <button class="criticButton">
+                <span>Marie Claire Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Metro</span>
+            </button>
+            <button class="criticButton">
+                <span>Metro Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Nice-Matin</span>
+            </button>
+            <button class="criticButton">
+                <span>Novaplanet.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Objectif-Cinema.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Objectif-Cinema.com Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Ouest France</span>
+            </button>
+            <button class="criticButton">
+                <span>Ouest France Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Ouirock.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Paris Match</span>
+            </button>
+            <button class="criticButton">
+                <span>Paris Match Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Planetcinema.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Positif</span>
+            </button>
+            <button class="criticButton">
+                <span>Positif Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Première</span>
+            </button>
+            <button class="criticButton">
+                <span>Première Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Public</span>
+            </button>
+            <button class="criticButton">
+                <span>Repérages</span>
+            </button>
+            <button class="criticButton">
+                <span>Rolling Stone</span>
+            </button>
+            <button class="criticButton">
+                <span>Rolling Stone Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Score</span>
+            </button>
+            <button class="criticButton">
+                <span>Starfix</span>
+            </button>
+            <button class="criticButton">
+                <span>Starfix Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Studio Ciné Live</span>
+            </button>
+            <button class="criticButton">
+                <span>Studio Ciné Live Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Studio Magazine</span>
+            </button>
+            <button class="criticButton">
+                <span>Studio Magazine Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>So Film</span>
+            </button>
+            <button class="criticButton">
+                <span>Sud Ouest</span>
+            </button>
+            <button class="criticButton">
+                <span>Sud Ouest Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Synopsis</span>
+            </button>
+            <button class="criticButton">
+                <span>Technikart</span>
+            </button>
+            <button class="criticButton">
+                <span>Time Out Paris</span>
+            </button>
+            <button class="criticButton">
+                <span>The Hollywood Reporter</span>
+            </button>
+            <button class="criticButton">
+                <span>Transfuge</span>
+            </button>
+            <button class="criticButton">
+                <span>TéléCinéObs</span>
+            </button>
+            <button class="criticButton">
+                <span>TéléCinéObs Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>Télé 2 semaines</span>
+            </button>
+            <button class="criticButton">
+                <span>Télé 7 Jours</span>
+            </button>
+            <button class="criticButton">
+                <span>Télé Loisirs</span>
+            </button>
+            <button class="criticButton">
+                <span>Télérama</span>
+            </button>
+            <button class="criticButton">
+                <span>Télérama Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>TF1 News</span>
+            </button>
+            <button class="criticButton">
+                <span>Urbuz</span>
+            </button>
+            <button class="criticButton">
+                <span>Variety</span>
+            </button>
+            <button class="criticButton">
+                <span>Voici</span>
+            </button>
+            <button class="criticButton">
+                <span>VSD</span>
+            </button>
+            <button class="criticButton">
+                <span>VSD Contre</span>
+            </button>
+            <button class="criticButton">
+                <span>aVoir-aLire.com</span>
+            </button>
+            <button class="criticButton">
+                <span>Zurban</span>
+            </button>
+            <button class="criticButton">
+                <span>Zurban Contre</span>
+            </button>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-6@sm">
@@ -47,6 +503,8 @@
                     <li><a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiauciné,yqac,cinéma,films,actuellementensalles"><i class="fab fa-twitter fa-lg"></i></a></li>
                     <li><a href="https://toucheradiostation.com/recent" target="_blank"><i class="fab fa-youtube fa-lg"></i></a></li>
                     <li><a href="https://github.com/pierrevano/yaquoiaucine" target="_blank"><i class="fab fa-github fa-lg"></i></a></li>
+                    <li><i class="fas tgl-darkmode"></i></li>
+                    <li><i class="fas fa-sliders-h"></i></li>
                     <li><i><span id="typewriter"></span></i></li>
                 </ul>
             </div>
