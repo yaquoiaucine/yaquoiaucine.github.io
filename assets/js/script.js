@@ -1,21 +1,22 @@
 var DOMLoaded = function() {
     var Shuffle = window.Shuffle;
     var shuffleInstance;
+    var buttonsArray = Array.from(document.querySelectorAll('.filter-options button'));
     var criticNumberBool = criticNull = false;
     var divMenu = document.querySelector('[role="menu"]');
     var gridContainerElement = document.getElementById('grid');
     var menuButton = document.querySelectorAll('.criticButton');
     var menuButtonArray = Array.from(menuButton);
     var menuButtonAll = document.querySelector('.criticButtonAll');
+    var optionsArray = Array.from(document.querySelectorAll('.period-options option'));
+    var optionsButton = document.querySelector('.period-options');
     var overlay = document.getElementById('menu');
     var tglDarkmode = document.querySelector('.tgl-darkmode');
 
     const options = {
         time: '0.5s',
-        mixColor: '#fff',
-        backgroundColor: 'rgb(237, 237, 237)',
-        saveInCookies: true,
-        autoMatchOsTheme: true
+        mixColor: '#FFFFFF',
+        backgroundColor: '#EDEDED'
     }
 
     const darkmode = new Darkmode(options);
@@ -35,25 +36,29 @@ var DOMLoaded = function() {
                 sizer: '.my-sizer-element'
             });
 
-            activeFilters = [];
+            filters = {
+                optionsArray: [],
+                buttonsArray: []
+            };
 
             var mode = localStorage.getItem('mode');
             var filterLabel = document.querySelector('.filter-label');
 
             if (mode === 'additive') {
-                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox" checked> )';
+                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox" checked><label for="inputToggle">)</label>';
             } else {
-                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox"> )';
+                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox"><label for="inputToggle">)</label>';
             }
 
-            addFilterButtons();
-            addSearchFilter();
             removeItems();
+            addSearchFilter();
             addSorting();
+            bindEventListeners();
             clickMenuButtonAll();
             clickToggleMode();
             darkmodePref();
             defaultInputClick();
+            focusSearchInput();
             getDarkmodeStatus();
             getTglButtons();
             menuButtons();
@@ -62,12 +67,14 @@ var DOMLoaded = function() {
             typewriter();
         });
 
+    // Retrieve all items from data object
     function getItemMarkup(items) {
         return items.reduce(function(str, item) {
             return str + getMarkupFromData(item);
         }, '');
     };
 
+    // Get selected data from data object
     function getMarkupFromData(dataForSingleItem) {
         var id = dataForSingleItem.id,
             titleTemp = dataForSingleItem.allocineData.title,
@@ -80,7 +87,62 @@ var DOMLoaded = function() {
             genre1 = dataForSingleItem.allocineData.genre.id1,
             genre2 = dataForSingleItem.allocineData.genre.id2,
             genre3 = dataForSingleItem.allocineData.genre.id3,
-            genre, title, rating;
+            genre, title, rating, dateFormatted;
+
+        if (genre3 !== undefined) {
+            genre = dataForSingleItem.allocineData.genre.id1 + ',' + dataForSingleItem.allocineData.genre.id2 + ',' + dataForSingleItem.allocineData.genre.id3;
+        } else if (genre2 !== undefined) {
+            genre = dataForSingleItem.allocineData.genre.id1 + ',' + dataForSingleItem.allocineData.genre.id2;
+        } else if (genre1 !== undefined) {
+            genre = dataForSingleItem.allocineData.genre.id1;
+        } else {
+            genre = '';
+        }
+
+        var dateFormatted = splitDate(date);
+
+        var today = new Date();
+        var todayNewTemp = String(today);
+        var todayNew = splitDate(todayNewTemp);
+        today.setDate(today.getDate() - 7);
+        var last7DaysNew = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var isDateIncludedlast7Days = dateCheck(last7DaysNew, todayNew, dateFormatted);
+
+        var today = new Date();
+        today.setDate(today.getDate() - 14);
+        var last2Weeks = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var isDateIncludedlast2Weeks = dateCheck(last2Weeks, todayNew, dateFormatted);
+
+        var today = new Date();
+        today.setDate(today.getDate() - 21);
+        var last3Weeks = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var isDateIncludedlast3Weeks = dateCheck(last3Weeks, todayNew, dateFormatted);
+
+        var today = new Date();
+        today.setDate(today.getDate() - 30);
+        var last30Days = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var isDateIncludedlast30Days = dateCheck(last30Days, todayNew, dateFormatted);
+
+        var today = new Date();
+        today.setDate(today.getDate() - 90);
+        var last90Days = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var isDateIncludedlast90Days = dateCheck(last90Days, todayNew, dateFormatted);
+
+        var isDateIncluded2018 = dateCheck('01/01/2018', '12/31/2018', dateFormatted);
+        var isDateIncluded2019 = dateCheck('01/01/2019', '12/31/2019', dateFormatted);
+        var isDateIncluded2020 = dateCheck('01/01/2020', '12/31/2020', dateFormatted);
+        var isDateIncluded2021 = dateCheck('01/01/2021', '12/31/2021', dateFormatted);
+
+        dateFormattedFilter = addDateFilter(
+            isDateIncludedlast7Days,
+            isDateIncludedlast2Weeks,
+            isDateIncludedlast3Weeks,
+            isDateIncludedlast30Days,
+            isDateIncludedlast90Days,
+            isDateIncluded2018,
+            isDateIncluded2019,
+            isDateIncluded2020,
+            isDateIncluded2021);
 
         critic = getActiveCritics(criticFix, criticNames);
 
@@ -108,20 +170,10 @@ var DOMLoaded = function() {
 
         rating = ratingTemp.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
 
-        if (genre3 !== undefined) {
-            genre = dataForSingleItem.allocineData.genre.id1 + '&quot;, &quot;' + dataForSingleItem.allocineData.genre.id2 + '&quot;, &quot;' + dataForSingleItem.allocineData.genre.id3;
-        } else if (genre2 !== undefined) {
-            genre = dataForSingleItem.allocineData.genre.id1 + '&quot;, &quot;' + dataForSingleItem.allocineData.genre.id2;
-        } else if (genre1 !== undefined) {
-            genre = dataForSingleItem.allocineData.genre.id1;
-        } else {
-            genre = '';
-        }
-
         titleTemp.length > 15 ? title = titleTemp.substring(0, 14) + '...' : title = dataForSingleItem.allocineData.title;
 
         return [
-            '<figure class="col-3@xs col-3@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-groups="[&quot;' + genre + '&quot;]" data-critic="' + rating + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
+            '<figure class="col-3@xs col-3@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + rating + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
             '<div class="picture-item__inner">',
             '<div class="aspect aspect--16x9">',
             '<div class="aspect__inner">',
@@ -138,6 +190,161 @@ var DOMLoaded = function() {
             '</div>',
             '</figure>'
         ].join('');
+    };
+
+    // Change french date format to mm/dd/yyyy
+    function splitDate(date) {
+        var newDate = date.split(' ');
+        var altFormat = false;
+
+        switch (newDate[1]) {
+            case 'janvier':
+                newDate[1] = '01';
+                break;
+            case 'Jan':
+                newDate[1] = '01';
+                altFormat = true;
+                break;
+            case 'février':
+                newDate[1] = '02';
+                break;
+            case 'Feb':
+                newDate[1] = '02';
+                altFormat = true;
+                break;
+            case 'mars':
+                newDate[1] = '03';
+                break;
+            case 'Mar':
+                newDate[1] = '03';
+                altFormat = true;
+                break;
+            case 'avril':
+                newDate[1] = '04';
+                break;
+            case 'Apr':
+                newDate[1] = '04';
+                altFormat = true;
+                break;
+            case 'mai':
+                newDate[1] = '05';
+                break;
+            case 'May':
+                newDate[1] = '05';
+                altFormat = true;
+                break;
+            case 'juin':
+                newDate[1] = '06';
+                break;
+            case 'Jun':
+                newDate[1] = '06';
+                altFormat = true;
+                break;
+            case 'juillet':
+                newDate[1] = '07';
+                break;
+            case 'Jul':
+                newDate[1] = '07';
+                altFormat = true;
+                break;
+            case 'août':
+                newDate[1] = '08';
+                break;
+            case 'Aug':
+                newDate[1] = '08';
+                altFormat = true;
+                break;
+            case 'septembre':
+                newDate[1] = '09';
+                break;
+            case 'Sep':
+                newDate[1] = '09';
+                altFormat = true;
+                break;
+            case 'octobre':
+                newDate[1] = '10';
+                break;
+            case 'Oct':
+                newDate[1] = '10';
+                altFormat = true;
+                break;
+            case 'novembre':
+                newDate[1] = '11';
+                break;
+            case 'Nov':
+                newDate[1] = '11';
+                altFormat = true;
+                break;
+            case 'décembre':
+                newDate[1] = '12';
+                break;
+            case 'Dec':
+                newDate[1] = '12';
+                altFormat = true;
+                break;
+            default:
+                newDate[1] = '';
+                break
+        }
+
+        if (altFormat) {
+            return newDate[1] + '/' + newDate[2] + '/' + newDate[3];
+        } else {
+            return newDate[1] + '/' + newDate[0] + '/' + newDate[2];
+        }
+    };
+
+    // Parse start date, end date and date to check
+    function dateCheck(firstDate, lastDate, dateToCheck) {
+        var firstDateNew, lastDateNew, dateToCheckNew;
+
+        firstDateNew = Date.parse(firstDate);
+        lastDateNew = Date.parse(lastDate);
+        dateToCheckNew = Date.parse(dateToCheck);
+
+        return (dateToCheckNew <= lastDateNew && dateToCheckNew >= firstDateNew);
+    };
+
+    // Return date values for filtering
+    function addDateFilter(
+        isDateIncludedlast7Days,
+        isDateIncludedlast2Weeks,
+        isDateIncludedlast3Weeks,
+        isDateIncludedlast30Days,
+        isDateIncludedlast90Days,
+        isDateIncluded2018,
+        isDateIncluded2019,
+        isDateIncluded2020,
+        isDateIncluded2021) {
+        var text = text2 = '';
+
+        if (isDateIncludedlast7Days) {
+            text = 'Les 7 derniers jours,Les 2 dernières semaines,Les 3 dernières semaines,Les 30 derniers jours,Les 90 derniers jours';
+        } else if (isDateIncludedlast2Weeks) {
+            text = 'Les 2 dernières semaines,Les 3 dernières semaines,Les 30 derniers jours,Les 90 derniers jours';
+        } else if (isDateIncludedlast3Weeks) {
+            text = 'Les 3 dernières semaines,Les 30 derniers jours,Les 90 derniers jours';
+        } else if (isDateIncludedlast30Days) {
+            text = 'Les 30 derniers jours,Les 90 derniers jours';
+        } else if (isDateIncludedlast90Days) {
+            text = 'Les 90 derniers jours';
+        } else {
+            text = '';
+        }
+
+        if (isDateIncluded2021) {
+            text2 = 'En 2021';
+        } else if (isDateIncluded2020) {
+            text2 = 'En 2020';
+        } else if (isDateIncluded2019) {
+            text2 = 'En 2019';
+        } else if (isDateIncluded2018) {
+            text2 = 'En 2018';
+        } else {
+            text2 = '';
+        }
+
+        return text + ',' + text2;
     };
 
     // Return active critics
@@ -180,6 +387,7 @@ var DOMLoaded = function() {
         return critic;
     };
 
+    // Set localStorage for critic and user main buttons
     function retrieveLocalData(item) {
         if (item == 'true') {
             return true;
@@ -192,68 +400,16 @@ var DOMLoaded = function() {
         }
     };
 
+    // Display retrieved data in grid div
     function appendMarkupToGrid(markup) {
         gridContainerElement.insertAdjacentHTML('beforeend', markup);
     };
 
-    function addFilterButtons() {
-        var options = document.querySelector('.filter-options');
-
-        if (!options) {
-            return;
-        }
-
-        var filterButtons = Array.from(options.children);
-
-        filterButtons.forEach(function(button) {
-            button.addEventListener('click', handleFilterClick.bind(this), false);
-        });
-    };
-
-    function handleFilterClick(evt) {
-        var mode = localStorage.getItem('mode');
-
-        if (mode == undefined) {
-            localStorage.setItem('mode', 'exclusive');
-            var mode = localStorage.getItem('mode');
-        }
-
-        var btn = evt.currentTarget;
-        var isActive = btn.classList.contains('active');
-        var btnGroup = btn.getAttribute('data-group');
-
-        if (mode === 'additive') {
-            if (isActive) {
-                activeFilters.splice(activeFilters.indexOf(btnGroup));
-            } else {
-                activeFilters.push(btnGroup);
-            }
-
-            btn.classList.toggle('active');
-
-            shuffleInstance.filter(activeFilters);
-
-        } else {
-            removeActiveClassFromChildren(btn.parentNode);
-
-            var filterGroup;
-            if (isActive) {
-                btn.classList.remove('active');
-                filterGroup = Shuffle.ALL_ITEMS;
-            } else {
-                btn.classList.add('active');
-                filterGroup = btnGroup;
-            }
-
-            shuffleInstance.filter(filterGroup);
-        }
-    };
-
-    function removeActiveClassFromChildren(parent) {
-        var children = parent.children;
-        for (var i = children.length - 1; i >= 0; i--) {
-            children[i].classList.remove('active');
-        }
+    // Remove localStorage items
+    function removeItems() {
+        localStorage.removeItem('critic');
+        localStorage.removeItem('title');
+        localStorage.removeItem('dateCreated');
     };
 
     // Search function
@@ -287,13 +443,6 @@ var DOMLoaded = function() {
 
             return titleText.indexOf(searchText) !== -1;
         });
-    };
-
-    // Remove localStorage items
-    function removeItems() {
-        localStorage.removeItem('critic');
-        localStorage.removeItem('title');
-        localStorage.removeItem('dateCreated');
     };
 
     // Sort function
@@ -398,51 +547,139 @@ var DOMLoaded = function() {
         shuffleInstance.sort(options);
     };
 
-    // Change french date format to mm/dd/yyyy
-    function splitDate(date) {
-        var newDate = date.split(' ');
-        switch (newDate[1]) {
-            case 'janvier':
-                newDate[1] = '01';
-                break;
-            case 'février':
-                newDate[1] = '02';
-                break;
-            case 'mars':
-                newDate[1] = '03';
-                break;
-            case 'avril':
-                newDate[1] = '04';
-                break;
-            case 'mai':
-                newDate[1] = '05';
-                break;
-            case 'juin':
-                newDate[1] = '06';
-                break;
-            case 'juillet':
-                newDate[1] = '07';
-                break;
-            case 'août':
-                newDate[1] = '08';
-                break;
-            case 'septembre':
-                newDate[1] = '09';
-                break;
-            case 'octobre':
-                newDate[1] = '10';
-                break;
-            case 'novembre':
-                newDate[1] = '11';
-                break;
-            case 'décembre':
-                newDate[1] = '12';
-                break;
-            default:
-                newDate[1] = '';
-                break
+    // Add events on options changes and buttons clicks
+    function bindEventListeners() {
+        var activePeriod = localStorage.getItem('activePeriod');
+
+        setTimeout(function() {
+            if (activePeriod != null) {
+                optionsButton.value = activePeriod;
+                optionsButton.options[optionsButton.selectedIndex].setAttribute('selected', 'selected');
+                handleOptionChange();
+            }
+        }, 100);
+
+        onButtonChange = handleButtonChange.bind(this);
+
+        optionsButton.addEventListener("change", function() {
+            optionsButton.options[optionsButton.selectedIndex].setAttribute('selected', 'selected');
+            handleOptionChange();
+            activePeriod = optionsButton.options[optionsButton.selectedIndex].value;
+            localStorage.setItem('activePeriod', activePeriod);
+        });
+
+        buttonsArray.forEach(function(button) {
+            button.addEventListener('click', onButtonChange);
+        }, this);
+    };
+
+    // Get current option filters and filter
+    function handleOptionChange() {
+        filters.optionsArray = getCurrentOptionFilters();
+        if (filters.optionsArray == 'Depuis toujours' ||
+            filters.optionsArray == 'Default')
+            filters.optionsArray = '';
+        filter();
+    };
+
+    // Return selected option value
+    function getCurrentOptionFilters() {
+        return optionsArray.filter(function(option) {
+            return option.selected;
+        }).map(function(option) {
+            return option.value;
+        });
+    };
+
+    // Handle button change with additive and exclusive mode
+    function handleButtonChange(evt) {
+        var mode = localStorage.getItem('mode');
+
+        if (mode == undefined) {
+            localStorage.setItem('mode', 'exclusive');
+            var mode = localStorage.getItem('mode');
         }
-        return newDate[1] + '/' + newDate[0] + '/' + newDate[2]
+
+        var btn = evt.currentTarget;
+        var isActive = btn.classList.contains('active');
+        var btnGroup = btn.getAttribute('data-group');
+
+        if (mode === 'additive') {
+            if (isActive) {
+                filters.buttonsArray.splice(filters.buttonsArray.indexOf(btnGroup));
+            } else {
+                filters.buttonsArray.push(btnGroup);
+            }
+
+            btn.classList.toggle('active');
+
+            filter();
+
+        } else {
+            removeActiveClassFromChildren(btn.parentNode);
+
+            if (isActive) {
+                btn.classList.remove('active');
+            } else {
+                btn.classList.add('active');
+                filters.buttonsArray = getCurrentButtonFilters();
+            }
+
+            filter();
+        }
+    };
+
+    // Remove active class from children
+    function removeActiveClassFromChildren(parent) {
+        var children = parent.children;
+        for (var i = children.length - 1; i >= 0; i--) {
+            children[i].classList.remove('active');
+        }
+    };
+
+    // Get current button filters
+    function getCurrentButtonFilters() {
+        return buttonsArray.filter(function(button) {
+            return button.classList.contains('active');
+        }).map(function(button) {
+            return button.getAttribute('data-group');
+        });
+    };
+
+    // Filter matching items
+    function filter() {
+        if (hasActiveFilters()) {
+            shuffleInstance.filter(itemPassesFilters.bind(this));
+        } else {
+            shuffleInstance.filter(Shuffle.ALL_ITEMS);
+        }
+    };
+
+    // Check active filters length
+    function hasActiveFilters() {
+        return Object.keys(filters).some(function(key) {
+            return filters[key].length > 0;
+        }, this);
+    };
+
+    // Select matching items
+    function itemPassesFilters(element) {
+        var optionsArray = filters.optionsArray;
+        var buttonsArray = filters.buttonsArray;
+        var option = element.getAttribute('data-date-formatted');
+        var optionNew = option.split(',');
+        var button = element.getAttribute('data-genre');
+        var buttonNew = button.split(',');
+
+        if (optionsArray.length > 0 && !optionsArray.some(r => optionNew.includes(r))) {
+            return false;
+        }
+
+        if (buttonsArray.length > 0 && !buttonsArray.some(r => buttonNew.includes(r))) {
+            return false;
+        }
+
+        return true;
     };
 
     // Set or unset all critic buttons
@@ -519,6 +756,20 @@ var DOMLoaded = function() {
         defaultInput.click();
     };
 
+    // Display shortcut on search input focus
+    function focusSearchInput() {
+        var shortcutId = document.getElementById('shortcut');
+        var textfieldInput = document.querySelector('.textfield');
+
+        textfieldInput.addEventListener('focus', function() {
+            shortcutId.classList.remove('displayNone');
+        });
+
+        textfieldInput.addEventListener('focusout', function() {
+            shortcutId.classList.add('displayNone');
+        });
+    };
+
     // Add click listener on menu toggles
     function getTglButtons() {
         var tglBtn = document.querySelectorAll('.tgl-flip');
@@ -530,8 +781,16 @@ var DOMLoaded = function() {
 
         if (tgl1.checked) {
             divMenu.classList.remove('displayNone');
+            tgl1.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
         } else {
             divMenu.classList.add('displayNone');
+            tgl1.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
+        }
+
+        if (tgl2.checked) {
+            tgl2.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
+        } else {
+            tgl2.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
         }
 
         var tglBtnArray = Array.from(tglBtn);
@@ -554,8 +813,10 @@ var DOMLoaded = function() {
 
         if (classListNameActive == 'true') {
             localStorage.setItem(classListName, 'false');
+            item.currentTarget.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
         } else {
             localStorage.setItem(classListName, 'true');
+            item.currentTarget.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
         }
     };
 

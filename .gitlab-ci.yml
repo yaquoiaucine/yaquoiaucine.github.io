@@ -4,6 +4,7 @@ before_script:
   - npm install surge
   - npm install get-json
   - npm install mailgun-js
+  - npm install compress-images
 
 main:
   stage: deploy
@@ -16,5 +17,5 @@ main:
     # - chmod +x ./assets/sh/data.sh
     # - bash ./assets/sh/data.sh
     # - node_modules/.bin/surge .
-    # - node ./index.js
+    - node node_script.js
     - node_modules/.bin/surge .

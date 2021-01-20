@@ -14,7 +14,7 @@ cat assets/css/shuffle-styleTemp.css | sed 's/\[type=search\]{-webkit-appearance
 js-beautify -r --type css assets/css/style.css
 js-beautify -r --type js assets/js/script.js
 js-beautify -r --type html index.html
-js-beautify -r --type js index.js
+js-beautify -r --type js node_script.js
 
 # Remove older files before compressing
 rm -f assets/js/script.min*.js
@@ -28,9 +28,9 @@ uglifycss assets/css/shuffle-style.css > assets/css/shuffle-style.min-$newFileVe
 echo "JS and CSS files minified with success"
 
 # Replace index files
-sed -i '' "s/script\.min\.js/script\.min-$newFileVersion\.js/" index.html
-sed -i '' "s/style\.min\.css/style\.min-$newFileVersion\.css/" index.html
-sed -i '' "s/shuffle-style\.min\.css/shuffle-style\.min-$newFileVersion\.css/" index.html
+sed -i '' "s/script\.min-........\.js/script\.min-$newFileVersion\.js/" index.html
+sed -i '' "s/style\.min-........\.css/style\.min-$newFileVersion\.css/" index.html
+sed -i '' "s/shuffle-style\.min-........\.css/shuffle-style\.min-$newFileVersion\.css/" index.html
 
 # Update rights
 chown -R pvano ./*
@@ -44,7 +44,7 @@ rm -f assets/css/shuffle-styleTemp.css
 rm -f assets/css/shuffle-style.css
 
 # Trigger node script
-node index.js
+node node_script.js
 
 # Define commit name
 commit=$1

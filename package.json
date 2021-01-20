@@ -2,7 +2,7 @@
   "name": "yaquoiaucine",
   "version": "1.0.0",
   "description": "https://yaquoiaucine.fr",
-  "main": "index.js",
+  "main": "node_script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "npx npm-force-resolutions"

@@ -163,6 +163,81 @@ getJSON("https://yaquoiaucine.fr/assets/js/data.json", function(error, response)
         if (data.data[i].allocineData.critic != newSum && !excludeTitles.some(str => data.data[i].allocineData.title.includes(str))) {
             text += "<li><a href=\"" + data.data[i].allocineData.url + "\">" + data.data[i].allocineData.title + "</a> : " + (sum / columnNumber) + " / " + newSum + " / " + data.data[i].allocineData.critic + "</li>";
         }
+
+        if (data.data[i].allocineData.genre.id1 != 'Action' &&
+            data.data[i].allocineData.genre.id1 != 'Animation' &&
+            data.data[i].allocineData.genre.id1 != 'Aventure' &&
+            data.data[i].allocineData.genre.id1 != 'Biopic' &&
+            data.data[i].allocineData.genre.id1 != 'Comédie dramatique' &&
+            data.data[i].allocineData.genre.id1 != 'Comédie' &&
+            data.data[i].allocineData.genre.id1 != 'Drame' &&
+            data.data[i].allocineData.genre.id1 != 'Science fiction' &&
+            data.data[i].allocineData.genre.id1 != 'Musical' &&
+            data.data[i].allocineData.genre.id1 != 'Famille' &&
+            data.data[i].allocineData.genre.id1 != 'Fantastique' &&
+            data.data[i].allocineData.genre.id1 != 'Policier' &&
+            data.data[i].allocineData.genre.id1 != 'Dessin animé' &&
+            data.data[i].allocineData.genre.id1 != 'Romance' &&
+            data.data[i].allocineData.genre.id1 != 'Historique' &&
+            data.data[i].allocineData.genre.id1 != 'Epouvante-horreur' &&
+            data.data[i].allocineData.genre.id1 != 'Thriller' &&
+            data.data[i].allocineData.genre.id1 != 'Guerre' &&
+            data.data[i].allocineData.genre.id1 != 'Documentaire' &&
+            data.data[i].allocineData.genre.id1 != 'Judiciaire' &&
+            data.data[i].allocineData.genre.id1 != 'Opera' &&
+            data.data[i].allocineData.genre.id1 != undefined) {
+            text += "<li>Genres manquants : " + data.data[i].allocineData.genre.id1 + "</li>";
+        }
+
+        if (data.data[i].allocineData.genre.id2 != 'Action' &&
+            data.data[i].allocineData.genre.id2 != 'Animation' &&
+            data.data[i].allocineData.genre.id2 != 'Aventure' &&
+            data.data[i].allocineData.genre.id2 != 'Biopic' &&
+            data.data[i].allocineData.genre.id2 != 'Comédie dramatique' &&
+            data.data[i].allocineData.genre.id2 != 'Comédie' &&
+            data.data[i].allocineData.genre.id2 != 'Drame' &&
+            data.data[i].allocineData.genre.id2 != 'Science fiction' &&
+            data.data[i].allocineData.genre.id2 != 'Musical' &&
+            data.data[i].allocineData.genre.id2 != 'Famille' &&
+            data.data[i].allocineData.genre.id2 != 'Fantastique' &&
+            data.data[i].allocineData.genre.id2 != 'Policier' &&
+            data.data[i].allocineData.genre.id2 != 'Dessin animé' &&
+            data.data[i].allocineData.genre.id2 != 'Romance' &&
+            data.data[i].allocineData.genre.id2 != 'Historique' &&
+            data.data[i].allocineData.genre.id2 != 'Epouvante-horreur' &&
+            data.data[i].allocineData.genre.id2 != 'Thriller' &&
+            data.data[i].allocineData.genre.id2 != 'Guerre' &&
+            data.data[i].allocineData.genre.id2 != 'Documentaire' &&
+            data.data[i].allocineData.genre.id2 != 'Judiciaire' &&
+            data.data[i].allocineData.genre.id2 != 'Opera' &&
+            data.data[i].allocineData.genre.id2 != undefined) {
+            text += "<li>Genres manquants : " + data.data[i].allocineData.genre.id2 + "</li>";
+        }
+
+        if (data.data[i].allocineData.genre.id3 != 'Action' &&
+            data.data[i].allocineData.genre.id3 != 'Animation' &&
+            data.data[i].allocineData.genre.id3 != 'Aventure' &&
+            data.data[i].allocineData.genre.id3 != 'Biopic' &&
+            data.data[i].allocineData.genre.id3 != 'Comédie dramatique' &&
+            data.data[i].allocineData.genre.id3 != 'Comédie' &&
+            data.data[i].allocineData.genre.id3 != 'Drame' &&
+            data.data[i].allocineData.genre.id3 != 'Science fiction' &&
+            data.data[i].allocineData.genre.id3 != 'Musical' &&
+            data.data[i].allocineData.genre.id3 != 'Famille' &&
+            data.data[i].allocineData.genre.id3 != 'Fantastique' &&
+            data.data[i].allocineData.genre.id3 != 'Policier' &&
+            data.data[i].allocineData.genre.id3 != 'Dessin animé' &&
+            data.data[i].allocineData.genre.id3 != 'Romance' &&
+            data.data[i].allocineData.genre.id3 != 'Historique' &&
+            data.data[i].allocineData.genre.id3 != 'Epouvante-horreur' &&
+            data.data[i].allocineData.genre.id3 != 'Thriller' &&
+            data.data[i].allocineData.genre.id3 != 'Guerre' &&
+            data.data[i].allocineData.genre.id3 != 'Documentaire' &&
+            data.data[i].allocineData.genre.id3 != 'Judiciaire' &&
+            data.data[i].allocineData.genre.id3 != 'Opera' &&
+            data.data[i].allocineData.genre.id3 != undefined) {
+            text += "<li>Genres manquants : " + data.data[i].allocineData.genre.id3 + "</li>";
+        }
     }
 
     text += "<li>Presses non rajoutées : " + totalKey + "</li></ul>";

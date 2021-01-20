@@ -27,14 +27,14 @@
     <meta property="og:title" content="Y'a quoi au ciné ?" />
     <meta property="og:description" content="Y'a quoi au ciné ? vous aidera à choisir parmi les films les mieux notés actuellement au cinéma." />
 
-    <link rel="stylesheet" href="assets/css/shuffle-style.min-20210114.css">
-    <link rel="stylesheet" href="assets/css/style.min-20210114.css">
+    <link rel="stylesheet" href="assets/css/shuffle-style.min-20210120.css">
+    <link rel="stylesheet" href="assets/css/style.min-20210120.css">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Shuffle/5.2.3/shuffle.min.js"></script>
     <script type="text/javascript" src="https://kit.fontawesome.com/a73a8689c0.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.17.0/core.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
-    <script type="text/javascript" src="assets/js/script.min-20210114.js"></script>
+    <script type="text/javascript" src="assets/js/script.min-20210120.js"></script>
 </head>
 
 <body>
@@ -499,7 +499,7 @@
             <div class="col-6@sm">
                 <ul>
                     <li><a href="https://yaquoiaucine.fr/"><strong>Y'a quoi au ciné ?</strong></a></li>
-                    <li> | </li>
+                    <li id="secondLi"> | </li>
                     <li><a class="twitter-share-button" id="twitterLink" target="_blank" href="https://twitter.com/intent/tweet?text=Y'a quoi au ciné ? : https://yaquoiaucine.fr&hashtags=yaquoiauciné,yqac,cinéma,films,actuellementensalles"><i class="fab fa-twitter fa-lg"></i></a></li>
                     <li><a href="https://toucheradiostation.com/recent" target="_blank"><i class="fab fa-youtube fa-lg"></i></a></li>
                     <li><a href="https://github.com/pierrevano/yaquoiaucine" target="_blank"><i class="fab fa-github fa-lg"></i></a></li>
@@ -510,7 +510,8 @@
             </div>
             <div class="col-6@sm">
                 <ul>
-                    <li><input class="textfield filter__search js-shuffle-search" type="search" id="filters-search-input" placeholder="Rechercher un titre de film" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Rechercher un titre de film'" title="raccourci : CMD/CTRL + F"></li>
+                    <li><input class="textfield filter__search js-shuffle-search" type="search" id="filters-search-input" placeholder="Rechercher un titre de film" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Rechercher un titre de film'"></li>
+                    <li id="shortcut" class="displayNone">raccourci : CMD/CTRL + F</li>
                 </ul>
             </div>
         </div>
@@ -519,19 +520,32 @@
         <div class="row">
             <div class="col-12@sm filters-group-wrap">
                 <div class="filters-group">
-                    <p class="filter-label">Genre (cumuler <input id="inputToggle" type="checkbox"> )</p>
-                    <div class="btn-group filter-options">
-                        <button class="btn btn--primary" data-group="Action">Action</button>
-                        <button class="btn btn--primary" data-group="Animation">Animation</button>
-                        <button class="btn btn--primary" data-group="Aventure">Aventure</button>
-                        <button class="btn btn--primary" data-group="Biopic">Biopic</button>
-                        <button class="btn btn--primary" data-group="Comédie dramatique">Comédie dramatique</button>
-                        <button class="btn btn--primary" data-group="Comédie">Comédie</button>
-                        <button class="btn btn--primary" data-group="Drame">Drame</button>
+                    <p class="filter-label">Genre (cumuler <input id="inputToggle" type="checkbox"><label for="inputToggle">)</label></p>
+                    <div class="btn-group filter-options firstFilter">
+                        <button class="btn btn--primary" data-group="Action">Action</button><button class="btn btn--primary" data-group="Animation">Animation</button><button class="btn btn--primary" data-group="Aventure">Aventure</button><button class="btn btn--primary" data-group="Biopic">Biopic</button><button class="btn btn--primary" data-group="Comédie dramatique">Comédie dramatique</button><button class="btn btn--primary" data-group="Comédie">Comédie</button><button class="btn btn--primary" data-group="Dessin animé">Dessin animé</button><button class="btn btn--primary" data-group="Documentaire">Documentaire</button><button class="btn btn--primary" data-group="Drame">Drame</button><button class="btn btn--primary" data-group="Epouvante-horreur">Epouvante-horreur</button><button class="btn btn--primary" data-group="Famille">Famille</button><button class="btn btn--primary" data-group="Fantastique">Fantastique</button><button class="btn btn--primary" data-group="Guerre">Guerre</button><button class="btn btn--primary" data-group="Historique">Historique</button><button class="btn btn--primary" data-group="Judiciaire">Judiciaire</button><button class="btn btn--primary" data-group="Musical">Musical</button><button class="btn btn--primary" data-group="Opera">Opera</button><button class="btn btn--primary" data-group="Policier">Policier</button><button class="btn btn--primary" data-group="Romance">Romance</button><button class="btn btn--primary" data-group="Science fiction">Science fiction</button><button class="btn btn--primary" data-group="Thriller">Thriller</button>
                     </div>
                 </div>
 
                 <div class="filters-group">
+                    <p class="filter-label"><label for="cars">Période</label></p>
+                    <div class="btn-group">
+                        <select class="btn period-options" name="date">
+                            <option value="Default" data-group="">Choisissez une période</option>
+                            <option value="Les 7 derniers jours" data-group="Les 7 derniers jours">Les 7 derniers jours</option>
+                            <option value="Les 2 dernières semaines" data-group="Les 2 dernières semaines">Les 2 dernières semaines</option>
+                            <option value="Les 3 dernières semaines" data-group="Les 3 dernières semaines">Les 3 dernières semaines</option>
+                            <option value="Les 30 derniers jours" data-group="Les 30 derniers jours">Les 30 derniers jours</option>
+                            <option value="Les 90 derniers jours" data-group="Les 90 derniers jours">Les 90 derniers jours</option>
+                            <option value="En 2021" data-group="En 2021">En 2021</option>
+                            <option value="En 2020" data-group="En 2020">En 2020</option>
+                            <option value="En 2019" data-group="En 2019">En 2019</option>
+                            <option value="En 2018" data-group="En 2018">En 2018</option>
+                            <option value="Depuis toujours" data-group="">Depuis toujours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filters-group lastFilter">
                     <p class="filter-label">Trier par</p>
                     <div class="btn-group sort-options">
                         <label class="btn active">
