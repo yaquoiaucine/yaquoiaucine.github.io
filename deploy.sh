@@ -36,18 +36,16 @@ sed -i '' "s/shuffle-style\.min-........\.css/shuffle-style\.min-$newFileVersion
 chown -R pvano ./*
 
 # Remove temp files
-rm -f assets/pictures/new/*
 rm -f temp*
-rm -f log*
 rm -f assets/sh/critics*.txt
 rm -f assets/css/shuffle-styleTemp.css
 rm -f assets/css/shuffle-style.css
 
-# Trigger node script
-node node_script.js
-
 # Define commit name
 commit=$1
 
+# Add commit
+git add . && git commit -m "$commit"
+
 # Deploy to GitLab
-git add . && git commit -m "$commit" && git push
+git push

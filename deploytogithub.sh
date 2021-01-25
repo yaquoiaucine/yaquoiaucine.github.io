@@ -16,6 +16,11 @@ mv ../.git ../yaquoiaucinegithub
 # Copy files from yaquoiaucine to yaquoiaucinegithub except git repo
 rsync -av --progress . ../yaquoiaucinegithub --exclude .git/
 
+# Remove extra files
+rm -f -R ../yaquoiaucinegithub/node_modules
+rm -f -R ../yaquoiaucinegithub/node_script.js
+rm -f -R ../yaquoiaucinegithub/package*.json
+
 # Change current path to yaquoiaucinegithub
 cd ../yaquoiaucinegithub
 

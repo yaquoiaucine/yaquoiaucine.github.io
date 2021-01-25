@@ -33,8 +33,6 @@ do
     if [ $checkMoviesNumber -eq 0 ]; then
       curl -s $baseUrl\?page\=$i > temp
     fi
-
-    curl -s $baseUrl\?page\=$i > log$i
   # Get Allociné last page
   elif [ $i -eq $pagesNumber ]; then
     curl -s $baseUrl\?page\=$i > temp
@@ -65,7 +63,6 @@ do
     # Extract movie picture
     picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4)
     echo "\"picture\": \"$picture\"," >> ./assets/js/data.json
-    curl -s $picture > ./assets/pictures/$id.jpg
 
     # Extract movie date
     date=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1)

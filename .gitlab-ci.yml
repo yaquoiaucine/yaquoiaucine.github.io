@@ -14,8 +14,8 @@ main:
     FROM_KEY: $FROM_KEY
     TO_KEY: $TO_KEY
   script:
-    # - chmod +x ./assets/sh/data.sh
-    # - bash ./assets/sh/data.sh
-    # - node_modules/.bin/surge .
+    - chmod +x ./assets/sh/data.sh
+    - bash ./assets/sh/data.sh
+    - node_modules/.bin/surge .
     - node node_script.js
     - node_modules/.bin/surge .

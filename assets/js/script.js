@@ -56,6 +56,7 @@ var DOMLoaded = function() {
             bindEventListeners();
             clickMenuButtonAll();
             clickToggleMode();
+            criticMenu();
             darkmodePref();
             defaultInputClick();
             focusSearchInput();
@@ -88,6 +89,8 @@ var DOMLoaded = function() {
             genre2 = dataForSingleItem.allocineData.genre.id2,
             genre3 = dataForSingleItem.allocineData.genre.id3,
             genre, title, rating, dateFormatted;
+
+        var urlId = dataForSingleItem.allocineData.url.match(/=(.*)\./).pop();
 
         if (genre3 !== undefined) {
             genre = dataForSingleItem.allocineData.genre.id1 + ',' + dataForSingleItem.allocineData.genre.id2 + ',' + dataForSingleItem.allocineData.genre.id3;
@@ -154,17 +157,32 @@ var DOMLoaded = function() {
         var userInput = document.querySelector('.usersAllocine');
 
         if (retrieveLocalData(criticActive) && retrieveLocalData(userActive)) {
-            if (critic == 0) critic = user;
+            if (critic == 0) {
+                critic = user;
+                criticDetails = '/';
+            } else {
+                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
+            }
             ratingTemp = (parseFloat(critic) + parseFloat(user)) / 2;
+            userDetails = user;
+
             criticInput.setAttribute('checked', '');
             userInput.setAttribute('checked', '');
         } else if (retrieveLocalData(criticActive)) {
+            criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
+            if (criticDetails == 0) criticDetails = '/';
+            userDetails = '/';
             ratingTemp = parseFloat(critic);
+
             criticInput.setAttribute('checked', '');
         } else if (retrieveLocalData(userActive)) {
+            criticDetails = '/';
+            userDetails = user;
             ratingTemp = parseFloat(user);
+
             userInput.setAttribute('checked', '');
         } else {
+            criticDetails = userDetails = '/';
             ratingTemp = 0;
         }
 
@@ -172,24 +190,39 @@ var DOMLoaded = function() {
 
         titleTemp.length > 15 ? title = titleTemp.substring(0, 14) + '...' : title = dataForSingleItem.allocineData.title;
 
+        /* beautify ignore:start */
         return [
-            '<figure class="col-3@xs col-3@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + rating + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
-            '<div class="picture-item__inner">',
-            '<div class="aspect aspect--16x9">',
-            '<div class="aspect__inner">',
-            '<img src="assets/pictures/new/' + id + '.jpg" srcset="assets/pictures/new/' + id + '.jpg" alt="' + title + '">',
-            '<img class="picture-item__blur" src="assets/pictures/new/' + id + '.jpg" srcset="assets/pictures/new/' + id + '.jpg" alt="" aria-hidden="true">',
-            '</div>',
-            '</div>',
-            '<div class="picture-item__details">',
-            '<figcaption class="picture-item__title">',
-            '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">' + title + '</a>',
-            '</figcaption>',
-            '<p class="picture-item__tags">' + rating + '</p>',
-            '</div>',
-            '</div>',
+            '<figure class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + rating + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
+              '<div class="picture-item__inner">',
+                '<div class="aspect aspect--16x9">',
+                  '<div class="aspect__inner">',
+                    '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">',
+                      '<img src="' + picture + '" srcset="' + picture + '" alt="' + title + '">',
+                    '</a>',
+                    '<img class="picture-item__blur" src="' + picture + '" srcset="' + picture + '" alt="" aria-hidden="true">',
+                  '</div>',
+                '</div>',
+                '<div class="picture-item__details">',
+                  '<figcaption class="picture-item__title">',
+                    '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">' + title + '</a>',
+                  '</figcaption>',
+                  '<a href="javascript:void(0)">',
+                    '<p class="picture-item__tags">' + rating + '</p>',
+                  '</a>',
+                  '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/presse/" target="_blank" class="displayNone">',
+                    '<p class="picture-item__tagsNew"><i class="fas fa-newspaper"></i> ' + criticDetails + '</p>',
+                  '</a>',
+                  '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/spectateurs/" target="_blank" class="displayNone">',
+                    '<p class="picture-item__tagsNew picture-item__tagsMargin"><i class="fas fa-users"></i> ' + userDetails + '</p>',
+                  '</a>',
+                  '<a href="javascript:void(0)" class="displayFlexEnd displayNone">',
+                    '<p class="picture-item__tags"><i class="fas fa-times-circle"></i></p>',
+                  '</a>',
+                '</div>',
+              '</div>',
             '</figure>'
         ].join('');
+        /* beautify ignore:end */
     };
 
     // Change french date format to mm/dd/yyyy
@@ -722,6 +755,27 @@ var DOMLoaded = function() {
         } else {
             localStorage.setItem('mode', 'additive');
         }
+    };
+
+    // Display more rating numbers
+    function criticMenu() {
+        var tags = document.querySelectorAll(".picture-item__tags");
+
+        tags.forEach(function(tag) {
+            tag.addEventListener('click', function() {
+                var parentDiv = tag.parentNode.parentNode;
+
+                if (parentDiv.classList.contains('displayFlexStart')) {
+                    parentDiv.classList.remove('displayFlexStart');
+                } else {
+                    parentDiv.classList.add('displayFlexStart');
+                }
+
+                for (var i = 0; i < parentDiv.children.length; i++) {
+                    parentDiv.children[i].classList.toggle('displayNone');
+                }
+            });
+        });
     };
 
     // Add click listener

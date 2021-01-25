@@ -41,12 +41,16 @@ li {
 
 li i,
 li span i {
-    margin: 0 5px;
+    margin: 0 7px;
 }
 
 li a,
 li a:visited {
     color: var(--dark-color);
+}
+
+.gridContainer {
+    margin-bottom: 24px;
 }
 
 #inputToggle {
@@ -55,7 +59,7 @@ li a:visited {
 
 #inputToggle+label:before {
     font-family: FontAwesome;
-    font-size: 16px;
+    font-size: 14px;
     display: inline-block;
     letter-spacing: 3px;
 }
@@ -86,6 +90,15 @@ li a:visited {
 
 li:last-child i {
     margin-left: 0;
+}
+
+.displayFlexStart {
+    justify-content: flex-start;
+}
+
+.displayFlexEnd {
+    justify-content: flex-end;
+    margin: 0 0 0 auto;
 }
 
 .displayNone {
@@ -143,7 +156,8 @@ div[role=menu]>button:disabled {
 .fa-github:hover,
 .fa-sun:hover,
 .fa-moon:hover,
-.fa-sliders-h:hover {
+.fa-sliders-h:hover,
+.fa-times-circle:hover {
     cursor: pointer;
     color: var(--green-color);
 }
@@ -250,19 +264,36 @@ div[role=menu]>button:disabled {
 
 .filters-group {
     margin: 1em 2em 1em 0;
+    overflow-x: scroll;
 }
 
-.firstFilter {
+.genreFilter,
+.periodFilter,
+.sortFilter {
     overflow-x: scroll;
     white-space: nowrap;
 }
 
-.firstFilter .btn {
+.filters-group .btn {
     display: inline-block;
     float: unset;
 }
 
-.lastFilter {
+.picture-item__details {
+    overflow-x: scroll;
+}
+
+.picture-item__tagsNew {
+    flex-shrink: 1;
+    text-align: right;
+    margin: 0;
+}
+
+.picture-item__tagsMargin {
+    margin: 0 0 0 15px;
+}
+
+.sortFilter {
     margin-right: 0;
 }
 
@@ -298,15 +329,46 @@ strong {
     .row {
         max-width: 1235px;
     }
+}
 
-    .firstFilter {
-        max-width: 600px;
+@media screen and (min-width: 768px) and (max-width: 897px) {
+    .genreFilter {
+        max-width: 213px;
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 898px) {
+    .periodFilter {
+        min-width: 213px;
+    }
+
+    .sortFilter {
+        min-width: 270px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 821px) {
+
+    li i,
+    li span i {
+        margin: 0 4px;
+    }
+}
+
+@media screen and (max-width: 767px) {
     .filters-group {
         margin: 0 0 1em;
+    }
+}
+
+@media screen and (max-width: 379px) {
+    #secondLi {
+        margin-right: 100%;
+        visibility: hidden;
+    }
+
+    .fa-twitter {
+        margin: 10px 0;
     }
 }
 
