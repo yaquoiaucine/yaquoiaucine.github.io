@@ -2,12 +2,14 @@ var DOMLoaded = function() {
     var Shuffle = window.Shuffle;
     var shuffleInstance;
     var buttonsArray = Array.from(document.querySelectorAll('.filter-options button'));
-    var criticNumberBool = criticNull = false;
-    var divMenu = document.querySelector('[role="menu"]');
+    var criticInput = document.querySelector('.nav-item.criticAllocine');
+    var criticNull = false;
+    var criticNumberBool = false;
     var gridContainerElement = document.getElementById('grid');
-    var menuButton = document.querySelectorAll('.criticButton');
+    var menuButton = document.querySelectorAll('.nav-item.criticButton:not(.mainToggle)');
     var menuButtonArray = Array.from(menuButton);
-    var menuButtonAll = document.querySelector('.criticButtonAll');
+    var menuButtonAll = document.querySelector('#criticToggle0');
+    var mainToggle0 = menuButtonAll.parentNode.parentNode;
     var optionsArray = Array.from(document.querySelectorAll('.period-options option'));
     var optionsButton = document.querySelector('.period-options');
     var overlay = document.getElementById('menu');
@@ -17,7 +19,7 @@ var DOMLoaded = function() {
         time: '0.5s',
         mixColor: '#FFFFFF',
         backgroundColor: '#EDEDED'
-    }
+    };
 
     const darkmode = new Darkmode(options);
 
@@ -27,6 +29,8 @@ var DOMLoaded = function() {
         })
         .then(function(response) {
             var data = response.data;
+
+            menuButtons();
 
             var markup = getItemMarkup(data);
             appendMarkupToGrid(markup);
@@ -62,9 +66,7 @@ var DOMLoaded = function() {
             focusSearchInput();
             getDarkmodeStatus();
             getTglButtons();
-            menuButtons();
             searchShortcut();
-            settingsClick();
             typewriter();
         });
 
@@ -73,12 +75,11 @@ var DOMLoaded = function() {
         return items.reduce(function(str, item) {
             return str + getMarkupFromData(item);
         }, '');
-    };
+    }
 
     // Get selected data from data object
     function getMarkupFromData(dataForSingleItem) {
-        var id = dataForSingleItem.id,
-            titleTemp = dataForSingleItem.allocineData.title,
+        var titleTemp = dataForSingleItem.allocineData.title,
             picture = dataForSingleItem.allocineData.picture,
             url = dataForSingleItem.allocineData.url,
             date = dataForSingleItem.allocineData.date,
@@ -88,7 +89,7 @@ var DOMLoaded = function() {
             genre1 = dataForSingleItem.allocineData.genre.id1,
             genre2 = dataForSingleItem.allocineData.genre.id2,
             genre3 = dataForSingleItem.allocineData.genre.id3,
-            genre, title, rating, dateFormatted;
+            genre, title, rating;
 
         var urlId = dataForSingleItem.allocineData.url.match(/=(.*)\./).pop();
 
@@ -111,24 +112,24 @@ var DOMLoaded = function() {
         var last7DaysNew = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
         var isDateIncludedlast7Days = dateCheck(last7DaysNew, todayNew, dateFormatted);
 
-        var today = new Date();
-        today.setDate(today.getDate() - 14);
-        var last2Weeks = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var today2 = new Date();
+        today2.setDate(today2.getDate() - 14);
+        var last2Weeks = ((today2.getMonth() + 1) + '/' + today2.getDate() + '/' + today2.getFullYear());
         var isDateIncludedlast2Weeks = dateCheck(last2Weeks, todayNew, dateFormatted);
 
-        var today = new Date();
-        today.setDate(today.getDate() - 21);
-        var last3Weeks = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var today3 = new Date();
+        today3.setDate(today3.getDate() - 21);
+        var last3Weeks = ((today3.getMonth() + 1) + '/' + today3.getDate() + '/' + today3.getFullYear());
         var isDateIncludedlast3Weeks = dateCheck(last3Weeks, todayNew, dateFormatted);
 
-        var today = new Date();
-        today.setDate(today.getDate() - 30);
-        var last30Days = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var today4 = new Date();
+        today4.setDate(today4.getDate() - 30);
+        var last30Days = ((today4.getMonth() + 1) + '/' + today4.getDate() + '/' + today4.getFullYear());
         var isDateIncludedlast30Days = dateCheck(last30Days, todayNew, dateFormatted);
 
-        var today = new Date();
-        today.setDate(today.getDate() - 90);
-        var last90Days = ((today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear());
+        var today5 = new Date();
+        today5.setDate(today5.getDate() - 90);
+        var last90Days = ((today5.getMonth() + 1) + '/' + today5.getDate() + '/' + today5.getFullYear());
         var isDateIncludedlast90Days = dateCheck(last90Days, todayNew, dateFormatted);
 
         var isDateIncluded2018 = dateCheck('01/01/2018', '12/31/2018', dateFormatted);
@@ -153,8 +154,7 @@ var DOMLoaded = function() {
 
         var criticActive = localStorage.getItem('criticAllocine');
         var userActive = localStorage.getItem('usersAllocine');
-        var criticInput = document.querySelector('.criticAllocine');
-        var userInput = document.querySelector('.usersAllocine');
+        var userInput = document.querySelector('.nav-item.usersAllocine');
 
         if (retrieveLocalData(criticActive) && retrieveLocalData(userActive)) {
             if (critic == 0) {
@@ -166,29 +166,34 @@ var DOMLoaded = function() {
             ratingTemp = (parseFloat(critic) + parseFloat(user)) / 2;
             userDetails = user;
 
-            criticInput.setAttribute('checked', '');
-            userInput.setAttribute('checked', '');
+            userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
         } else if (retrieveLocalData(criticActive)) {
             criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
             if (criticDetails == 0) criticDetails = '/';
             userDetails = '/';
             ratingTemp = parseFloat(critic);
 
-            criticInput.setAttribute('checked', '');
+            userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
         } else if (retrieveLocalData(userActive)) {
             criticDetails = '/';
             userDetails = user;
             ratingTemp = parseFloat(user);
 
-            userInput.setAttribute('checked', '');
+            userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
         } else {
             criticDetails = userDetails = '/';
             ratingTemp = 0;
+
+            userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
         }
 
         rating = ratingTemp.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
 
-        titleTemp.length > 15 ? title = titleTemp.substring(0, 14) + '...' : title = dataForSingleItem.allocineData.title;
+        if (titleTemp.length > 15) {
+            title = titleTemp.substring(0, 14) + '...';
+        } else {
+            title = dataForSingleItem.allocineData.title;
+        }
 
         /* beautify ignore:start */
         return [
@@ -223,7 +228,7 @@ var DOMLoaded = function() {
             '</figure>'
         ].join('');
         /* beautify ignore:end */
-    };
+    }
 
     // Change french date format to mm/dd/yyyy
     function splitDate(date) {
@@ -317,7 +322,7 @@ var DOMLoaded = function() {
                 break;
             default:
                 newDate[1] = '';
-                break
+                break;
         }
 
         if (altFormat) {
@@ -325,7 +330,7 @@ var DOMLoaded = function() {
         } else {
             return newDate[1] + '/' + newDate[0] + '/' + newDate[2];
         }
-    };
+    }
 
     // Parse start date, end date and date to check
     function dateCheck(firstDate, lastDate, dateToCheck) {
@@ -336,7 +341,7 @@ var DOMLoaded = function() {
         dateToCheckNew = Date.parse(dateToCheck);
 
         return (dateToCheckNew <= lastDateNew && dateToCheckNew >= firstDateNew);
-    };
+    }
 
     // Return date values for filtering
     function addDateFilter(
@@ -349,7 +354,8 @@ var DOMLoaded = function() {
         isDateIncluded2019,
         isDateIncluded2020,
         isDateIncluded2021) {
-        var text = text2 = '';
+        var text = '';
+        var text2 = '';
 
         if (isDateIncludedlast7Days) {
             text = 'Les 7 derniers jours,Les 2 dernières semaines,Les 3 dernières semaines,Les 30 derniers jours,Les 90 derniers jours';
@@ -378,16 +384,18 @@ var DOMLoaded = function() {
         }
 
         return text + ',' + text2;
-    };
+    }
 
     // Return active critics
     function getActiveCritics(criticFix, criticNames) {
-        var critic = res = criticNumber = 0;
+        var critic = 0;
+        var criticNumber = 0;
+        var res = 0;
         var buttonCriticNameNew;
 
         if (Object.keys(criticNames).length > 0) {
             menuButtonArray.forEach(function(button) {
-                var buttonCriticName = button.children[0].innerHTML;
+                var buttonCriticName = button.children[0].children[0].textContent;
                 var localbuttonCriticName = localStorage.getItem(buttonCriticName);
                 var last7Char = buttonCriticName.substr(buttonCriticName.length - 7);
 
@@ -418,7 +426,7 @@ var DOMLoaded = function() {
         }
 
         return critic;
-    };
+    }
 
     // Set localStorage for critic and user main buttons
     function retrieveLocalData(item) {
@@ -431,19 +439,19 @@ var DOMLoaded = function() {
             localStorage.setItem('usersAllocine', 'true');
             return true;
         }
-    };
+    }
 
     // Display retrieved data in grid div
     function appendMarkupToGrid(markup) {
         gridContainerElement.insertAdjacentHTML('beforeend', markup);
-    };
+    }
 
     // Remove localStorage items
     function removeItems() {
         localStorage.removeItem('critic');
         localStorage.removeItem('title');
         localStorage.removeItem('dateCreated');
-    };
+    }
 
     // Search function
     function addSearchFilter() {
@@ -454,7 +462,7 @@ var DOMLoaded = function() {
         }
 
         searchInput.addEventListener('input', handleSearchKeyup.bind(this));
-    };
+    }
 
     // Add keyup listeners for search
     function handleSearchKeyup(evt) {
@@ -476,7 +484,7 @@ var DOMLoaded = function() {
 
             return titleText.indexOf(searchText) !== -1;
         });
-    };
+    }
 
     // Sort function
     function addSorting() {
@@ -487,7 +495,7 @@ var DOMLoaded = function() {
         }
 
         buttonGroup.addEventListener('change', handleSortChange.bind(this));
-    };
+    }
 
     // Add or remove active class for sort change
     function handleSortChange(evt) {
@@ -524,7 +532,7 @@ var DOMLoaded = function() {
                     by: sortByDate,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="date-created"> Date de sortie <i class="fas fa-arrow-up"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="date-created"> Date de sortie <i class="fas fa-arrow-up"></i>';
                 localStorage.setItem('dateCreated', 'false');
             } else {
                 options = {
@@ -532,7 +540,7 @@ var DOMLoaded = function() {
                     by: sortByDate,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="date-created"> Date de sortie <i class="fas fa-arrow-down"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="date-created"> Date de sortie <i class="fas fa-arrow-down"></i>';
                 localStorage.setItem('dateCreated', 'true');
             }
         } else if (value === 'title') {
@@ -544,7 +552,7 @@ var DOMLoaded = function() {
                     by: sortByTitle,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="title"> Titre <i class="fas fa-arrow-up"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="title"> Titre <i class="fas fa-arrow-up"></i>';
                 localStorage.setItem('title', 'false');
             } else {
                 options = {
@@ -552,7 +560,7 @@ var DOMLoaded = function() {
                     by: sortByTitle,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="title"> Titre <i class="fas fa-arrow-down"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="title"> Titre <i class="fas fa-arrow-down"></i>';
                 localStorage.setItem('title', 'true');
             }
         } else if (value === 'critic') {
@@ -564,7 +572,7 @@ var DOMLoaded = function() {
                     by: sortCritic,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-up"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-up"></i>';
                 localStorage.setItem('critic', 'false');
             } else {
                 options = {
@@ -572,13 +580,13 @@ var DOMLoaded = function() {
                     by: sortCritic,
                 };
 
-                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-down"></i>'
+                evt.target.parentNode.innerHTML = '<input type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-down"></i>';
                 localStorage.setItem('critic', 'true');
             }
         }
 
         shuffleInstance.sort(options);
-    };
+    }
 
     // Add events on options changes and buttons clicks
     function bindEventListeners() {
@@ -594,7 +602,7 @@ var DOMLoaded = function() {
 
         onButtonChange = handleButtonChange.bind(this);
 
-        optionsButton.addEventListener("change", function() {
+        optionsButton.addEventListener('change', function() {
             optionsButton.options[optionsButton.selectedIndex].setAttribute('selected', 'selected');
             handleOptionChange();
             activePeriod = optionsButton.options[optionsButton.selectedIndex].value;
@@ -604,7 +612,7 @@ var DOMLoaded = function() {
         buttonsArray.forEach(function(button) {
             button.addEventListener('click', onButtonChange);
         }, this);
-    };
+    }
 
     // Get current option filters and filter
     function handleOptionChange() {
@@ -613,7 +621,7 @@ var DOMLoaded = function() {
             filters.optionsArray == 'Default')
             filters.optionsArray = '';
         filter();
-    };
+    }
 
     // Return selected option value
     function getCurrentOptionFilters() {
@@ -622,7 +630,7 @@ var DOMLoaded = function() {
         }).map(function(option) {
             return option.value;
         });
-    };
+    }
 
     // Handle button change with additive and exclusive mode
     function handleButtonChange(evt) {
@@ -630,7 +638,6 @@ var DOMLoaded = function() {
 
         if (mode == undefined) {
             localStorage.setItem('mode', 'exclusive');
-            var mode = localStorage.getItem('mode');
         }
 
         var btn = evt.currentTarget;
@@ -660,7 +667,7 @@ var DOMLoaded = function() {
 
             filter();
         }
-    };
+    }
 
     // Remove active class from children
     function removeActiveClassFromChildren(parent) {
@@ -668,7 +675,7 @@ var DOMLoaded = function() {
         for (var i = children.length - 1; i >= 0; i--) {
             children[i].classList.remove('active');
         }
-    };
+    }
 
     // Get current button filters
     function getCurrentButtonFilters() {
@@ -677,7 +684,7 @@ var DOMLoaded = function() {
         }).map(function(button) {
             return button.getAttribute('data-group');
         });
-    };
+    }
 
     // Filter matching items
     function filter() {
@@ -686,14 +693,14 @@ var DOMLoaded = function() {
         } else {
             shuffleInstance.filter(Shuffle.ALL_ITEMS);
         }
-    };
+    }
 
     // Check active filters length
     function hasActiveFilters() {
         return Object.keys(filters).some(function(key) {
             return filters[key].length > 0;
         }, this);
-    };
+    }
 
     // Select matching items
     function itemPassesFilters(element) {
@@ -713,38 +720,36 @@ var DOMLoaded = function() {
         }
 
         return true;
-    };
+    }
 
     // Set or unset all critic buttons
     function clickMenuButtonAll() {
-        menuButtonAll.addEventListener('click', function() {
+        mainToggle0.addEventListener('click', function() {
             menuButtonArray.forEach(function(button) {
-                var buttonCriticName = button.children[0].innerHTML;
+                var buttonCriticName = button.children[0].children[0].textContent;
 
                 if (criticNumberBool) {
-                    button.classList.remove('active');
+                    button.children[0].children[0].children[0].children[0].removeAttribute('checked');
                     localStorage.setItem(buttonCriticName, 'false');
                 } else {
-                    button.classList.add('active');
+                    button.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
                     localStorage.setItem(buttonCriticName, 'true');
                 }
             });
 
             if (criticNumberBool) {
-                menuButtonAll.children[0].innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i> Sélectionner toutes les critiques';
                 criticNumberBool = false;
             } else {
-                menuButtonAll.children[0].innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i> Désélectionner toutes les critiques';
                 criticNumberBool = true;
             }
         }, false);
-    };
+    }
 
     // Add additive/exclusive click listener
     function clickToggleMode() {
         var inputToggle = document.querySelector('#inputToggle');
         inputToggle.addEventListener('click', toggleMode, false);
-    };
+    }
 
     // Set additive/exclusive toggle
     function toggleMode() {
@@ -755,11 +760,11 @@ var DOMLoaded = function() {
         } else {
             localStorage.setItem('mode', 'additive');
         }
-    };
+    }
 
     // Display more rating numbers
     function criticMenu() {
-        var tags = document.querySelectorAll(".picture-item__tags");
+        var tags = document.querySelectorAll('.picture-item__tags');
 
         tags.forEach(function(tag) {
             tag.addEventListener('click', function() {
@@ -776,18 +781,18 @@ var DOMLoaded = function() {
                 }
             });
         });
-    };
+    }
 
     // Add click listener
     function darkmodePref() {
         tglDarkmode.addEventListener('click', toggleDarkmode, false);
-    };
+    }
 
     // Trigger darkmode function
     function toggleDarkmode() {
         darkmode.toggle();
         getDarkmodeStatus();
-    };
+    }
 
     // Get darkmode status and set icon
     function getDarkmodeStatus() {
@@ -801,14 +806,14 @@ var DOMLoaded = function() {
             tglDarkmode.classList.remove('fa-moon');
             tglDarkmode.classList.add('fa-sun');
         }
-    };
+    }
 
     // Set on load default sort on critic
     function defaultInputClick() {
         removeItems();
         var defaultInput = document.getElementById('defaultInput');
         defaultInput.click();
-    };
+    }
 
     // Display shortcut on search input focus
     function focusSearchInput() {
@@ -822,100 +827,82 @@ var DOMLoaded = function() {
         textfieldInput.addEventListener('focusout', function() {
             shortcutId.classList.add('displayNone');
         });
-    };
+    }
 
     // Add click listener on menu toggles
     function getTglButtons() {
-        var tglBtn = document.querySelectorAll('.tgl-flip');
-        var tgl1 = document.getElementById('tgl1');
-
-        if (!tglBtn) {
-            return;
-        }
-
-        if (tgl1.checked) {
-            divMenu.classList.remove('displayNone');
-            tgl1.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
-        } else {
-            divMenu.classList.add('displayNone');
-            tgl1.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
-        }
-
-        if (tgl2.checked) {
-            tgl2.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
-        } else {
-            tgl2.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
-        }
-
+        var tglBtn = document.querySelectorAll('.nav-item.mainToggle');
         var tglBtnArray = Array.from(tglBtn);
 
         tglBtnArray.forEach(function(toggle) {
-            toggle.addEventListener('click', toggleLocalData.bind(this), false);
+            toggle.children[0].children[0].addEventListener('click', toggleLocalData.bind(this), false);
         });
-    };
+    }
 
     // Set localStorage toggles
     function toggleLocalData(item) {
-        var classListName = item.currentTarget.classList[2];
+        var classListName = item.currentTarget.parentNode.parentNode.classList[1];
         var classListNameActive = localStorage.getItem(classListName);
 
-        if (classListName == 'criticAllocine' && classListNameActive == 'true') {
-            divMenu.classList.add('displayNone');
-        } else if (classListName == 'criticAllocine' && classListNameActive == 'false') {
-            divMenu.classList.remove('displayNone');
-        }
-
         if (classListNameActive == 'true') {
+            if (classListName == 'criticAllocine') {
+                item.currentTarget.innerHTML = 'Tout sélectionner<span><input id="criticToggle0" type="checkbox"><label for="criticToggle0"></label></span>';
+            }
+            item.currentTarget.children[0].children[0].removeAttribute('checked');
             localStorage.setItem(classListName, 'false');
-            item.currentTarget.previousElementSibling.style.textDecorationColor = 'var(--red-color)';
         } else {
+            if (classListName == 'criticAllocine') {
+                item.currentTarget.innerHTML = 'Tout désélectionner<span><input id="criticToggle0" type="checkbox"><label for="criticToggle0"></label></span>';
+            }
+            item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
             localStorage.setItem(classListName, 'true');
-            item.currentTarget.previousElementSibling.style.textDecorationColor = 'var(--green-color)';
         }
-    };
+    }
 
     // Set or unset active critic on load
     function menuButtons() {
         menuButtonArray.forEach(function(button) {
-            button.addEventListener('click', setLocalstorageMenu.bind(this), false);
+            button.children[0].children[0].addEventListener('click', setLocalstorageMenu.bind(this), false);
 
-            var buttonCriticName = button.children[0].innerHTML;
+            var buttonCriticName = button.children[0].children[0].textContent;
             var localbuttonCriticName = localStorage.getItem(buttonCriticName);
 
             if (localbuttonCriticName == 'true') {
-                button.classList.add('active');
                 criticNumberBool = true;
             } else if (localbuttonCriticName == 'false') {
-                button.classList.remove('active');
+                button.children[0].children[0].children[0].children[0].removeAttribute('checked');
             } else {
                 localStorage.setItem(buttonCriticName, 'true');
-                button.classList.add('active');
                 criticNumberBool = true;
             }
         });
 
         if (criticNumberBool) {
-            menuButtonAll.children[0].innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i> Désélectionner toutes les critiques';
+            localStorage.setItem('criticAllocine', 'true');
+            criticInput.children[0].children[0].innerHTML = 'Tout désélectionner<span><input id="criticToggle0" type="checkbox" checked="checked"><label for="criticToggle0"></label></span>';
+            criticInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
         } else {
-            menuButtonAll.children[0].innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i> Sélectionner toutes les critiques';
+            localStorage.setItem('criticAllocine', 'false');
+            criticInput.children[0].children[0].innerHTML = 'Tout sélectionner<span><input id="criticToggle0" type="checkbox"><label for="criticToggle0"></label></span>';
+            criticInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
         }
-    };
+    }
 
     // Set localStorage for each button
     function setLocalstorageMenu(item) {
-        var buttonCriticName = item.currentTarget.children[0].innerText;
+        var buttonCriticName = item.currentTarget.innerText;
         var localbuttonCriticName = localStorage.getItem(buttonCriticName);
 
         if (localbuttonCriticName == 'true') {
-            item.currentTarget.classList.remove('active');
+            item.currentTarget.children[0].children[0].removeAttribute('checked');
             localStorage.setItem(buttonCriticName, 'false');
         } else if (localbuttonCriticName == 'false') {
-            item.currentTarget.classList.add('active');
+            item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
             localStorage.setItem(buttonCriticName, 'true');
         } else {
             localStorage.setItem(buttonCriticName, 'true');
         }
-    };
+    }
 
     // Focus search bar on CMD/CTRL + F keys
     function searchShortcut() {
@@ -938,26 +925,8 @@ var DOMLoaded = function() {
                     map['27'] = false;
                 }
             }
-        }
-    };
-
-    // Trigger overlay menu on settings click
-    function settingsClick() {
-        var burgerMenu = document.getElementById('burger-menu');
-        var sliders = document.querySelector('.fa-sliders-h');
-
-        sliders.addEventListener('click', function() {
-            burgerMenu.classList.add('close');
-            overlay.classList.add('overlay');
-            return false;
-        });
-
-        burgerMenu.addEventListener('click', function() {
-            burgerMenu.classList.remove('close');
-            overlay.classList.remove('overlay');
-            document.location.reload();
-        });
-    };
+        };
+    }
 
     // Typewriter function
     function typewriter() {
@@ -966,10 +935,27 @@ var DOMLoaded = function() {
                 loop: !0,
                 delay: 50
             });
-        typewriter.typeString('"T\'as vu quoi comme bon film récemment ?"').pauseFor(2500).deleteAll().typeString('"C\'est quoi le film à ne pas manquer ?"').pauseFor(2500).deleteAll().typeString('"Tu me recommandes quoi en ce moment ?"').pauseFor(2500).start()
-    };
+        typewriter.typeString('"T\'as vu quoi comme bon film récemment ?"').pauseFor(2500).deleteAll().typeString('"C\'est quoi le film à ne pas manquer ?"').pauseFor(2500).deleteAll().typeString('"Tu me recommandes quoi en ce moment ?"').pauseFor(2500).start();
+    }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+    var Nav = new hcOffcanvasNav('#main-nav', {
+        customToggle: '.fa-sliders-h',
+        closeOnClick: false,
+        levelSpacing: 0,
+        navTitle: 'Choix des notes',
+        labelBack: 'Retour',
+        ariaLabels: {
+            open: 'Ouvrir menu',
+            close: 'Fermer menu',
+            submenu: 'Sous-menu'
+        }
+    });
+
+    Nav.on('close', function() {
+        document.location.reload();
+    });
+
     window.main = new DOMLoaded(document.getElementById('grid'));
 });

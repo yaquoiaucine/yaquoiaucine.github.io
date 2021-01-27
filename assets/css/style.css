@@ -53,22 +53,30 @@ li a:visited {
     margin-bottom: 24px;
 }
 
-#inputToggle {
+#inputToggle,
+.criticButton input,
+.usersAllocine input {
     display: none;
 }
 
-#inputToggle+label:before {
+#inputToggle+label:before,
+.criticButton input+label:before,
+.usersAllocine input+label:before {
     font-family: FontAwesome;
     font-size: 14px;
     display: inline-block;
     letter-spacing: 3px;
 }
 
-#inputToggle+label:before {
+#inputToggle+label:before,
+.criticButton input+label:before,
+.usersAllocine input+label:before {
     content: "\f096";
 }
 
-#inputToggle:checked+label:before {
+#inputToggle:checked+label:before,
+.criticButton input:checked+label:before,
+.usersAllocine input:checked+label:before {
     content: "\f046";
 }
 
@@ -275,7 +283,6 @@ div[role=menu]>button:disabled {
 }
 
 .filters-group .btn {
-    display: inline-block;
     float: unset;
 }
 
@@ -370,109 +377,6 @@ strong {
     .fa-twitter {
         margin: 10px 0;
     }
-}
-
-/* Sidebar css */
-#burger-menu {
-    cursor: pointer;
-    height: 27px;
-    width: 27px;
-    margin: 50px;
-    overflow: visible;
-    position: fixed;
-    z-index: 2;
-    visibility: hidden;
-}
-
-#burger-menu span,
-#burger-menu span:before,
-#burger-menu span:after {
-    background: var(--light-gray-color);
-    display: block;
-    height: 4px;
-    opacity: 1;
-    position: absolute;
-    transition: 0.3s ease-in-out;
-}
-
-#burger-menu span:before,
-#burger-menu span:after {
-    content: "";
-}
-
-#burger-menu span {
-    right: 0px;
-    top: 13px;
-    width: 27px;
-}
-
-#burger-menu span:before {
-    left: 0px;
-    top: -10px;
-    width: 16px;
-}
-
-#burger-menu span:after {
-    left: 0px;
-    top: 10px;
-    width: 20px;
-}
-
-#burger-menu.close {
-    visibility: visible;
-}
-
-#burger-menu.close span {
-    transform: rotate(-45deg);
-    top: 13px;
-    width: 27px;
-}
-
-#burger-menu.close span:before {
-    top: 0px;
-    transform: rotate(90deg);
-    width: 27px;
-}
-
-#burger-menu.close span:after {
-    top: 0px;
-    left: 0;
-    transform: rotate(90deg);
-    opacity: 0;
-    width: 0;
-}
-
-#menu {
-    z-index: 1;
-    min-width: 100%;
-    min-height: 100%;
-    position: fixed;
-    top: 0;
-    height: 0;
-    visibility: hidden;
-    opacity: 0;
-    text-align: center;
-    padding-top: 20px;
-    transition: all 0.4s ease-in-out;
-
-}
-
-#menu.overlay {
-    visibility: visible;
-    opacity: 1;
-    padding-top: 100px;
-    background: var(--dark-color);
-    overflow-y: scroll;
-}
-
-#menu.overlay::after {
-    content: '';
-    display: block;
-    height: 50px;
-}
-
-#menu li {
-    list-style: none;
 }
 
 /* Toggles css */
