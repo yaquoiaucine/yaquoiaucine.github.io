@@ -1,0 +1,1 @@
+s/^Animaux et Cie/Animaux \& Cie/

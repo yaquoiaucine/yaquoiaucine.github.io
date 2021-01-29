@@ -169,7 +169,7 @@ do
     echo "\"imdbData\":{" >> ./assets/js/data.json
 
     # Extract IMDb rating
-    titleLower=$(echo ${title// /%20} | tr '[:upper:]' '[:lower:]')
+    titleLower=$(echo $title | sed -f assets/sh/imdb_titles.sed | sed -f assets/sh/url_escape.sed | tr '[:upper:]' '[:lower:]')
 
     curl -s "https://www.imdb.com/find?q=$titleLower&s=tt" > temp5
     imdbId=$(cat temp5 | grep -m1 "result_text" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | sed "s/.*title\///g")

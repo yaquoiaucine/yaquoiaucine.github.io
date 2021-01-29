@@ -96,10 +96,6 @@ li a:visited {
     margin-left: 0;
 }
 
-li:last-child i {
-    margin-left: 0;
-}
-
 .displayFlexStart {
     justify-content: flex-start;
 }

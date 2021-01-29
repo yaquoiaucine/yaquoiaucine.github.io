@@ -861,21 +861,30 @@ var DOMLoaded = function() {
 
     // Set or unset active critic on load
     function menuButtons() {
+        var localbuttonCriticNameNumber = 0;
+        var criticRatingsLi = document.querySelector('.criticRatings');
+
         menuButtonArray.forEach(function(button) {
             button.children[0].children[0].addEventListener('click', setLocalstorageMenu.bind(this), false);
-
             var buttonCriticName = button.children[0].children[0].textContent;
             var localbuttonCriticName = localStorage.getItem(buttonCriticName);
 
-            if (localbuttonCriticName == 'true') {
+            if (localbuttonCriticName == 'true' || localbuttonCriticName == null) {
                 criticNumberBool = true;
+                localbuttonCriticNameNumber++;
+                if (localbuttonCriticName == null) {
+                    localStorage.setItem(buttonCriticName, 'true');
+                }
             } else if (localbuttonCriticName == 'false') {
                 button.children[0].children[0].children[0].children[0].removeAttribute('checked');
-            } else {
-                localStorage.setItem(buttonCriticName, 'true');
-                criticNumberBool = true;
             }
         });
+
+        if (localbuttonCriticNameNumber > 0) {
+            criticRatingsLi.children[1].children[0].innerHTML = '<i class="fas fa-newspaper fa-lg" aria-hidden="true"></i> Presse<span class="criticNumber">' + localbuttonCriticNameNumber + '</span>';
+        } else {
+            criticRatingsLi.children[1].children[0].innerHTML = '<i class="fas fa-newspaper fa-lg" aria-hidden="true"></i> Presse<span class="nav-next"><span></span></span>';
+        }
 
         if (criticNumberBool) {
             localStorage.setItem('criticAllocine', 'true');
