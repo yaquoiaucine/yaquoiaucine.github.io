@@ -8,7 +8,7 @@ curl -s $baseUrl > temp
 # Get Allociné baseUrl movies number
 moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
 
-if [ $moviesNumber -lt 15 ]; then
+if [[ $moviesNumber -lt 15 ]]; then
   # Define Allociné baseUrl pages number to 1
   pagesNumber=1
 else
@@ -23,24 +23,24 @@ do
   echo page number $i / $pagesNumber
 
   # Get Allociné first page
-  if [ $i -eq 1 ]; then
+  if [[ $i -eq 1 ]]; then
     id=1
   # Get Allociné second until second to last page
-  elif [ $i -lt $pagesNumber ]; then
+  elif [[ $i -lt $pagesNumber ]]; then
     curl -s $baseUrl\?page\=$i > temp
 
     checkMoviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
-    if [ $checkMoviesNumber -eq 0 ]; then
+    if [[ $checkMoviesNumber -eq 0 ]]; then
       curl -s $baseUrl\?page\=$i > temp
     fi
   # Get Allociné last page
-  elif [ $i -eq $pagesNumber ]; then
+  elif [[ $i -eq $pagesNumber ]]; then
     curl -s $baseUrl\?page\=$i > temp
     moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
   fi
 
   j=1
-  while [ $j -le $moviesNumber ]
+  while [[ $j -le $moviesNumber ]]
   do
     # Add id
     echo "\"id\": \"$id\"," >> ./assets/js/data.json
@@ -60,6 +60,10 @@ do
     title=$(cat temp2 | grep -m1 "<meta property=\"og:title\" content=\"" | cut -d'"' -f4 | sed 's/&#039;/'"'"'/' | sed 's/[[:blank:]]*$//')
     echo "\"title\": \"$title\"," >> ./assets/js/data.json
 
+    # Extract AlloCiné first director
+    firstAllocineDirector=$(cat temp2 | grep "<meta property=\"video:director\" content=\"" | cut -d'"' -f4 | tr '[:upper:]' '[:lower:]')
+    echo "\"allocineDirector\": \"$firstAllocineDirector\"," >> ./assets/js/data.json
+
     # Extract movie picture
     picture=$(cat temp2 | grep -m1 "<meta property=\"og:image\" content=\"" | cut -d'"' -f4)
     echo "\"picture\": \"$picture\"," >> ./assets/js/data.json
@@ -68,15 +72,15 @@ do
     date=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1)
     spaceNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1 | tr -cd ' \t' | wc -c | awk '{print $1}')
     dateNumber=$(cat temp2 | grep -A1 "== date blue-link\">" | tail -1 | sed 's/^ *//' | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
-    if [ $dateNumber -eq 0 ]; then
+    if [[ $dateNumber -eq 0 ]]; then
       date=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1)
       spaceNumber=$(cat temp2 | grep "<span class=\"date\"" | cut -d'>' -f2 | cut -d'<' -f1 | tr -cd ' \t' | wc -c | awk '{print $1}')
     fi
     echo "\"date\": \"$date\"," >> ./assets/js/data.json
 
-    # Extract genre and link
+    # Extract movie genre
     genreNumber=$(cat temp2 | grep -m3 "<span class=\"ACrL2ZACrpbG1zL2d" | cut -d'>' -f2 | cut -d'<' -f1 | wc -l | awk '{print $1}')
-    if [ $genreNumber -gt 0 ]; then
+    if [[ $genreNumber -gt 0 ]]; then
 
       echo "\"genre\":{" >> ./assets/js/data.json
 
@@ -89,17 +93,16 @@ do
       echo "}," >> ./assets/js/data.json
     fi
 
-    # Extract video player link
+    # Extract movie id
     movieId=$(cat temp | grep -m$j "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | tail -1 | head -1 | cut -d'"' -f4 | cut -d'=' -f2 | cut -d'.' -f1)
-    curl -s https://www.allocine.fr/videos/fichefilm-$movieId/toutes/ > temp3
-    curl -s https://www.allocine.fr/film/fichefilm-$movieId/critiques/presse/ > temp4
+    curl -s https://www.allocine.fr/film/fichefilm-$movieId/critiques/presse/ > temp3
 
     # Extract critic rating number
-    critic=$(cat temp4 | grep -m1 -Eo "</div><span class=\"stareval-note\">[0-9],[0-9]</span></div>" | cut -d'>' -f3 | cut -d'<' -f1 | sed 's/,/./')
+    critic=$(cat temp3 | grep -m1 -Eo "</div><span class=\"stareval-note\">[0-9],[0-9]</span></div>" | cut -d'>' -f3 | cut -d'<' -f1 | sed 's/,/./')
     echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
 
     # Extract critic number
-    criticNumber=$(cat temp4 | grep -Eo "<span class=\"light\">[0-9]+ titre*" | cut -d'>' -f2 | cut -d' ' -f1)
+    criticNumber=$(cat temp3 | grep -Eo "<span class=\"light\">[0-9]+ titre*" | cut -d'>' -f2 | cut -d' ' -f1)
     echo "\"criticNumber\": \"$criticNumber\"," >> ./assets/js/data.json
 
     # Extract critic rating and convert it to number
@@ -110,15 +113,15 @@ do
 
       criticName=$(echo $criticName | cut -d',' -f1)
       criticNameFirst=$(echo $criticName | cut -d',' -f1)
-      criticRatingNumber=$(cat temp4 | grep "js-anchor-link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
+      criticRatingNumber=$(cat temp3 | grep "js-anchor-link\">$criticName" | cut -d'"' -f6 | wc -l | awk '{print $1}')
 
-      if [ "$criticNameFirst" != "$criticNameTemp" ]; then
-        if [ $criticRatingNumber -gt 0 ]; then
+      if [[ $criticNameFirst != $criticNameTemp ]]; then
+        if [[ $criticRatingNumber -gt 0 ]]; then
           for k in $( eval echo {1..$criticRatingNumber} )
           do
-          criticRating=$(cat temp4 | grep -m$k "js-anchor-link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
+          criticRating=$(cat temp3 | grep -m$k "js-anchor-link\">$criticName" | tail -1 | head -1 | cut -d'"' -f6)
 
-            if [ $k -gt 1 ]; then
+            if [[ $k -gt 1 ]]; then
               criticNameTemp="$criticName"
               criticName="$criticName$k"
             fi
@@ -144,7 +147,7 @@ do
                 ;;
             esac
 
-            if [ $k -gt 1 ]; then
+            if [[ $k -gt 1 ]]; then
               criticName="$criticNameTemp"
             fi
 
@@ -168,16 +171,35 @@ do
     # Add IMDb object
     echo "\"imdbData\":{" >> ./assets/js/data.json
 
-    # Extract IMDb rating
+    # Encode and lowercase IMDb title
     titleLower=$(echo $title | sed -f assets/sh/imdb_titles.sed | sed -f assets/sh/url_escape.sed | tr '[:upper:]' '[:lower:]')
-
     curl -s "https://www.imdb.com/find?q=$titleLower&s=tt" > temp5
-    imdbId=$(cat temp5 | grep -m1 "result_text" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | sed "s/.*title\///g")
-    curl -s https://www.imdb.com/title/$imdbId/ > temp6
-    imdbRating=$(cat temp6 | grep -m1 "ratingValue" | cut -d'"' -f4)
 
-    echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
+    # Extract IMDb id
+    m=1
+    imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -$m | tail -1 | sed "s/.*title\///g")
+    curl -s https://www.imdb.com/title/$imdbId/ > temp6
+
+    # Extract IMDb first director
+    firstImdbDirector=$(cat temp6 | grep -A2 "Director" | head -3 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
+
+    # Get second to five result if movie match is not right
+    for m in {2..5}
+    do
+      if [[ $firstAllocineDirector != *$firstImdbDirector* ]]; then
+          imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -$m | tail -1 | sed "s/.*title\///g")
+          curl -s https://www.imdb.com/title/$imdbId/ > temp6
+          firstImdbDirector=$(cat temp6 | grep -A2 "Director" | head -3 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
+      fi
+    done
+
+    # Extract IMDb rating number
+    imdbRating=$(cat temp6 | grep -m1 "ratingValue" | cut -d'"' -f4)
     echo "\"imdbRating\": \"$imdbRating\"," >> ./assets/js/data.json
+
+    # Add IMDb id and director after checking
+    echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
+    echo "\"imdbDirector\": \"$firstImdbDirector\"," >> ./assets/js/data.json
 
     # Add ending bracket
     echo "}," >> ./assets/js/data.json
@@ -204,7 +226,7 @@ while IFS= read -r criticName <&3; do
   criticName=$(echo $criticName | cut -d',' -f1)
 
   # If same criticName add 2 to criticName else don't
-  if [ "$criticName" == "$criticNameTemp" ]; then
+  if [[ $criticName == $criticNameTemp ]]; then
     echo "{\"$id\": \"$criticName$sec\"}," >> ./assets/js/critics.json
   else
     echo "{\"$id\": \"$criticName\"}," >> ./assets/js/critics.json

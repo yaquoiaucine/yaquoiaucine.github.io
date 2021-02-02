@@ -55,13 +55,15 @@ li a:visited {
 
 #inputToggle,
 .criticButton input,
-.usersAllocine input {
+.usersAllocine input,
+.usersImdb input {
     display: none;
 }
 
 #inputToggle+label:before,
 .criticButton input+label:before,
-.usersAllocine input+label:before {
+.usersAllocine input+label:before,
+.usersImdb input+label:before {
     font-family: FontAwesome;
     font-size: 14px;
     display: inline-block;
@@ -70,13 +72,15 @@ li a:visited {
 
 #inputToggle+label:before,
 .criticButton input+label:before,
-.usersAllocine input+label:before {
+.usersAllocine input+label:before,
+.usersImdb input+label:before {
     content: "\f096";
 }
 
 #inputToggle:checked+label:before,
 .criticButton input:checked+label:before,
-.usersAllocine input:checked+label:before {
+.usersAllocine input:checked+label:before,
+.usersImdb input:checked+label:before {
     content: "\f046";
 }
 
@@ -96,17 +100,44 @@ li a:visited {
     margin-left: 0;
 }
 
-.displayFlexStart {
-    justify-content: flex-start;
-}
-
-.displayFlexEnd {
-    justify-content: flex-end;
-    margin: 0 0 0 auto;
-}
-
 .displayNone {
-    display: none;
+    display: none !important;
+}
+
+.picture-item__tags span,
+.overlayInfos span {
+    opacity: .7;
+}
+
+.overlayInfos {
+    background: rgba(var(--dark-rgba-color), .8);
+    color: var(--white-color);
+    transition: .5s ease;
+    font-size: 1rem;
+    text-align: center;
+    width: 100%;
+    z-index: 1;
+    padding-top: 15%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    border-bottom: 1px solid var(--gray-color);
+}
+
+.overlayInfos * {
+    flex: 1 1 34%;
+}
+
+.overlayInfos i {
+    margin-right: 5px;
+}
+
+.overlayInfos a:nth-child(1n) {
+    margin: 0 0 0 15px;
+}
+
+.overlayInfos a:nth-child(2n) {
+    margin: 0 15px 0 0;
 }
 
 div[role=menu] {
@@ -284,16 +315,6 @@ div[role=menu]>button:disabled {
 
 .picture-item__details {
     overflow-x: scroll;
-}
-
-.picture-item__tagsNew {
-    flex-shrink: 1;
-    text-align: right;
-    margin: 0;
-}
-
-.picture-item__tagsMargin {
-    margin: 0 0 0 15px;
 }
 
 .sortFilter {

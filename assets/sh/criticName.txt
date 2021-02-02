@@ -36,6 +36,7 @@ Excessif,de Excessif,Ex
 Femme Actuelle,de Femme Actuelle,FA
 FHM,de FHM,FHM
 Filmsactu,de Filmsactu,Fi
+Filmsactu,de Filmsactu Contre,Fi2
 Fluctuat.net,de Fluctuat.net,Fl
 France-Observateur,de France-Observateur,FO
 France Soir,de France Soir,FS

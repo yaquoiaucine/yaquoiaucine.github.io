@@ -60,12 +60,12 @@ var DOMLoaded = function() {
             bindEventListeners();
             clickMenuButtonAll();
             clickToggleMode();
-            criticMenu();
             darkmodePref();
             defaultInputClick();
             focusSearchInput();
             getDarkmodeStatus();
             getTglButtons();
+            ratingInfoDetails();
             searchShortcut();
             typewriter();
         });
@@ -86,9 +86,12 @@ var DOMLoaded = function() {
             criticFix = dataForSingleItem.allocineData.critic,
             criticNames = dataForSingleItem.allocineData.criticNames,
             user = dataForSingleItem.allocineData.user,
+            imdbId = dataForSingleItem.imdbData.imdbId,
+            imdbRating = dataForSingleItem.imdbData.imdbRating,
             genre1 = dataForSingleItem.allocineData.genre.id1,
             genre2 = dataForSingleItem.allocineData.genre.id2,
             genre3 = dataForSingleItem.allocineData.genre.id3,
+            divisionNumber = 0,
             genre, title, rating;
 
         var urlId = dataForSingleItem.allocineData.url.match(/=(.*)\./).pop();
@@ -149,45 +152,172 @@ var DOMLoaded = function() {
             isDateIncluded2021);
 
         critic = getActiveCritics(criticFix, criticNames);
-
         if (user == '') user = 0;
+        if (imdbRating == '') imdbRating = 0;
 
         var criticActive = localStorage.getItem('criticAllocine');
         var userActive = localStorage.getItem('usersAllocine');
+        var usersImdbActive = localStorage.getItem('usersImdb');
         var userInput = document.querySelector('.nav-item.usersAllocine');
+        var userImdbInput = document.querySelector('.nav-item.usersImdb');
 
-        if (retrieveLocalData(criticActive) && retrieveLocalData(userActive)) {
+        if (retrieveLocalData(criticActive) && retrieveLocalData(userActive) && retrieveLocalData(usersImdbActive)) {
+            divisionNumber = 3;
+
             if (critic == 0) {
-                critic = user;
+                divisionNumber--;
                 criticDetails = '/';
             } else {
-                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
+                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
             }
-            ratingTemp = (parseFloat(critic) + parseFloat(user)) / 2;
-            userDetails = user;
+
+            if (user == 0) {
+                divisionNumber--;
+                userDetails = '/';
+            } else {
+                userDetails = user + '<span>/5</span>';
+            }
+
+            if (imdbRating == 0) {
+                divisionNumber--;
+                imdbDetails = '/';
+            } else {
+                imdbDetails = imdbRating + '<span>/10</span>';
+            }
+
+            ratingTemp = (parseFloat(critic) + parseFloat(user) + parseFloat(imdbRating / 2)) / divisionNumber;
 
             userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
-        } else if (retrieveLocalData(criticActive)) {
-            criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
-            if (criticDetails == 0) criticDetails = '/';
+            userImdbInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+        } else if (retrieveLocalData(criticActive) && retrieveLocalData(usersImdbActive)) {
+            divisionNumber = 2;
+
+            if (critic == 0) {
+                divisionNumber--;
+                criticDetails = '/';
+            } else {
+                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
+            }
+
+            if (imdbRating == 0) {
+                divisionNumber--;
+                imdbDetails = '/';
+            } else {
+                imdbDetails = imdbRating + '<span>/10</span>';
+            }
+
+            ratingTemp = (parseFloat(critic) + parseFloat(imdbRating / 2)) / divisionNumber;
+
             userDetails = '/';
-            ratingTemp = parseFloat(critic);
 
             userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
-        } else if (retrieveLocalData(userActive)) {
+            userImdbInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+        } else if (retrieveLocalData(userActive) && retrieveLocalData(usersImdbActive)) {
+            divisionNumber = 2;
+
+            if (user == 0) {
+                divisionNumber--;
+                userDetails = '/';
+            } else {
+                userDetails = user + '<span>/5</span>';
+            }
+
+            if (imdbRating == 0) {
+                divisionNumber--;
+                imdbDetails = '/';
+            } else {
+                imdbDetails = imdbRating + '<span>/10</span>';
+            }
+
+            ratingTemp = (parseFloat(user) + parseFloat(imdbRating / 2)) / divisionNumber;
+
             criticDetails = '/';
-            userDetails = user;
-            ratingTemp = parseFloat(user);
 
             userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
-        } else {
+            userImdbInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+        } else if (retrieveLocalData(criticActive) && retrieveLocalData(userActive)) {
+            divisionNumber = 2;
+
+            if (critic == 0) {
+                divisionNumber--;
+                criticDetails = '/';
+            } else {
+                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
+            }
+
+            if (user == 0) {
+                divisionNumber--;
+                userDetails = '/';
+            } else {
+                userDetails = user + '<span>/5</span>';
+            }
+
+            ratingTemp = (parseFloat(critic) + parseFloat(user)) / divisionNumber;
+
+            imdbDetails = '/';
+
+            userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+            userImdbInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+        } else if (retrieveLocalData(criticActive)) {
+            divisionNumber = 1;
+
+            if (critic == 0) {
+                divisionNumber--;
+                criticDetails = '/';
+            } else {
+                criticDetails = parseFloat(critic).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
+            }
+
+            ratingTemp = parseFloat(critic) / divisionNumber;
+
+            userDetails = imdbDetails = '/';
+
+            userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+            userImdbInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+        } else if (retrieveLocalData(userActive)) {
+            divisionNumber = 1;
+
+            if (user == 0) {
+                divisionNumber--;
+                userDetails = '/';
+            } else {
+                userDetails = parseFloat(user).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
+            }
+
+            ratingTemp = parseFloat(user) / divisionNumber;
+
+            criticDetails = imdbDetails = '/';
+
+            userInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+            userImdbInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+        } else if (retrieveLocalData(usersImdbActive)) {
+            divisionNumber = 1;
+
+            if (imdbRating == 0) {
+                divisionNumber--;
+                imdbDetails = '/';
+            } else {
+                imdbDetails = parseFloat(imdbRating).toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/10</span>';
+            }
+
+            ratingTemp = parseFloat(imdbRating / 2) / divisionNumber;
+
             criticDetails = userDetails = '/';
+
+            userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+            userImdbInput.children[0].children[0].children[0].children[0].setAttribute('checked', 'checked');
+        } else {
             ratingTemp = 0;
 
+            criticDetails = userDetails = imdbDetails = '/';
+
             userInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
+            userImdbInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
         }
 
-        rating = ratingTemp.toFixed(2).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1');
+        ratingTemp = ratingTemp || 0;
+        ratingToFixed = ratingTemp.toFixed(2);
+        rating = ratingToFixed.replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1') + '<span>/5</span>';
 
         if (titleTemp.length > 15) {
             title = titleTemp.substring(0, 14) + '...';
@@ -197,34 +327,30 @@ var DOMLoaded = function() {
 
         /* beautify ignore:start */
         return [
-            '<figure class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + rating + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
-              '<div class="picture-item__inner">',
-                '<div class="aspect aspect--16x9">',
-                  '<div class="aspect__inner">',
-                    '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">',
-                      '<img src="' + picture + '" srcset="' + picture + '" alt="' + title + '">',
-                    '</a>',
-                    '<img class="picture-item__blur" src="' + picture + '" srcset="' + picture + '" alt="" aria-hidden="true">',
-                  '</div>',
+            '<figure class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + ratingToFixed + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
+                '<div class="picture-item__inner">',
+                    '<div class="aspect aspect--16x9">',
+                        '<div class="aspect__inner overlayInfos displayNone">',
+                            '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/presse/" target="_blank"><i class="fas fa-newspaper"></i>' + criticDetails + '</a>',
+                            '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/spectateurs/" target="_blank"><i class="fas fa-users"></i>' + userDetails + '</a>',
+                            '<a href="https://www.imdb.com/title/' + imdbId + '/" target="_blank"><i class="fab fa-imdb"></i>' + imdbDetails + '</a>',
+                        '</div>',
+                        '<div class="aspect__inner">',
+                            '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">',
+                                '<img src="' + picture + '" srcset="' + picture + '" alt="' + title + '">',
+                            '</a>',
+                            '<img class="picture-item__blur" src="' + picture + '" srcset="' + picture + '" alt="" aria-hidden="true">',
+                        '</div>',
+                    '</div>',
+                    '<div class="picture-item__details">',
+                        '<figcaption class="picture-item__title">',
+                            '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">' + title + '</a>',
+                        '</figcaption>',
+                        '<a href="javascript:void(0)">',
+                            '<p class="picture-item__tags">' + rating + '</p>',
+                        '</a>',
+                    '</div>',
                 '</div>',
-                '<div class="picture-item__details">',
-                  '<figcaption class="picture-item__title">',
-                    '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">' + title + '</a>',
-                  '</figcaption>',
-                  '<a href="javascript:void(0)">',
-                    '<p class="picture-item__tags">' + rating + '</p>',
-                  '</a>',
-                  '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/presse/" target="_blank" class="displayNone">',
-                    '<p class="picture-item__tagsNew"><i class="fas fa-newspaper"></i> ' + criticDetails + '</p>',
-                  '</a>',
-                  '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/spectateurs/" target="_blank" class="displayNone">',
-                    '<p class="picture-item__tagsNew picture-item__tagsMargin"><i class="fas fa-users"></i> ' + userDetails + '</p>',
-                  '</a>',
-                  '<a href="javascript:void(0)" class="displayFlexEnd displayNone">',
-                    '<p class="picture-item__tags"><i class="fas fa-times-circle"></i></p>',
-                  '</a>',
-                '</div>',
-              '</div>',
             '</figure>'
         ].join('');
         /* beautify ignore:end */
@@ -437,6 +563,7 @@ var DOMLoaded = function() {
         } else {
             localStorage.setItem('criticAllocine', 'true');
             localStorage.setItem('usersAllocine', 'true');
+            localStorage.setItem('usersImdb', 'true');
             return true;
         }
     }
@@ -660,6 +787,7 @@ var DOMLoaded = function() {
 
             if (isActive) {
                 btn.classList.remove('active');
+                filters.buttonsArray = [];
             } else {
                 btn.classList.add('active');
                 filters.buttonsArray = getCurrentButtonFilters();
@@ -760,27 +888,6 @@ var DOMLoaded = function() {
         } else {
             localStorage.setItem('mode', 'additive');
         }
-    }
-
-    // Display more rating numbers
-    function criticMenu() {
-        var tags = document.querySelectorAll('.picture-item__tags');
-
-        tags.forEach(function(tag) {
-            tag.addEventListener('click', function() {
-                var parentDiv = tag.parentNode.parentNode;
-
-                if (parentDiv.classList.contains('displayFlexStart')) {
-                    parentDiv.classList.remove('displayFlexStart');
-                } else {
-                    parentDiv.classList.add('displayFlexStart');
-                }
-
-                for (var i = 0; i < parentDiv.children.length; i++) {
-                    parentDiv.children[i].classList.toggle('displayNone');
-                }
-            });
-        });
     }
 
     // Add click listener
@@ -897,6 +1004,23 @@ var DOMLoaded = function() {
         }
     }
 
+    // Add ratings info details
+    function ratingInfoDetails() {
+        var tags = document.querySelectorAll('.picture-item__tags');
+
+        tags.forEach(function(tag) {
+            tag.addEventListener('click', function() {
+                var elClass = tag.parentNode.parentNode.parentNode.children[0].children[0].classList[2];
+
+                if (elClass == 'displayNone') {
+                    tag.parentNode.parentNode.parentNode.children[0].children[0].classList.remove('displayNone');
+                } else {
+                    tag.parentNode.parentNode.parentNode.children[0].children[0].classList.add('displayNone');
+                }
+            });
+        });
+    }
+
     // Set localStorage for each button
     function setLocalstorageMenu(item) {
         var buttonCriticName = item.currentTarget.innerText;
@@ -948,6 +1072,7 @@ var DOMLoaded = function() {
     }
 };
 
+// Load ratings menu and ShuffleJS grid
 document.addEventListener('DOMContentLoaded', function() {
     var Nav = new hcOffcanvasNav('#main-nav', {
         customToggle: '.fa-sliders-h',
