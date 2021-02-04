@@ -3,7 +3,6 @@ image: node
 before_script:
   - npm install surge
   - npm install get-json
-  - npm install mailgun-js
 
 main:
   stage: deploy

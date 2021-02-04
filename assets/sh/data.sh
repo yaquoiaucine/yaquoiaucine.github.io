@@ -19,14 +19,15 @@ fi
 # Loop through all Allociné pages
 for i in $( eval echo {1..$pagesNumber} )
 do
-  # Display number of pages remaining
-  echo page number $i / $pagesNumber
-
   # Get Allociné first page
   if [[ $i -eq 1 ]]; then
+    echo page number $i / $pagesNumber
+
     id=1
   # Get Allociné second until second to last page
   elif [[ $i -lt $pagesNumber ]]; then
+    echo page number $i / $pagesNumber
+
     curl -s $baseUrl\?page\=$i > temp
 
     checkMoviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
@@ -35,6 +36,8 @@ do
     fi
   # Get Allociné last page
   elif [[ $i -eq $pagesNumber ]]; then
+    echo page number $i / $pagesNumber
+
     curl -s $baseUrl\?page\=$i > temp
     moviesNumber=$(cat temp | grep "<a class=\"meta-title-link\" href=\"/film/fichefilm_gen_cfilm=" | wc -l | awk '{print $1}')
   fi
@@ -174,30 +177,60 @@ do
     # Encode and lowercase IMDb title
     titleLower=$(echo $title | sed -f assets/sh/imdb_titles.sed | sed -f assets/sh/url_escape.sed | tr '[:upper:]' '[:lower:]')
     curl -s "https://www.imdb.com/find?q=$titleLower&s=tt" > temp5
+    echo $titleLower
 
     # Extract IMDb id
-    m=1
-    imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -$m | tail -1 | sed "s/.*title\///g")
+    imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -1 | tail -1 | sed "s/.*title\///g")
     curl -s https://www.imdb.com/title/$imdbId/ > temp6
 
-    # Extract IMDb first director
-    firstImdbDirector=$(cat temp6 | grep -A2 "Director" | head -3 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
-
-    # Get second to five result if movie match is not right
-    for m in {2..5}
+    # Get number of IMDb directors
+    imdbDirectorNumber=$(cat temp6 | grep -A6 "<h4 class=\"inline\">Director" | grep -Eo "/name/nm" | wc -l | awk '{print $1}')
+    o=3
+    for m in $( eval echo {1..$imdbDirectorNumber} )
     do
+      # Extract IMDb first director
+      firstImdbDirector=$(cat temp6 | grep -A6 "<h4 class=\"inline\">Director" | head -$o | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
+      if [[ -z $firstImdbDirector ]]; then
+        firstImdbDirector="N/A"
+      fi
+
+      # Get second to five result if movie match is not right
+      for n in {2..5}
+      do
+        if [[ $firstAllocineDirector != *$firstImdbDirector* ]]; then
+            imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -$n | tail -1 | sed "s/.*title\///g")
+            curl -s https://www.imdb.com/title/$imdbId/ > temp6
+            firstImdbDirector=$(cat temp6 | grep -A6 "<h4 class=\"inline\">Director" | head -$o | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
+            if [[ -z $firstImdbDirector ]]; then
+              firstImdbDirector="N/A"
+            fi
+        fi
+      done
+
       if [[ $firstAllocineDirector != *$firstImdbDirector* ]]; then
-          imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -$m | tail -1 | sed "s/.*title\///g")
-          curl -s https://www.imdb.com/title/$imdbId/ > temp6
-          firstImdbDirector=$(cat temp6 | grep -A2 "Director" | head -3 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | tr '[:upper:]' '[:lower:]' | sed -f assets/sh/imdb_director.sed)
+        # Extract IMDb id
+        imdbId=$(cat temp5 | grep -Eo "<td class=\"primary_photo\"> <a href=\"/title/tt[0-9]+" | sed 's/\/\" ><img src=\"https:\/\/m.media.*$//g' | head -1 | tail -1 | sed "s/.*title\///g")
+        curl -s https://www.imdb.com/title/$imdbId/ > temp6
+        o=$[$o+1]
       fi
     done
 
     # Extract IMDb rating number
     imdbRating=$(cat temp6 | grep -m1 "ratingValue" | cut -d'"' -f4)
-    echo "\"imdbRating\": \"$imdbRating\"," >> ./assets/js/data.json
 
-    # Add IMDb id and director after checking
+    # Null value if still different
+    if [[ $firstAllocineDirector != *$firstImdbDirector* ]]; then
+      echo ----------------------
+      echo $firstAllocineDirector
+      echo $firstImdbDirector
+      echo ----------------------
+      imdbRating=""
+      imdbId=""
+      firstImdbDirector=""
+    fi
+
+    # Add IMDb rating number, id and director after checking
+    echo "\"imdbRating\": \"$imdbRating\"," >> ./assets/js/data.json
     echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
     echo "\"imdbDirector\": \"$firstImdbDirector\"," >> ./assets/js/data.json
 

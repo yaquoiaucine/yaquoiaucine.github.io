@@ -113,7 +113,7 @@ body.hc-nav-open {
     box-sizing: border-box
 }
 
-.hc-offcanvas-nav li.criticRatings>.nav-item-wrapper .nav-item-link span.criticNumber {
+.criticNumber {
     font-size: 80%;
     font-weight: 600;
     line-height: 17px;
@@ -122,6 +122,10 @@ body.hc-nav-open {
     float: right;
     background: var(--green-color);
     border-radius: 2px;
+}
+
+.criticNumberZero {
+    opacity: .5;
 }
 
 .hc-offcanvas-nav .nav-item-link span {
