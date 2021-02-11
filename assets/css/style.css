@@ -39,11 +39,6 @@ li {
     display: inline;
 }
 
-li i,
-li span i {
-    margin: 0 7px;
-}
-
 li a,
 li a:visited {
     color: var(--dark-color);
@@ -85,7 +80,11 @@ li a:visited {
 }
 
 #secondLi {
-    margin: 0 2px 0 4px;
+    margin: 0 7px;
+}
+
+.first-nav i {
+    margin-right: 7px;
 }
 
 #shortcut {
@@ -110,18 +109,14 @@ li a:visited {
 }
 
 .overlayInfos {
-    background: rgba(var(--dark-rgba-color), .8);
+    background-color: rgba(var(--dark-rgba-color), .85);
     color: var(--white-color);
-    transition: .5s ease;
     font-size: 1rem;
     text-align: center;
-    width: 100%;
-    z-index: 1;
     padding-top: 15%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    border-bottom: 1px solid var(--gray-color);
 }
 
 .overlayInfos * {
@@ -189,12 +184,14 @@ div[role=menu]>button:disabled {
 .fa-twitter:hover,
 .fa-youtube:hover,
 .fa-github:hover,
-.fa-sun:hover,
-.fa-moon:hover,
-.fa-sliders-h:hover,
-.fa-times-circle:hover {
+.fa-lightbulb:hover,
+.fa-sliders-h:hover {
     cursor: pointer;
     color: var(--green-color);
+}
+
+.bottom-nav li a:hover {
+    background: var(--dark-color) !important;
 }
 
 .textfield {
@@ -348,34 +345,10 @@ strong {
     background-color: var(--light-gray-color);
 }
 
-/* Mobile view overwrite css */
-@media screen and (min-width: 768px) {
-    .row {
-        max-width: 1235px;
-    }
-}
-
-@media screen and (min-width: 768px) and (max-width: 897px) {
-    .genreFilter {
-        max-width: 213px;
-    }
-}
-
-@media screen and (min-width: 898px) {
-    .periodFilter {
-        min-width: 213px;
-    }
-
-    .sortFilter {
-        min-width: 270px;
-    }
-}
-
-@media screen and (min-width: 768px) and (max-width: 821px) {
-
-    li i,
-    li span i {
-        margin: 0 4px;
+/* Mobile view css */
+@media screen and (max-width: 379px) {
+    .overlayInfos {
+        font-size: .8rem;
     }
 }
 
@@ -385,14 +358,29 @@ strong {
     }
 }
 
-@media screen and (max-width: 379px) {
-    #secondLi {
-        margin-right: 100%;
-        visibility: hidden;
+@media screen and (min-width: 768px) {
+    .row {
+        max-width: 1235px;
     }
 
-    .fa-twitter {
-        margin: 10px 0;
+    .overlayInfos {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 968px) {
+    .genreFilter {
+        max-width: 270px;
+    }
+}
+
+@media screen and (min-width: 969px) {
+    .periodFilter {
+        min-width: 213px;
+    }
+
+    .sortFilter {
+        min-width: 270px;
     }
 }
 

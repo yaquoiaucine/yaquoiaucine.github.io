@@ -27,6 +27,8 @@ var DOMLoaded = function() {
 
     const darkmode = new Darkmode(options);
 
+    localStorage.setItem('menuBool', false);
+
     fetch('https://yaquoiaucine.fr/assets/js/data.json')
         .then(function(response) {
             return response.json();
@@ -69,6 +71,7 @@ var DOMLoaded = function() {
             focusSearchInput();
             getDarkmodeStatus();
             getTglButtons();
+            menuButtonsChecked();
             ratingInfoDetails();
             searchShortcut();
             typewriter();
@@ -350,16 +353,16 @@ var DOMLoaded = function() {
             '<figure class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-date-formatted="' + dateFormattedFilter + '" data-critic="' + ratingToFixed + '" data-date-created="' + date + '" data-title="' + title + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
                 '<div class="picture-item__inner">',
                     '<div class="aspect aspect--16x9">',
-                        '<div class="aspect__inner overlayInfos displayNone">',
-                            '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/presse/" target="_blank"><i class="fas fa-newspaper"></i>' + criticDetails + '</a>',
-                            '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/spectateurs/" target="_blank"><i class="fas fa-users"></i>' + userDetails + '</a>',
-                            '<a href="https://www.imdb.com/title/' + imdbId + '/" target="_blank"><i class="fab fa-imdb"></i>' + imdbDetails + '</a>',
-                        '</div>',
                         '<div class="aspect__inner">',
                             '<a href="' + url + '" target="_blank" rel="noopener" title="' + dataForSingleItem.allocineData.title + " / " + date + '">',
                                 '<img src="' + picture + '" srcset="' + picture + '" alt="' + title + '">',
                             '</a>',
                             '<img class="picture-item__blur" src="' + picture + '" srcset="' + picture + '" alt="" aria-hidden="true">',
+                            '<div class="aspect__inner overlayInfos displayNone">',
+                                '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/presse/" target="_blank"><i class="fas fa-newspaper"></i>' + criticDetails + '</a>',
+                                '<a href="https://www.allocine.fr/film/fichefilm-' + urlId + '/critiques/spectateurs/" target="_blank"><i class="fas fa-users"></i>' + userDetails + '</a>',
+                                '<a href="https://www.imdb.com/title/' + imdbId + '/" target="_blank"><i class="fab fa-imdb"></i>' + imdbDetails + '</a>',
+                            '</div>',
                         '</div>',
                     '</div>',
                     '<div class="picture-item__details">',
@@ -793,7 +796,7 @@ var DOMLoaded = function() {
 
         if (mode === 'additive') {
             if (isActive) {
-                filters.buttonsArray.splice(filters.buttonsArray.indexOf(btnGroup));
+                filters.buttonsArray.splice(filters.buttonsArray.indexOf(btnGroup), 1);
             } else {
                 filters.buttonsArray.push(btnGroup);
             }
@@ -875,6 +878,8 @@ var DOMLoaded = function() {
         var criticButtonNumber = document.querySelectorAll('.nav-item.criticButton:not(.criticAllocine)').length;
 
         mainToggle0.addEventListener('click', function() {
+            localStorage.setItem('menuBool', true);
+
             menuButtonArray.forEach(function(button) {
                 var buttonCriticName = button.children[0].children[0].textContent;
 
@@ -933,11 +938,11 @@ var DOMLoaded = function() {
         var darkmodeActive = localStorage.getItem('darkmode');
 
         if (darkmodeActive == 'true' || body.classList.contains('darkmode--activated')) {
-            tglDarkmode.classList.add('fa-moon');
-            tglDarkmode.classList.remove('fa-sun');
+            tglDarkmode.classList.add('far');
+            tglDarkmode.classList.remove('fas');
         } else {
-            tglDarkmode.classList.remove('fa-moon');
-            tglDarkmode.classList.add('fa-sun');
+            tglDarkmode.classList.remove('far');
+            tglDarkmode.classList.add('fas');
         }
     }
 
@@ -974,6 +979,8 @@ var DOMLoaded = function() {
 
     // Set localStorage toggles
     function toggleLocalData(item) {
+        localStorage.setItem('menuBool', true);
+
         var classListName = item.currentTarget.parentNode.parentNode.classList[1];
         var classListNameActive = localStorage.getItem(classListName);
 
@@ -1004,6 +1011,7 @@ var DOMLoaded = function() {
     function menuButtons() {
         menuButtonArray.forEach(function(button) {
             button.children[0].children[0].addEventListener('click', setLocalstorageMenu.bind(this), false);
+
             var buttonCriticName = button.children[0].children[0].textContent;
             var localbuttonCriticName = localStorage.getItem(buttonCriticName);
 
@@ -1033,25 +1041,10 @@ var DOMLoaded = function() {
         }
     }
 
-    // Add ratings info details
-    function ratingInfoDetails() {
-        var tags = document.querySelectorAll('.picture-item__tags');
-
-        tags.forEach(function(tag) {
-            tag.addEventListener('click', function() {
-                var elClass = tag.parentNode.parentNode.parentNode.children[0].children[0].classList[2];
-
-                if (elClass == 'displayNone') {
-                    tag.parentNode.parentNode.parentNode.children[0].children[0].classList.remove('displayNone');
-                } else {
-                    tag.parentNode.parentNode.parentNode.children[0].children[0].classList.add('displayNone');
-                }
-            });
-        });
-    }
-
     // Set localStorage for each button
     function setLocalstorageMenu(item) {
+        localStorage.setItem('menuBool', true);
+
         var buttonCriticName = item.currentTarget.innerText;
         var localbuttonCriticName = localStorage.getItem(buttonCriticName);
 
@@ -1072,6 +1065,44 @@ var DOMLoaded = function() {
         } else {
             criticRatingsLi.children[1].children[0].innerHTML = '<i class="fas fa-newspaper fa-lg" aria-hidden="true"></i> Presse<span class="criticNumber criticNumberZero">0</span>';
         }
+    }
+
+    function menuButtonsChecked() {
+        var menuAllChecked = document.querySelectorAll('.nav-item.criticButton:not(.mainToggle)');
+        var menuAllCheckedArray = Array.from(menuAllChecked);
+        var i = 1;
+
+        menuAllCheckedArray.forEach(function(button) {
+            var buttonCriticName = button.children[0].children[0].textContent;
+            var localbuttonCriticName = localStorage.getItem(buttonCriticName);
+
+            button.children[0].children[0].addEventListener('click', function() {
+                var ulList = this.parentNode.parentNode.parentNode;
+                var liItem = this.parentNode.parentNode;
+                var secondListItem = this.parentNode.parentNode.parentNode.childNodes[1];
+                if (this.children[0].children[0].getAttribute('checked') == 'checked') {
+                    ulList.insertBefore(liItem, secondListItem);
+                }
+            }, false);
+
+            if (localbuttonCriticName == 'true') {
+                var ulListLoad = button.parentNode;
+                var secondListItemLoad = button.parentNode.childNodes[i];
+                ulListLoad.insertBefore(button, secondListItemLoad);
+                i++;
+            }
+        });
+    }
+
+    // Add ratings info details
+    function ratingInfoDetails() {
+        var tags = document.querySelectorAll('.picture-item__tags');
+
+        tags.forEach(function(tag) {
+            tag.addEventListener('click', function() {
+                tag.parentNode.parentNode.parentNode.children[0].children[0].children[2].classList.toggle('displayNone');
+            }, false);
+        });
     }
 
     // Focus search bar on CMD/CTRL + F keys
@@ -1125,7 +1156,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     Nav.on('close', function() {
-        document.location.reload();
+        var menuBool = localStorage.getItem('menuBool');
+
+        if (menuBool == 'true') {
+            document.location.reload();
+            menuBool = localStorage.setItem('menuBool', false);
+        }
     });
 
     window.main = new DOMLoaded(document.getElementById('grid'));

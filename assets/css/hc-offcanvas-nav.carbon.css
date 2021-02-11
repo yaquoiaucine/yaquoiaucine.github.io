@@ -134,6 +134,23 @@ body.hc-nav-open {
     top: 13px;
 }
 
+.hc-offcanvas-nav ul.bottom-nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    border-top: 1px solid rgba(var(--green-rgba-color), .25);
+}
+
+.hc-offcanvas-nav ul.bottom-nav li {
+    margin-top: 0;
+}
+
 .hc-offcanvas-nav:not(.user-is-tabbing) .nav-close-button:focus,
 .hc-offcanvas-nav:not(.user-is-tabbing) .nav-item-wrapper a:focus {
     outline: none
@@ -527,7 +544,7 @@ body.hc-nav-open {
     width: 40px;
     height: 40px;
     line-height: 40px;
-    top: 28px;
+    top: 25px;
     right: 15px
 }
 
