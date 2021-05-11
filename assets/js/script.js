@@ -57,7 +57,7 @@ var DOMLoaded = function() {
 
     localStorage.setItem('yqac_menu.' + 'menuBool', false);
 
-    fetch('https://yaquoiaucine.surge.sh/assets/js/data.json')
+    fetch('https://yaquoiaucine.fr/assets/js/data.json')
         .then(function(response) {
             return response.json();
         })
@@ -946,7 +946,7 @@ var DOMLoaded = function() {
                     by: sortByCreationDate,
                 };
 
-                evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date de création <i class="fas fa-arrow-up"></i>';
+                evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date <i class="fas fa-arrow-up"></i>';
                 localStorage.setItem('yqac_sort.' + 'creationdate', 'false');
                 localStorage.removeItem('yqac_sort.' + 'popularity');
                 localStorage.removeItem('yqac_sort.' + 'critic');
@@ -957,7 +957,7 @@ var DOMLoaded = function() {
                     by: sortByCreationDate,
                 };
 
-                evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date de création <i class="fas fa-arrow-down"></i>';
+                evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date <i class="fas fa-arrow-down"></i>';
                 localStorage.setItem('yqac_sort.' + 'creationdate', 'true');
                 localStorage.removeItem('yqac_sort.' + 'popularity');
                 localStorage.removeItem('yqac_sort.' + 'critic');
@@ -1256,8 +1256,8 @@ var DOMLoaded = function() {
                     criticKeysNew[0] != 'Note IMDb') {
                     htmlTagCriticRecap += '<p>Notes de la presse : </p>';
                     criticKeysNewLength = criticKeysNew.length;
-                    if (criticKeysNew.length > 15) {
-                        criticKeysNewLength = 15;
+                    if (criticKeysNew.length > 10) {
+                        criticKeysNewLength = 10;
                     }
                     for (var htmlTagCriticRecapIndex = 0; htmlTagCriticRecapIndex < criticKeysNewLength; htmlTagCriticRecapIndex++) {
                         if (criticKeysNew[htmlTagCriticRecapIndex] != 'Note AlloCiné' &&
