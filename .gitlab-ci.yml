@@ -1,8 +1,12 @@
 image: node
 
 before_script:
-  - npm install surge
   - npm install get-json
+  - npm install got
+  - npm install jsdom
+  - npm install link-check
+  - npm install shelljs
+  - npm install surge
 
 main:
   stage: deploy
@@ -13,8 +17,3 @@ main:
     TO_KEY: $TO_KEY
   script:
     - node node_script.js
-    - chmod +x ./assets/sh/data.sh
-    - bash ./assets/sh/data.sh
-    - node_modules/.bin/surge .
-    - node node_script.js
-    - node_modules/.bin/surge .
