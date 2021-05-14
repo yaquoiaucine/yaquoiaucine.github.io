@@ -42,6 +42,6 @@
 /film/fichefilm_gen_cfilm=248196.html,tt4532038,39763-the-war-with-grandpa
 /film/fichefilm_gen_cfilm=239054.html,tt10785618,78814-adolescentes
 /film/fichefilm_gen_cfilm=4063.html,tt0050083,170-12-angry-men
-/film/fichefilm_gen_cfilm=283953.html,,84444-la-chouette-en-toque
+/film/fichefilm_gen_cfilm=283953.html,noImdbId,84444-la-chouette-en-toque
 /film/fichefilm_gen_cfilm=228972.html,tt1259528,50603-den-of-thieves
 /film/fichefilm_gen_cfilm=128108.html,tt1257562,2659-hadewijch

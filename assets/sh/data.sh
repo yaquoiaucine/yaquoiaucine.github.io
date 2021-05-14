@@ -325,6 +325,10 @@ do
       done 3<$filmsIdsFile
 
       if [[ $betaseriesFound -eq 0 ]]; then
+        if [[ -z $testing ]]; then
+          abord_script
+        fi
+
         # Get betaseries film page
         creationYear=$(cat temp2 | grep -A6 "date blue-link" | grep -Eo "[0-9][0-9][0-9][0-9]" | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//')
         betaseriesTitle=$(echo $title | tr '[:upper:]' '[:lower:]' | sed -f ./assets/sed/url_escape.sed)
