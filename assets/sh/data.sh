@@ -371,7 +371,8 @@ do
               echo $id / "https://www.allocine.fr$url" ❌
 
               betaseriesId="noBetaseriesId"
-              exit 0
++             echo $betaseriesId
+              abord_script
             fi
           fi
         fi
