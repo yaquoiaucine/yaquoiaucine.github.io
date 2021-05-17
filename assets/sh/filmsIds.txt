@@ -45,3 +45,5 @@
 /film/fichefilm_gen_cfilm=283953.html,noImdbId,84444-la-chouette-en-toque
 /film/fichefilm_gen_cfilm=228972.html,tt1259528,50603-den-of-thieves
 /film/fichefilm_gen_cfilm=128108.html,tt1257562,2659-hadewijch
+/film/fichefilm_gen_cfilm=283687.html,tt12313458,83760-un-pays-qui-se-tient-sage
+/film/fichefilm_gen_cfilm=187864.html,tt1748122,724-moonrise-kingdom

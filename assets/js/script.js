@@ -488,7 +488,7 @@ var DOMLoaded = function() {
         if (betaseriesDetails == '/') {
             betaseriesDetailsUrl = '<a href="javascript:void(0)"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
         } else {
-            betaseriesDetailsUrl = '<a href="https://www.betaseries.com/film/' + betaseriesId + '/" target="_blank"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
+            betaseriesDetailsUrl = '<a href="https://www.betaseries.com/film/' + betaseriesId + '" target="_blank"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
         }
 
         /* beautify ignore:start */
@@ -1250,15 +1250,14 @@ var DOMLoaded = function() {
                 }
 
                 var htmlTagCriticRecap = '<ul>';
+                var criticKeysNewLength = 0;
+
                 if (criticKeysNew != '' &&
                     criticKeysNew[0] != 'Note AlloCiné' &&
                     criticKeysNew[0] != 'Note BetaSeries' &&
                     criticKeysNew[0] != 'Note IMDb') {
                     htmlTagCriticRecap += '<p>Notes de la presse : </p>';
                     criticKeysNewLength = criticKeysNew.length;
-                    if (criticKeysNew.length > 10) {
-                        criticKeysNewLength = 10;
-                    }
                     for (var htmlTagCriticRecapIndex = 0; htmlTagCriticRecapIndex < criticKeysNewLength; htmlTagCriticRecapIndex++) {
                         if (criticKeysNew[htmlTagCriticRecapIndex] != 'Note AlloCiné' &&
                             criticKeysNew[htmlTagCriticRecapIndex] != 'Note BetaSeries' &&
@@ -1289,6 +1288,12 @@ var DOMLoaded = function() {
                 htmlTagCriticRecap += '</ul>';
 
                 document.querySelector('.slide-critics-recap').innerHTML = htmlTagCriticRecap;
+
+                if (criticKeysNewLength > 13) {
+                    document.querySelector('.slide-critics-recap ul').style.height = '80vh';
+                } else {
+                    document.querySelector('.slide-critics-recap ul').style.height = '';
+                }
             }, false);
         });
 
