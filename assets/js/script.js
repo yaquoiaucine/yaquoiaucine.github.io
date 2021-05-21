@@ -199,6 +199,10 @@ var DOMLoaded = function() {
             divisionNumber = 0,
             genre, title, rating;
 
+        if (!betaseriesId.startsWith('serie')) {
+            betaseriesId = 'film/' + betaseriesId;
+        }
+
         var floatCriticNames = Object.keys(criticNames).reduce(function(obj, key) {
             var value = criticNames[key];
             obj[key] = isNumeric(value) ? Number(value) : value;
@@ -210,7 +214,7 @@ var DOMLoaded = function() {
         );
         var criticNamesKeysTemp = '';
         var criticNamesValuesTemp = '';
-        for (var key in criticNamesNew) criticNamesKeysTemp += key + ',';
+        for (var key in criticNamesNew) criticNamesKeysTemp += key.replace(/2$/, ' Contre') + ',';
         for (key in criticNamesNew) criticNamesValuesTemp += criticNamesNew[key] + ',';
         if (user != '') {
             criticNamesKeysTemp += 'Note AlloCiné,';
@@ -488,7 +492,7 @@ var DOMLoaded = function() {
         if (betaseriesDetails == '/') {
             betaseriesDetailsUrl = '<a href="javascript:void(0)"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
         } else {
-            betaseriesDetailsUrl = '<a href="https://www.betaseries.com/film/' + betaseriesId + '" target="_blank"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
+            betaseriesDetailsUrl = '<a href="https://www.betaseries.com/' + betaseriesId + '" target="_blank"><i class="icon-betaseries"></i>' + betaseriesDetails + '</a>';
         }
 
         /* beautify ignore:start */
@@ -1017,7 +1021,7 @@ var DOMLoaded = function() {
         } else {
             activePeriod = localStorage.getItem('yqac_period.' + 'activePeriod');
             if (activePeriod == null) {
-                activePeriod = 'En 2020';
+                activePeriod = 'Les 7 derniers jours';
             }
         }
 
@@ -1220,7 +1224,7 @@ var DOMLoaded = function() {
             'controlsPosition': 'bottom',
             'controlsText': ['Précédent', 'Suivant'],
             'nav': false,
-            'mouseDrag': true,
+            'mouseDrag': false,
             'arrowKeys': true
         });
 
@@ -1428,7 +1432,7 @@ var DOMLoaded = function() {
             } else {
                 item.currentTarget.innerHTML = 'Tout désélectionner<span><input id="criticToggle0" type="checkbox"><label for="criticToggle0"></label></span>';
                 item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
-                localStorage.setItem('yqac_critic.' + classListName, 'true')
+                localStorage.setItem('yqac_critic.' + classListName, 'true');
             }
         } else if (classListName == 'usersAllocine') {
             if (classListNameActive == 'true') {
@@ -1438,7 +1442,7 @@ var DOMLoaded = function() {
             } else {
                 userRatingLi.children[1].children[0].innerHTML = '<i class="fas fa-users fa-lg"></i> Spectateurs AlloCiné<span class="criticNumber">1</span>';
                 item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
-                localStorage.setItem('yqac_critic.' + classListName, 'true')
+                localStorage.setItem('yqac_critic.' + classListName, 'true');
             }
         } else if (classListName == 'usersImdb') {
             if (classListNameActive == 'true') {
@@ -1448,7 +1452,7 @@ var DOMLoaded = function() {
             } else {
                 imdbUserRatingLi.children[1].children[0].innerHTML = '<i class="fab fa-imdb fa-lg"></i> Spectateurs IMDb<span class="criticNumber">1</span>';
                 item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
-                localStorage.setItem('yqac_critic.' + classListName, 'true')
+                localStorage.setItem('yqac_critic.' + classListName, 'true');
             }
         } else if (classListName == 'usersBetaseries') {
             if (classListNameActive == 'true') {
@@ -1458,7 +1462,7 @@ var DOMLoaded = function() {
             } else {
                 betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs Betaseries<span class="criticNumber">1</span>';
                 item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
-                localStorage.setItem('yqac_critic.' + classListName, 'true')
+                localStorage.setItem('yqac_critic.' + classListName, 'true');
             }
         } else if (classListName == 'mainToggleNationality') {
             if (classListNameActive2 == 'true') {
