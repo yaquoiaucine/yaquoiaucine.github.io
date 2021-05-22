@@ -355,11 +355,12 @@ do
 
             betaseriesTitle=$(echo $filmsIdsLine | cut -d',' -f3)
             if [[ $betaseriesTitle == serie* ]]; then
+              echo "\"betaseriesId\": \"$betaseriesTitle\"," >> ./assets/js/data.json
               curl -s https://www.betaseries.com/$betaseriesTitle > temp9
             else
+              echo "\"betaseriesId\": \"film/$betaseriesTitle\"," >> ./assets/js/data.json
               curl -s https://www.betaseries.com/film/$betaseriesTitle > temp9
             fi
-            echo "\"betaseriesId\": \"$betaseriesTitle\"," >> ./assets/js/data.json
             betaseriesFound=1
             break
           else

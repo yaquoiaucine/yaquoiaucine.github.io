@@ -199,10 +199,6 @@ var DOMLoaded = function() {
             divisionNumber = 0,
             genre, title, rating;
 
-        if (!betaseriesId.startsWith('serie')) {
-            betaseriesId = 'film/' + betaseriesId;
-        }
-
         var floatCriticNames = Object.keys(criticNames).reduce(function(obj, key) {
             var value = criticNames[key];
             obj[key] = isNumeric(value) ? Number(value) : value;

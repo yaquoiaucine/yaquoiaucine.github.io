@@ -262,4 +262,9 @@
 /film/fichefilm_gen_cfilm=184006.html,tt1123373,1721-detective-dee-and-the-mystery-of-the-phantom-flame
 /film/fichefilm_gen_cfilm=263810.html,tt9625632,77384-mes-jours-de-gloire
 /film/fichefilm_gen_cfilm=291614.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=280240.html,tt8351520,80696-white-riot
 /film/fichefilm_gen_cfilm=213418.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=299.html,tt0052311,7422-touch-of-evil
+/film/fichefilm_gen_cfilm=246702.html,tt5700672,33693-train-to-busan
+/film/fichefilm_gen_cfilm=6822.html,tt0043278,5496-an-american-in-paris
+/film/fichefilm_gen_cfilm=33408.html,tt0070468,3329-the-offence
