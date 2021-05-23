@@ -78,6 +78,44 @@ fi
 # Remove lines with no data
 sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
 
+echo "----------------------------------------------------------------------------------------------------"
+betaseriesIdNotFoundNumber=$(cat assets/sh/filmsIds.txt | grep "[0-9],noBetaseriesId" | wc -l | awk '{print $1}')
+echo "betaseriesIdNotFoundNumber: $betaseriesIdNotFoundNumber"
+for betaseriesIdNotFoundNumberIndex in $( eval echo {1..$betaseriesIdNotFoundNumber} )
+do
+  imdbIdFound=$(cat assets/sh/filmsIds.txt | grep "[0-9],noBetaseriesId" | head -$betaseriesIdNotFoundNumberIndex | tail -1 | cut -d',' -f2)
+  echo "imdbIdFound: $imdbIdFound"
+  betaseriesCode=$(curl -s https://api.betaseries.com/movies/movie\?key\=7f7fef35706f\&imdb_id\=$imdbIdFound | jq '.errors[0].code')
+  if [[ $betaseriesCode != "4001" ]]; then
+    echo "----------------------------------------------------------------------------------------------------"
+    echo "betaseriesCode: $betaseriesCode"
+    echo "imdbIdFound: $imdbIdFound"
+    exit 0
+  fi
+done
+
+echo "----------------------------------------------------------------------------------------------------"
+imdbIdNotFoundNumber=$(cat assets/sh/filmsIds.txt | grep "noImdbId,[[:alnum:]]" | wc -l | awk '{print $1}')
+echo "imdbIdNotFoundNumber: $imdbIdNotFoundNumber"
+for imdbIdNotFoundNumberIndex in $( eval echo {1..$imdbIdNotFoundNumber} )
+do
+  betaseriesIdFound=$(cat assets/sh/filmsIds.txt | grep "noImdbId,[[:alnum:]]" | head -$imdbIdNotFoundNumberIndex | tail -1 | cut -d',' -f3)
+  echo "betaseriesIdFound: $betaseriesIdFound"
+  if [[ $betaseriesIdFound == serie* ]]; then
+    betaseriesIdFoundNew=$(echo $betaseriesIdFound | cut -d'/' -f2)
+    imdbRes=$(curl -s https://api.betaseries.com/shows/display\?key\=7f7fef35706f\&url\=$betaseriesIdFoundNew | jq '.show.imdb_id')
+  else
+    betaseriesIdFoundNew=$(echo $betaseriesIdFound | grep -Eo "[0-9]+")
+    imdbRes=$(curl -s https://api.betaseries.com/movies/movie\?key\=7f7fef35706f\&id\=$betaseriesIdFoundNew | jq '.movie.imdb_id')
+  fi
+  if [[ $imdbRes != "\"\"" ]]; then
+    echo "----------------------------------------------------------------------------------------------------"
+    echo "imdbRes: $imdbRes"
+    echo "betaseriesIdFound: $betaseriesIdFound"
+    exit 0
+  fi
+done
+
 # Add criticName first list
 cat ./assets/sh/criticName.txt | cut -d',' -f1 | sort | uniq >> ./assets/sh/criticNameTemp.txt
 

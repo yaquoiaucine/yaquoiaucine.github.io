@@ -454,13 +454,27 @@ var DOMLoaded = function() {
         }
 
         if (parseInt(filmId) == 4) {
+            localStorage.setItem('yqac_twitter.' + 'title4', titleTwitter);
+            localStorage.setItem('yqac_twitter.' + 'rating4', ratingTwitter);
+        }
+
+        if (parseInt(filmId) == 5) {
+            localStorage.setItem('yqac_twitter.' + 'title5', titleTwitter);
+            localStorage.setItem('yqac_twitter.' + 'rating5', ratingTwitter);
+        }
+
+        if (parseInt(filmId) == 6) {
             var title1 = localStorage.getItem('yqac_twitter.' + 'title1');
             var rating1 = localStorage.getItem('yqac_twitter.' + 'rating1');
             var title2 = localStorage.getItem('yqac_twitter.' + 'title2');
             var rating2 = localStorage.getItem('yqac_twitter.' + 'rating2');
             var title3 = localStorage.getItem('yqac_twitter.' + 'title3');
             var rating3 = localStorage.getItem('yqac_twitter.' + 'rating3');
-            twitterTops(title1, rating1, title2, rating2, title3, rating3);
+            var title4 = localStorage.getItem('yqac_twitter.' + 'title4');
+            var rating4 = localStorage.getItem('yqac_twitter.' + 'rating4');
+            var title5 = localStorage.getItem('yqac_twitter.' + 'title5');
+            var rating5 = localStorage.getItem('yqac_twitter.' + 'rating5');
+            twitterTops(title1, rating1, title2, rating2, title3, rating3, title4, rating4, title5, rating5);
         }
 
         var criticDetailsUrl = '';
@@ -781,7 +795,7 @@ var DOMLoaded = function() {
     }
 
     // Send top titles and ratings to Twitter new tweet
-    function twitterTops(title1, rating1, title2, rating2, title3, rating3) {
+    function twitterTops(title1, rating1, title2, rating2, title3, rating3, title4, rating4, title5, rating5) {
         var date = new Date();
         var weekdate = date.getDay();
         var day = date.getDate();
@@ -791,12 +805,14 @@ var DOMLoaded = function() {
         var weekdateNames = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
 
         var text = '';
-        text += '🏆 Top 3 des films les plus vus sur 🎬 %23AlloCiné le ' + weekdateNames[weekdate] + ' ' + day + ' ' + monthNames[month] + ' ' + year + ' !';
+        text += '🏆 Top 5 des films les %2B distribués en 🇫🇷 France le ' + weekdateNames[weekdate] + ' ' + day + ' ' + monthNames[month] + ' ' + year + ' !';
         text += '%0a%0a🥇 %23' + hashtagFormatted(title1) + ' avec ' + rating1 + '⭐️ /5';
         text += '%0a🥈 %23' + hashtagFormatted(title2) + ' avec ' + rating2 + '⭐️ /5';
         text += '%0a🥉 %23' + hashtagFormatted(title3) + ' avec ' + rating3 + '⭐️ /5';
+        text += '%0a4. %23' + hashtagFormatted(title4) + ' avec ' + rating4 + '⭐️ /5';
+        text += '%0a5. %23' + hashtagFormatted(title5) + ' avec ' + rating5 + '⭐️ /5';
         text += '%0a%0aEt vous, quel est votre film du moment ?';
-        text += '%0a%0ahttps://yaquoiaucine.fr';
+        text += '%0a%0ahttps://yaquoiaucine.fr?trier_par=popularite';
         text += '%0a%0a%23YQAC';
 
         var twitterButton = document.querySelector('.fa-twitter');
@@ -812,7 +828,8 @@ var DOMLoaded = function() {
             .replace(/\s+/g, '')
             .replace('\'', '')
             .replace('?', '')
-            .replace(',', '');
+            .replace(',', '')
+            .replace('-', '');
     }
 
     // Display retrieved data in grid div
@@ -1017,7 +1034,7 @@ var DOMLoaded = function() {
         } else {
             activePeriod = localStorage.getItem('yqac_period.' + 'activePeriod');
             if (activePeriod == null) {
-                activePeriod = 'Les 7 derniers jours';
+                activePeriod = 'NoFilter';
             }
         }
 
