@@ -247,7 +247,7 @@ do
         curl -s https://www.allocine.fr/film/fichefilm-$filmId/critiques/presse/ > temp3
 
         # Get film trailer id
-        filmTrailerId=$(cat temp2 | grep "Bandes-annonces" | head -1 | cut -d'=' -f4 | cut -d'&' -f1)
+        filmTrailerId=$(cat temp2 | grep "Bandes-annonces" | head -1 | cut -d'=' -f4 | cut -d'&' -f1 | grep -Eo "[0-9]+")
         echo "\"filmTrailerId\": \"$filmTrailerId\"," >> ./assets/js/data.json
 
         # Get all film genres
