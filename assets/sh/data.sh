@@ -78,6 +78,11 @@ fi
 # Remove lines with no data
 sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
 
+# Sort dataset file
+cat ./assets/sh/filmsIds.txt | sort -V > ./assets/sh/filmsIdsTemp.txt
+cat ./assets/sh/filmsIdsTemp.txt > ./assets/sh/filmsIds.txt
+rm -f ./assets/sh/filmsIdsTemp.txt
+
 echo "----------------------------------------------------------------------------------------------------"
 betaseriesIdNotFoundNumber=$(cat assets/sh/filmsIds.txt | grep "[0-9],noBetaseriesId" | wc -l | awk '{print $1}')
 echo "betaseriesIdNotFoundNumber: $betaseriesIdNotFoundNumber"
