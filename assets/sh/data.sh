@@ -366,6 +366,10 @@ do
         # Get critic number
         echo "\"criticNumber\": \"$criticNumber\"," >> ./assets/js/data.json
 
+        # Get AlloCiné critic number
+        allocineCriticNumber=$(cat temp3 | grep -Eo "[0-9]+ titres de presse" | grep -Eo "[0-9]+")
+        echo "\"allocineCriticNumber\": \"$allocineCriticNumber\"," >> ./assets/js/data.json
+
         # Get critic rating front page
         criticFrontPage=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ critique*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
         echo "\"criticFrontPage\": \"$criticFrontPage\"," >> ./assets/js/data.json
