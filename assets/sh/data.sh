@@ -526,7 +526,7 @@ do
         echo "\"imdbData\":{" >> ./assets/js/data.json
 
         # Get IMDb rating number
-        imdbRating=$(cat temp6 | grep -Eo "AggregateRatingButton__RatingScore.{1,50}>" | cut -d'>' -f2 | cut -d'<' -f1)
+        imdbRating=$(cat temp6 | grep -Eo "AggregateRatingButton__RatingScore.{1,50}>" | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
 
         # Add IMDb last episode date, ID and rating number
         echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
