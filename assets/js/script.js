@@ -1294,7 +1294,8 @@ var DOMLoaded = function() {
                     htmlTagCriticRecap += '<li>' + convertNumberToStars(parseFloat(criticValuesNew[criticKeysNew.indexOf('Note AlloCiné')])) + ' (' + criticValuesNew[criticKeysNew.indexOf('Note AlloCiné')] + '/5) AlloCiné</li>';
                 }
 
-                if (criticKeysNew.includes('Note BetaSeries')) {
+                if (criticKeysNew.includes('Note BetaSeries') &&
+                    parseFloat(criticValuesNew[criticKeysNew.indexOf('Note BetaSeries')]) !== 0) {
                     htmlTagCriticRecap += '<li>' + convertNumberToStars(parseFloat(criticValuesNew[criticKeysNew.indexOf('Note BetaSeries')])) + ' (' + criticValuesNew[criticKeysNew.indexOf('Note BetaSeries')] + '/5) BetaSeries</li>';
                 }
 
