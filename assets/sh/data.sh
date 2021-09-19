@@ -382,9 +382,13 @@ do
         fi
         echo "\"critic\": \"$critic\"," >> ./assets/js/data.json
 
-        # Get user rating number
+        # Get user rating
         user=$(cat temp2 | grep -Eo "<span class=\"stareval-note\">[0-9],[0-9]</span><span class=\"stareval-review light\"> [0-9]+ note*" | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/,/./')
         echo "\"user\": \"$user\"," >> ./assets/js/data.json
+
+        # Get user rating number
+        userRatingsNumber=$(cat temp2 | grep -Eo "[0-9]+ notes dont" | grep -Eo "[0-9]+")
+        echo "\"userRatingsNumber\": \"$userRatingsNumber\"," >> ./assets/js/data.json
 
         # Add ending bracket
         echo "}," >> ./assets/js/data.json
