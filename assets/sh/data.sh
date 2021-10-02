@@ -523,18 +523,26 @@ do
         betaseriesRating=$(cat temp9 | grep "stars js-render-stars" | cut -d'"' -f4 | cut -d' ' -f1 | sed 's/,/./g')
         echo "\"betaseriesRating\": \"$betaseriesRating\"," >> ./assets/js/data.json
 
+        betaseriesRatingNumber=$(cat temp9 | grep -A10 "blockInformations__metadatas\"" | grep -m1 "membres" | sed 's/ //g' | grep -Eo "[0-9]+")
+        echo "\"betaseriesRatingNumber\": \"$betaseriesRatingNumber\"," >> ./assets/js/data.json
+
         # Add ending bracket
         echo "}," >> ./assets/js/data.json
 
         # Add IMDb object
         echo "\"imdbData\":{" >> ./assets/js/data.json
 
-        # Get IMDb rating number
+        # Get IMDb rating
         imdbRating=$(cat temp6 | grep -Eo "AggregateRatingButton__RatingScore.{1,50}>" | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
+
+        # Get IMDb rating number
+        curl -s "https://www.imdb.com/title/$imdbId/ratings" > temp7
+        imdbUserRatings=$(cat temp7 | grep -B1 "IMDb users have given" | head -1 | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//' | sed 's/,//')
 
         # Add IMDb last episode date, ID and rating number
         echo "\"imdbId\": \"$imdbId\"," >> ./assets/js/data.json
         echo "\"imdbRating\": \"$imdbRating\"," >> ./assets/js/data.json
+        echo "\"imdbUserRatings\": \"$imdbUserRatings\"," >> ./assets/js/data.json
       fi
 
       # Add ending bracket

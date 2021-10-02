@@ -196,6 +196,7 @@ var DOMLoaded = function() {
             betaseriesRatingTemp = dataForSingleItem.betaseriesData.betaseriesRating,
             betaseriesId = dataForSingleItem.betaseriesData.betaseriesId,
             imdbId = dataForSingleItem.imdbData.imdbId,
+            imdbUserRatings = dataForSingleItem.imdbData.imdbUserRatings,
             imdbRating = dataForSingleItem.imdbData.imdbRating,
             divisionNumber = 0,
             genre, title, rating;
@@ -228,6 +229,10 @@ var DOMLoaded = function() {
         if (imdbRating != '') {
             criticNamesKeysTemp += 'Note IMDb,';
             criticNamesValuesTemp += imdbRating + ',';
+        }
+        if (imdbUserRatings != '') {
+            criticNamesKeysTemp += 'Nombre notes IMDb,';
+            criticNamesValuesTemp += imdbUserRatings + ',';
         }
         var criticNamesKeys = criticNamesKeysTemp.replace(/,\s*$/, '');
         var criticNamesValues = criticNamesValuesTemp.replace(/,\s*$/, '');
@@ -1292,21 +1297,24 @@ var DOMLoaded = function() {
                 }
 
                 if (criticKeysNew.includes('Note IMDb')) {
-                    htmlTagCriticRecap += '<li>' + convertNumberToStars(parseFloat(criticValuesNew[criticKeysNew.indexOf('Note IMDb')]) / 2) + ' (' + criticValuesNew[criticKeysNew.indexOf('Note IMDb')] + '/10) IMDb</li>';
+                    htmlTagCriticRecap += '<li>' + convertNumberToStars(parseFloat(criticValuesNew[criticKeysNew.indexOf('Note IMDb')]) / 2) + ' (' + criticValuesNew[criticKeysNew.indexOf('Note IMDb')] + '/10) IMDb';
+                    htmlTagCriticRecap += ' (' + criticValuesNew[criticKeysNew.indexOf('Nombre notes IMDb')] + ' notes)</li>';
                 }
 
                 if (criticKeysNew != '' &&
                     criticKeysNew[0] != 'Note AlloCiné' &&
                     criticKeysNew[0] != 'Nombre notes AlloCiné' &&
                     criticKeysNew[0] != 'Note BetaSeries' &&
-                    criticKeysNew[0] != 'Note IMDb') {
+                    criticKeysNew[0] != 'Note IMDb' &&
+                    criticKeysNew[0] != 'Nombre notes IMDb') {
                     htmlTagCriticRecap += '<p>Notes de la presse : </p>';
                     criticKeysNewLength = criticKeysNew.length;
                     for (var htmlTagCriticRecapIndex = 0; htmlTagCriticRecapIndex < criticKeysNewLength; htmlTagCriticRecapIndex++) {
                         if (criticKeysNew[htmlTagCriticRecapIndex] != 'Note AlloCiné' &&
                             criticKeysNew[htmlTagCriticRecapIndex] != 'Nombre notes AlloCiné' &&
                             criticKeysNew[htmlTagCriticRecapIndex] != 'Note BetaSeries' &&
-                            criticKeysNew[htmlTagCriticRecapIndex] != 'Note IMDb') {
+                            criticKeysNew[htmlTagCriticRecapIndex] != 'Note IMDb' &&
+                            criticKeysNew[htmlTagCriticRecapIndex] != 'Nombre notes IMDb') {
                             htmlTagCriticRecap += '<li>' + convertNumberToStars(parseFloat(criticValuesNew[htmlTagCriticRecapIndex])) + ' ' + criticKeysNew[htmlTagCriticRecapIndex] + '</li>';
                         }
                     }
