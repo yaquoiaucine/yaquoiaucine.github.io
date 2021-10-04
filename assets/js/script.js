@@ -63,56 +63,102 @@ var DOMLoaded = function() {
         })
         .then(function(response) {
             var data = response.data;
+            var cinemaIdParam = paramsURL('cinemaId');
+            getMoviesIdsWithTheaterCode(cinemaIdParam)
+                .then(function(result) {
+                    var dataFilteredWithTheater = data;
+                    if (result !== null) {
+                        dataFilteredWithTheater = data.filter((item) => result.includes(item.allocineData.url));
+                    }
 
-            menuCriticsOnLoad();
+                    menuCriticsOnLoad();
 
-            var markup = getItemMarkup(data);
-            appendMarkupToGrid(markup);
+                    var markup = getItemMarkup(dataFilteredWithTheater);
+                    appendMarkupToGrid(markup);
 
-            shuffleInstance = new Shuffle(gridContainerElement, {
-                itemSelector: '.picture-item',
-                sizer: '.my-sizer-element'
-            });
+                    shuffleInstance = new Shuffle(gridContainerElement, {
+                        itemSelector: '.picture-item',
+                        sizer: '.my-sizer-element'
+                    });
 
-            filters = {
-                periodArray: [],
-                genreArray: [],
-                nationalityArray: ['No nationality'],
-                durationArray: ['No duration'],
-                starsArray: ['No stars']
-            };
+                    filters = {
+                        periodArray: [],
+                        genreArray: [],
+                        nationalityArray: ['No nationality'],
+                        durationArray: ['No duration'],
+                        starsArray: ['No stars']
+                    };
 
-            var mode = localStorage.getItem('yqac_mode.' + 'mode');
-            var filterLabel = document.querySelector('.filter-label');
+                    var mode = localStorage.getItem('yqac_mode.' + 'mode');
+                    var filterLabel = document.querySelector('.filter-label');
 
-            if (mode === 'additive') {
-                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox" checked><label for="inputToggle">)</label>';
-            } else {
-                filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox"><label for="inputToggle">)</label>';
-            }
+                    if (mode === 'additive') {
+                        filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox" checked><label for="inputToggle">)</label>';
+                    } else {
+                        filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox"><label for="inputToggle">)</label>';
+                    }
 
-            removeItems();
-            addSearchFilter();
-            addSorting();
-            addPeriodFilter();
-            bindPeriodAndGenreListeners();
-            clickToggleMode();
-            darkmodePref();
-            defaultInputClick();
-            displayOverlay();
-            focusSearchInput();
-            getDarkmodeStatus();
-            getTglButtons();
-            menuButtonsChecked();
-            menuNationalityOnLoad();
-            menuDurationOnLoad();
-            menuStarsOnLoad();
-            ratingInfoDetails();
-            reset();
-            searchShortcut();
-            setMenuButtonAll();
-            typewriter();
+                    removeItems();
+                    addSearchFilter();
+                    addSorting();
+                    addPeriodFilter();
+                    bindPeriodAndGenreListeners();
+                    clickToggleMode();
+                    darkmodePref();
+                    defaultInputClick();
+                    displayOverlay();
+                    focusSearchInput();
+                    getDarkmodeStatus();
+                    getTglButtons();
+                    menuButtonsChecked();
+                    menuNationalityOnLoad();
+                    menuDurationOnLoad();
+                    menuStarsOnLoad();
+                    ratingInfoDetails();
+                    reset();
+                    searchShortcut();
+                    setMenuButtonAll();
+                    typewriter();
+                });
         });
+
+    function getMoviesIdsWithTheaterCode(cinemaIdParam) {
+        if (cinemaIdParam !== null) {
+            return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/`)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(response) {
+                    var data = response.results;
+                    var dataLength = data.length;
+                    var internalIdArray = [];
+                    for (var i = 0; i < dataLength; i++) {
+                        var internalId = data[i].movie.internalId;
+                        internalIdArray.push(`https://www.allocine.fr/film/fichefilm_gen_cfilm=${internalId}.html`);
+                    }
+
+                    if (dataLength === 15) {
+                        return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/p-2`)
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(response) {
+                                var data = response.results;
+                                var dataLength = data.length;
+                                for (var i = 0; i < dataLength; i++) {
+                                    var internalId = data[i].movie.internalId;
+                                    internalIdArray.push(`https://www.allocine.fr/film/fichefilm_gen_cfilm=${internalId}.html`);
+                                }
+                                return internalIdArray;
+                            });
+                    } else {
+                        return internalIdArray;
+                    }
+                });
+        } else {
+            return Promise.resolve(null);
+        }
+    }
 
     // Set or unset active critic on load
     function menuCriticsOnLoad() {
