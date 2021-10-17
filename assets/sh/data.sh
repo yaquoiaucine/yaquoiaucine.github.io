@@ -65,7 +65,11 @@ secondfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f2)
 thirdfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f3)
 fourthfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f4)
 fifthfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f5)
-if [[ $firstfilm != $firstfilmFromFile ]] || [[ $secondfilm != $secondfilmFromFile ]] || [[ $thirdfilm != $thirdfilmFromFile ]] || [[ $fourthfilm != $fourthfilmFromFile ]] || [[ $fifthfilm != $fifthfilmFromFile ]]; then
+if [[ $firstfilm != $firstfilmFromFile ]] || \
+[[ $secondfilm != $secondfilmFromFile ]] || \
+[[ $thirdfilm != $thirdfilmFromFile ]] || \
+[[ $fourthfilm != $fourthfilmFromFile ]] || \
+[[ $fifthfilm != $fifthfilmFromFile ]]; then
   echo $firstfilm,$secondfilm,$thirdfilm,$fourthfilm,$fifthfilm > ./assets/sh/checkingFile.txt
   echo "Data will be updated"
 else
@@ -76,7 +80,12 @@ else
 fi
 
 # Remove lines with no data
-sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
+curl -s https://yaquoiaucine.fr/assets/sh/filmsIds.txt > ./assets/sh/filmsIds.txt
+if [[ ! -z $testing ]]; then
+  sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
+else
+  sed -i "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
+fi
 
 # Sort dataset file
 cat ./assets/sh/filmsIds.txt | sort -V > ./assets/sh/filmsIdsTemp.txt
@@ -199,12 +208,6 @@ do
       fi
     done 3<$filmsIdsFile
 
-    if [[ $found -eq 0 ]]; then
-      if [[ -z $testing ]]; then
-        abord_script
-      fi
-    fi
-
     if [[ -z $checkMissingShows ]] || [[ $found -eq 0 ]]; then
       urlFile="./assets/sh/urlTemp.txt"
       while IFS= read -r urlTemp <&3; do
@@ -278,7 +281,11 @@ do
           for nationalityNumberIndex in $( eval echo {1..$nationalityNumber} )
           do
             nationalityNameTemp=$(cat temp2 | grep " nationality" | head -$nationalityNumberIndex | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//')
-            nationalityName=$(echo $nationalityNameTemp | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')
+            if [[ ! -z $testing ]]; then
+              nationalityName=$(echo $nationalityNameTemp | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')
+            else
+              nationalityName=$(echo "${nationalityNameTemp^}")
+            fi
             echo "\"id$nationalityNumberIndex\": \"$nationalityName\"," >> ./assets/js/data.json
             echo $nationalityName >> ./assets/sh/criticNameNationalityButtonsTemp.txt
           done

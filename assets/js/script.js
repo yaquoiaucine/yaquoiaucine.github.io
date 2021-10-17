@@ -2,6 +2,11 @@ var DOMLoaded = function() {
     var Shuffle = window.Shuffle;
     var shuffleInstance;
 
+    var autoSuggestInput = document.getElementById('autoSuggest');
+    var theatersSearchSelection = document.querySelector('.theatersSearchSelection');
+    var cinemaIdParam = localStorage.getItem('yqac_cinemaId');
+    var cinemaName = localStorage.getItem('yqac_cinemaName');
+
     var genreArray = Array.from(document.querySelectorAll('.filter-options button'));
     var periodArray = Array.from(document.querySelectorAll('.period-options option'));
     var criticArray = Array.from(document.querySelectorAll('.nav-item.criticButton:not(.mainToggle)'));
@@ -64,6 +69,10 @@ var DOMLoaded = function() {
         .then(function(response) {
             var data = response.data;
             var cinemaIdParam = paramsURL('cinemaId');
+            if (paramsURLCheck('cinemaId')) {
+                localStorage.setItem('yqac_cinemaId', cinemaIdParam);
+            }
+            cinemaIdParam = localStorage.getItem('yqac_cinemaId');
             getMoviesIdsWithTheaterCode(cinemaIdParam)
                 .then(function(result) {
                     var dataFilteredWithTheater = data;
@@ -149,7 +158,24 @@ var DOMLoaded = function() {
                                     var internalId = data[i].movie.internalId;
                                     internalIdArray.push(`https://www.allocine.fr/film/fichefilm_gen_cfilm=${internalId}.html`);
                                 }
-                                return internalIdArray;
+
+                                if (dataLength === 15) {
+                                    return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/p-3`)
+                                        .then(function(response) {
+                                            return response.json();
+                                        })
+                                        .then(function(response) {
+                                            var data = response.results;
+                                            var dataLength = data.length;
+                                            for (var i = 0; i < dataLength; i++) {
+                                                var internalId = data[i].movie.internalId;
+                                                internalIdArray.push(`https://www.allocine.fr/film/fichefilm_gen_cfilm=${internalId}.html`);
+                                            }
+                                            return internalIdArray;
+                                        });
+                                } else {
+                                    return internalIdArray;
+                                }
                             });
                     } else {
                         return internalIdArray;
@@ -1452,7 +1478,7 @@ var DOMLoaded = function() {
     // Display shortcut on search input focus
     function focusSearchInput() {
         var shortcutId = document.getElementById('shortcut');
-        var textfieldInput = document.querySelector('.textfield');
+        var textfieldInput = document.querySelector('.js-shuffle-search');
 
         textfieldInput.addEventListener('focus', function() {
             shortcutId.classList.remove('displayNone');
@@ -2006,6 +2032,69 @@ var DOMLoaded = function() {
                 delay: 50
             });
         typewriter.typeString('"T\'as vu quoi comme bon film récemment ?"').pauseFor(2500).deleteAll().typeString('"C\'est quoi LE film à ne pas manquer ?"').pauseFor(2500).deleteAll().typeString('"T\'as vu quoi dernièrement ?"').pauseFor(2500).start();
+    }
+
+    // Detect theater search text change
+    var theaterSearchOnChange = function(evt) {
+        if (evt.target.value.length == 0) {
+            document.getElementById("result").innerHTML = '';
+            return;
+        }
+        theatersRes(evt).then(function(autoCompleteResult) {
+            document.getElementById("result").innerHTML = autoCompleteResult.map(i => `<a href="https://yaquoiaucine.fr?cinemaId=${i.theaterNameCode}" class="theaterResLink">${i.theaterName}</a>`).join('');
+            document.querySelectorAll('.theaterResLink').forEach(item => {
+                item.addEventListener('click', event => {
+                    var cinemaName = event.target.innerText;
+                    localStorage.setItem('yqac_cinemaName', cinemaName);
+                });
+            });
+        });
+    };
+    autoSuggestInput.addEventListener('input', theaterSearchOnChange, false);
+
+    // Send search input to AlloCiné theaters search
+    function theatersRes(input) {
+        var inputSearch = encodeURI(input.target.value);
+        return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/localization_city/${inputSearch}`)
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(response) {
+                var data = response.values.theaters;
+                var dataLength = data.length;
+                var theatersName = [];
+                for (var i = 0; i < dataLength; i++) {
+                    var theaterNameCode = data[i].node.internalId;
+                    var theaterName = data[i].node.name;
+                    theatersName.push({
+                        'theaterNameCode': theaterNameCode,
+                        'theaterName': theaterName
+                    });
+                }
+                return theatersName;
+            });
+    }
+
+    // Remove localStorage on cross mark click
+    var checkCrossMark = setInterval(function() {
+        var crossMark = document.querySelector('.theatersSearchSelectionSpan .fa-times');
+        if (crossMark) {
+            clearInterval(checkCrossMark);
+            crossMark.onclick = function() {
+                localStorage.removeItem('yqac_cinemaId');
+                localStorage.removeItem('yqac_cinemaName');
+                theatersSearchSelection.classList.add('displayNone');
+            };
+        }
+    }, 100);
+
+    if (cinemaIdParam === null) {
+        cinemaIdParam = paramsURL('cinemaId');
+    }
+
+    if (cinemaIdParam !== null || paramsURLCheck('cinemaId')) {
+        theatersSearchSelection.innerHTML = `<span class="theatersSearchSelectionSpan">${cinemaName} <i class="fas fa-times fa-lg"></i></span>`;
+        theatersSearchSelection.classList.remove('displayNone');
     }
 };
 

@@ -787,6 +787,41 @@ strong {
     transform: rotateY(20deg);
 }
 
+.theatersSearchTitle .nav-item-link {
+    padding-bottom: 0;
+}
+
+.theatersSearchSelection {
+    padding-top: 5px;
+    margin-left: 15px;
+    margin-top: 0;
+}
+
+.theatersSearchSelection .nav-item-link {
+    padding-bottom: 20px;
+}
+
+.theatersSearchSelection span:hover,
+.theatersSearch span:hover {
+    background: transparent !important;
+}
+
+.theatersSearchSelectionSpan {
+    font-size: 13px;
+    left: 15px;
+}
+
+.theatersSearchSelectionSpan .fa-lg {
+    margin-left: 3px;
+    vertical-align: -.15em;
+    cursor: pointer;
+}
+
+#result a,
+#result a:hover {
+    padding: 10px;
+}
+
 /* Darkmode overwrite css */
 .darkmode--activated,
 .darkmode--activated a,

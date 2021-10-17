@@ -1,6 +1,8 @@
-image: node
+image: node:latest
 
 before_script:
+  - apt-get -qq update
+  - apt-get install -y jq
   - npm install get-json
   - npm install got
   - npm install jsdom
@@ -15,5 +17,11 @@ main:
     DOMAIN_KEY: $DOMAIN_KEY
     FROM_KEY: $FROM_KEY
     TO_KEY: $TO_KEY
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - node node_script.js
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+  script:
+    - node node_script.js forceupdate
