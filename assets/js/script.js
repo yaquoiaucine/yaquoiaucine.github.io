@@ -49,6 +49,8 @@ var DOMLoaded = function() {
     var localbuttonDurationNameNumber = 0;
     var localbuttonStarsNameNumber = 0;
 
+    var movieSeenSpan = document.querySelector('.mainButtonTitle2Span');
+
     const options = {
         mixColor: '#FFFFFF',
         backgroundColor: '#EDEDED',
@@ -68,16 +70,39 @@ var DOMLoaded = function() {
         })
         .then(function(response) {
             var data = response.data;
+
+            var movieSeenIdMode = localStorage.getItem('yqac_movieSeenIdMode');
+            if (movieSeenIdMode === null) {
+                localStorage.setItem('yqac_movieSeenIdMode', 'false');
+            }
+
+            var movieIdArray = JSON.parse(localStorage.getItem('yqac_movieSeenId')) || [];
+            var internalIdArray = [];
+            if (movieSeenIdMode === 'true') {
+                movieSeenSpan.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer les films vus <input id="inputToggle2" type="checkbox" checked><label for="inputToggle2"></label>';
+                movieIdArray.forEach(function(internalId) {
+                    internalIdArray.push(`https://www.allocine.fr/film/fichefilm_gen_cfilm=${internalId}.html`);
+                });
+            }
+
+            var dataFilteredWithSeen = data;
+            if (internalIdArray.length > 0) {
+                dataFilteredWithSeen = data.filter((item) => !internalIdArray.includes(item.allocineData.url));
+            }
+
             var cinemaIdParam = paramsURL('cinemaId');
             if (paramsURLCheck('cinemaId')) {
                 localStorage.setItem('yqac_cinemaId', cinemaIdParam);
             }
             cinemaIdParam = localStorage.getItem('yqac_cinemaId');
-            getMoviesIdsWithTheaterCode(cinemaIdParam)
+            check404TheatersLink(cinemaIdParam)
+                .then(function(endURLFirstPart) {
+                    return getMoviesIdsWithTheaterCode(endURLFirstPart, cinemaIdParam);
+                })
                 .then(function(result) {
-                    var dataFilteredWithTheater = data;
+                    var dataFilteredWithTheater = dataFilteredWithSeen;
                     if (result !== null) {
-                        dataFilteredWithTheater = data.filter((item) => result.includes(item.allocineData.url));
+                        dataFilteredWithTheater = dataFilteredWithSeen.filter((item) => result.includes(item.allocineData.url));
                     }
 
                     menuCriticsOnLoad();
@@ -102,9 +127,9 @@ var DOMLoaded = function() {
                     var filterLabel = document.querySelector('.filter-label');
 
                     if (mode === 'additive') {
-                        filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox" checked><label for="inputToggle">)</label>';
+                        filterLabel.innerHTML = 'Cumuler les genres <input id="inputToggle" type="checkbox" checked><label for="inputToggle"></label>';
                     } else {
-                        filterLabel.innerHTML = 'Genre (cumuler <input id="inputToggle" type="checkbox"><label for="inputToggle">)</label>';
+                        filterLabel.innerHTML = 'Cumuler les genres <input id="inputToggle" type="checkbox"><label for="inputToggle"></label>';
                     }
 
                     removeItems();
@@ -127,13 +152,33 @@ var DOMLoaded = function() {
                     reset();
                     searchShortcut();
                     setMenuButtonAll();
+                    movieSeenFn();
                     typewriter();
                 });
         });
 
-    function getMoviesIdsWithTheaterCode(cinemaIdParam) {
+    function check404TheatersLink(cinemaIdParam) {
+        var baseURL = 'https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-';
+        var endURLFirstPart = 'd-0/p-';
+        var URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}1/`;
+        return fetch(URL)
+            .then(function(response) {
+                if (response.status === 404) {
+                    endURLFirstPart = '[d-0/][p-';
+                    return endURLFirstPart;
+                }
+            });
+    }
+
+    function getMoviesIdsWithTheaterCode(endURLFirstPart, cinemaIdParam) {
         if (cinemaIdParam !== null) {
-            return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/`)
+            var endURLLastPart = '';
+            if (endURLFirstPart === '[d-0/][p-') {
+                endURLLastPart = ']';
+            }
+            var baseURL = 'https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-';
+            var URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}1/${endURLLastPart}`;
+            return fetch(URL)
                 .then(function(response) {
                     return response.json();
                 })
@@ -147,7 +192,8 @@ var DOMLoaded = function() {
                     }
 
                     if (dataLength === 15) {
-                        return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/p-2`)
+                        URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}2/${endURLLastPart}`;
+                        return fetch(URL)
                             .then(function(response) {
                                 return response.json();
                             })
@@ -160,7 +206,8 @@ var DOMLoaded = function() {
                                 }
 
                                 if (dataLength === 15) {
-                                    return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-${cinemaIdParam}/d-0/p-3`)
+                                    URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}3/${endURLLastPart}`;
+                                    return fetch(URL)
                                         .then(function(response) {
                                             return response.json();
                                         })
@@ -589,12 +636,13 @@ var DOMLoaded = function() {
 
         /* beautify ignore:start */
         return [
-            '<figure class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-nationality="' + nationality + '" data-duration="' + duration + '" data-date-formatted="' + dateFormattedFilter + '" data-stars="' + ratingToFixedOne + '" data-critic="' + ratingToFixed + '" data-seasons-critic="' + seasonsCriticArray +  '" data-seasons-critic-details="' + seasonsCriticDetailsArray + '" data-critic-keys="' + criticNamesKeys + '" data-critic-values="' + criticNamesValues + '" data-popularity="' + filmId + '" data-creationdate="' + creationDate + '" data-filmTrailerId="' + filmTrailerId + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
+            '<figure id="' + urlId + '" class="col-3@xs col-4@sm col-3@md picture-item shuffle-item shuffle-item--visible" data-genre="' + genre + '" data-nationality="' + nationality + '" data-duration="' + duration + '" data-date-formatted="' + dateFormattedFilter + '" data-stars="' + ratingToFixedOne + '" data-critic="' + ratingToFixed + '" data-seasons-critic="' + seasonsCriticArray +  '" data-seasons-critic-details="' + seasonsCriticDetailsArray + '" data-critic-keys="' + criticNamesKeys + '" data-critic-values="' + criticNamesValues + '" data-popularity="' + filmId + '" data-creationdate="' + creationDate + '" data-filmTrailerId="' + filmTrailerId + '" style="position: absolute; top: 0px; left: 0px; visibility: visible; will-change: transform; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">',
                 '<div class="picture-item__inner">',
                     '<div class="aspect aspect--16x9">',
                         '<div class="aspect__inner">',
                             '<a href="javascript:void(0)" title="' + dataForSingleItem.allocineData.title + '">',
                                 '<img src="' + picture + '" srcset="' + picture + '" alt="' + title + '">',
+                                '<i class="far fa-check-circle displayNone movieSeenIcon"></i>',
                             '</a>',
                             '<img class="picture-item__blur" src="' + picture + '" srcset="' + picture + '" alt="">',
                             '<div class="aspect__inner overlayInfos displayNone">',
@@ -604,6 +652,7 @@ var DOMLoaded = function() {
                                 betaseriesDetailsUrl,
                             '</div>',
                             '<div class="aspect__inner overlayMoreInfos displayNone">',
+                                '<span class="movieSeen">Vu <i class="far fa-check-circle movieSeenIconSmall"></i></span>',
                                 '<a href="javascript:void(0)" class="read-more">Plus d\'infos</a>',
                             '</div>',
                         '</div>',
@@ -1164,7 +1213,7 @@ var DOMLoaded = function() {
     function handleButtonChange(evt) {
         var mode = localStorage.getItem('yqac_mode.' + 'mode');
 
-        if (mode == undefined) {
+        if (mode === null) {
             localStorage.setItem('yqac_mode.' + 'mode', 'exclusive');
         }
 
@@ -1324,7 +1373,12 @@ var DOMLoaded = function() {
         });
 
         imgsLink.forEach(function(link) {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function(e) {
+                if (e.target.classList.contains('movieSeen') ||
+                    e.target.classList.contains('movieSeenIcon') ||
+                    e.target.classList.contains('movieSeenIconSmall')) {
+                    return;
+                }
                 document.querySelector('#overlay').style.display = 'block';
                 document.body.style.overflow = 'hidden';
 
@@ -2093,8 +2147,72 @@ var DOMLoaded = function() {
     }
 
     if (cinemaIdParam !== null || paramsURLCheck('cinemaId')) {
+        if (cinemaName === null) {
+            cinemaName = 'Non renseigné';
+        }
         theatersSearchSelection.innerHTML = `<span class="theatersSearchSelectionSpan">${cinemaName} <i class="fas fa-times fa-lg"></i></span>`;
         theatersSearchSelection.classList.remove('displayNone');
+    }
+
+    // Display seen movies with check mark
+    function movieSeenFn() {
+        var movieSeenArray = Array.from(document.querySelectorAll('.movieSeen'));
+        var movieIdArray = JSON.parse(localStorage.getItem('yqac_movieSeenId')) || [];
+        movieSeenArray.forEach(function(movie) {
+            var movieId = movie.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id');
+            if (movieIdArray.includes(movieId)) {
+                var elementWithmovieId = document.getElementById(movieId);
+                elementWithmovieId.childNodes[0].childNodes[1].style.opacity = '0.2';
+                elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0].style.opacity = '0.2';
+                elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[3].childNodes[0].innerHTML = 'Non vu <i class="far fa-times-circle movieSeenIconSmall"></i>';
+                elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].classList.remove('displayNone');
+            }
+            movie.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('movieSeenIconSmall')) {
+                    var elementWithmovieId = document.getElementById(movieId);
+                    if (!movieIdArray.includes(movieId)) {
+                        movieIdArray = JSON.parse(localStorage.getItem('yqac_movieSeenId')) || [];
+                        movieIdArray.push(movieId);
+                        localStorage.setItem('yqac_movieSeenId', JSON.stringify(movieIdArray));
+                        for (var i = 0; i < elementWithmovieId.children.length; i++) {
+                            elementWithmovieId.childNodes[0].childNodes[1].style.opacity = '0.2';
+                            elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0].style.opacity = '0.2';
+                        }
+                        e.target.closest('figure').childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].classList.remove('displayNone');
+                        e.target.innerHTML = 'Non vu <i class="far fa-times-circle movieSeenIconSmall"></i>';
+                    } else {
+                        movieIdArray = JSON.parse(localStorage.getItem('yqac_movieSeenId')) || [];
+                        var index = movieIdArray.indexOf(movieId);
+                        if (index > -1) {
+                            movieIdArray.splice(index, 1);
+                        }
+                        localStorage.setItem('yqac_movieSeenId', JSON.stringify(movieIdArray));
+                        for (var i = 0; i < elementWithmovieId.children.length; i++) {
+                            elementWithmovieId.childNodes[0].childNodes[1].style.opacity = '1';
+                            elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0].style.opacity = '1';
+                        }
+                        e.target.closest('figure').childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].classList.add('displayNone');
+                        e.target.innerHTML = 'Vu <i class="far fa-check-circle movieSeenIconSmall"></i>';
+                    }
+                }
+            });
+        }, false);
+    }
+
+    var movieSeenButton = document.querySelector('.mainButtonTitle2Span');
+    movieSeenButton.addEventListener('click', movieSeenButtonFn, false);
+
+    // Change yqac_movieSeenIdMode localStorage on click
+    function movieSeenButtonFn() {
+        var movieSeenIdMode = localStorage.getItem('yqac_movieSeenIdMode');
+        if (movieSeenIdMode === 'true') {
+            localStorage.setItem('yqac_movieSeenIdMode', 'false');
+            movieSeenSpan.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer les films vus <input id="inputToggle2" type="checkbox"><label for="inputToggle2"></label>';
+        } else {
+            localStorage.setItem('yqac_movieSeenIdMode', 'true');
+            movieSeenSpan.innerHTML = '<i class="fas fa-eye-slash"></i> Masquer les films vus <input id="inputToggle2" type="checkbox" checked><label for="inputToggle2"></label>';
+        }
+        document.location.reload();
     }
 };
 

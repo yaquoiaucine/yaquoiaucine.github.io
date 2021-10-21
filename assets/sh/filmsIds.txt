@@ -101,8 +101,10 @@
 /film/fichefilm_gen_cfilm=1073.html,tt0055614,3890-west-side-story
 /film/fichefilm_gen_cfilm=1076.html,tt0047136,14609-johnny-guitar
 /film/fichefilm_gen_cfilm=1082.html,tt0082010,7691-an-american-werewolf-in-london
+/film/fichefilm_gen_cfilm=1095.html,tt0035853,41665-falbalas
 /film/fichefilm_gen_cfilm=1099.html,tt0039155,25414-antoine-et-antoinette
 /film/fichefilm_gen_cfilm=1105.html,tt0046451,9499-touchez-pas-au-grisbi
+/film/fichefilm_gen_cfilm=1133.html,tt0063350,7535-night-of-the-living-dead
 /film/fichefilm_gen_cfilm=1147.html,tt0045061,8586-the-quiet-man
 /film/fichefilm_gen_cfilm=1153.html,tt0078875,1507-die-blechtrommel
 /film/fichefilm_gen_cfilm=1182.html,tt0062695,15818-baisers-voles
@@ -121,6 +123,7 @@
 /film/fichefilm_gen_cfilm=1353.html,tt0061418,9734-bonnie-and-clyde
 /film/fichefilm_gen_cfilm=1361.html,tt0082436,356-garde-a-vue
 /film/fichefilm_gen_cfilm=1375.html,tt0069027,3374-nous-ne-vieillirons-pas-ensemble
+/film/fichefilm_gen_cfilm=1403.html,tt0082054,19142-beau-pere
 /film/fichefilm_gen_cfilm=1404.html,tt0058329,6754-marnie
 /film/fichefilm_gen_cfilm=1409.html,tt0047469,2519-senso
 /film/fichefilm_gen_cfilm=1414.html,tt0069293,9252-solaris
@@ -146,6 +149,7 @@
 /film/fichefilm_gen_cfilm=1766.html,tt0057091,1911-il-gattopardo
 /film/fichefilm_gen_cfilm=1786.html,tt0069400,8625-trafic
 /film/fichefilm_gen_cfilm=1787.html,tt0088680,1860-after-hours
+/film/fichefilm_gen_cfilm=1790.html,tt0091670,3088-offret
 /film/fichefilm_gen_cfilm=1792.html,tt0072037,3292-profumo-di-donna
 /film/fichefilm_gen_cfilm=1809.html,tt0033870,2529-the-maltese-falcon
 /film/fichefilm_gen_cfilm=1824.html,tt0068638,9279-the-getaway
@@ -182,6 +186,7 @@
 /film/fichefilm_gen_cfilm=2260.html,tt0015864,298-the-gold-rush
 /film/fichefilm_gen_cfilm=2304.html,tt0024803,24624-zero-de-conduite-jeunes-diables-au-college
 /film/fichefilm_gen_cfilm=2305.html,tt0024844,13026-latalante
+/film/fichefilm_gen_cfilm=2307.html,tt0046521,16078-i-vitelloni
 /film/fichefilm_gen_cfilm=2348.html,tt0056892,23081-bebert-et-lomnibus
 /film/fichefilm_gen_cfilm=2352.html,tt0074285,6081-carrie
 /film/fichefilm_gen_cfilm=2358.html,tt0065531,3251-le-cercle-rouge
@@ -230,6 +235,7 @@
 /film/fichefilm_gen_cfilm=3295.html,tt0093940,9226-september
 /film/fichefilm_gen_cfilm=3326.html,tt0093779,2842-the-princess-bride
 /film/fichefilm_gen_cfilm=3373.html,tt0061852,3735-the-jungle-book
+/film/fichefilm_gen_cfilm=3531.html,tt0095801,3128-out-of-rosenheim
 /film/fichefilm_gen_cfilm=3547.html,tt0113475,9331-the-chinese-feast
 /film/fichefilm_gen_cfilm=3557.html,tt0057710,87277-an-actors-revenge
 /film/fichefilm_gen_cfilm=3622.html,tt0038890,6860-roma-citta-aperta
@@ -385,6 +391,7 @@
 /film/fichefilm_gen_cfilm=12195.html,tt0047849,24226-bad-day-at-black-rock
 /film/fichefilm_gen_cfilm=12240.html,tt0114069,8865-outbreak
 /film/fichefilm_gen_cfilm=12359.html,tt0062138,1875-point-blank
+/film/fichefilm_gen_cfilm=12578.html,tt0069019,22617-non-si-sevizia-un-paperino
 /film/fichefilm_gen_cfilm=12620.html,tt0055832,10572-cartouche
 /film/fichefilm_gen_cfilm=12621.html,tt0063663,2027-the-swimmer
 /film/fichefilm_gen_cfilm=12685.html,tt0109686,4537-dumb-and-dumber
@@ -428,6 +435,7 @@
 /film/fichefilm_gen_cfilm=18446.html,tt0181627,4534-kirikou-et-la-sorciere
 /film/fichefilm_gen_cfilm=18530.html,tt0156887,3027-perfect-blue
 /film/fichefilm_gen_cfilm=18644.html,tt0154420,2909-festen
+/film/fichefilm_gen_cfilm=19081.html,tt0088040,68061-los-santos-inocentes
 /film/fichefilm_gen_cfilm=19395.html,tt0060196,172-il-buono-il-brutto-il-cattivo
 /film/fichefilm_gen_cfilm=20196.html,tt0049877,3846-la-traversee-de-paris
 /film/fichefilm_gen_cfilm=20366.html,tt0068502,64905-dr-jekyll-sister-hyde
@@ -438,6 +446,7 @@
 /film/fichefilm_gen_cfilm=21709.html,tt0129167,6237-the-iron-giant
 /film/fichefilm_gen_cfilm=22037.html,tt0033563,3720-dumbo
 /film/fichefilm_gen_cfilm=22159.html,tt0229664,3619-princes-et-princesses
+/film/fichefilm_gen_cfilm=23316.html,tt0145653,31261-angelas-ashes
 /film/fichefilm_gen_cfilm=23668.html,tt0211900,23302-les-acteurs
 /film/fichefilm_gen_cfilm=23747.html,tt0034399,2388-a-womans-face
 /film/fichefilm_gen_cfilm=24850.html,tt0124718,4501-he-got-game
@@ -457,6 +466,7 @@
 /film/fichefilm_gen_cfilm=27070.html,tt0120737,154-the-lord-of-the-rings-the-fellowship-of-the-ring
 /film/fichefilm_gen_cfilm=27098.html,tt0043274,5965-alice-in-wonderland
 /film/fichefilm_gen_cfilm=27442.html,tt0062622,492-2001-a-space-odyssey
+/film/fichefilm_gen_cfilm=27524.html,tt0029583,3713-snow-white-and-the-seven-dwarfs
 /film/fichefilm_gen_cfilm=27591.html,tt0034478,8908-lassassin-habite-au-21
 /film/fichefilm_gen_cfilm=27606.html,tt0047445,22664-sansho-the-bailiff
 /film/fichefilm_gen_cfilm=27624.html,tt0099487,178-edward-scissorhands
@@ -490,6 +500,7 @@
 /film/fichefilm_gen_cfilm=30430.html,tt0073685,22701-sept-morts-sur-ordonnance
 /film/fichefilm_gen_cfilm=30472.html,tt0095647,3079-mississippi-burning
 /film/fichefilm_gen_cfilm=30765.html,tt0031593,80714-love-affair
+/film/fichefilm_gen_cfilm=31995.html,tt0082406,4524-the-fox-and-the-hound
 /film/fichefilm_gen_cfilm=32000.html,tt0088814,7286-the-black-cauldron
 /film/fichefilm_gen_cfilm=32704.html,tt0278504,4059-insomnia
 /film/fichefilm_gen_cfilm=33360.html,tt0073802,2394-three-days-of-the-condor
@@ -551,6 +562,7 @@
 /film/fichefilm_gen_cfilm=49530.html,tt0023382,72376-red-dust
 /film/fichefilm_gen_cfilm=49956.html,tt0065777,14579-il-giardino-dei-finzi-contini
 /film/fichefilm_gen_cfilm=50361.html,tt0022208,72476-night-nurse
+/film/fichefilm_gen_cfilm=50409.html,tt0347149,283-howls-moving-castle
 /film/fichefilm_gen_cfilm=52019.html,tt0042824,13793-outrage
 /film/fichefilm_gen_cfilm=52143.html,tt0347618,5449-the-cat-returns
 /film/fichefilm_gen_cfilm=53024.html,tt0033873,1817-man-hunt
@@ -596,6 +608,7 @@
 /film/fichefilm_gen_cfilm=87601.html,tt0068182,3370-aguirre-der-zorn-gottes
 /film/fichefilm_gen_cfilm=87886.html,tt0113720,29697-lust-och-fagring-stor
 /film/fichefilm_gen_cfilm=89485.html,tt0092603,3237-babettes-gaestebud
+/film/fichefilm_gen_cfilm=89957.html,tt0058946,29311-la-battaglia-di-algeri
 /film/fichefilm_gen_cfilm=89979.html,tt0015648,11452-battleship-potemkin
 /film/fichefilm_gen_cfilm=90812.html,tt0045557,83818-the-bigamist
 /film/fichefilm_gen_cfilm=94380.html,tt0060802,992-oste-sledovane-vlaky
@@ -618,7 +631,9 @@
 /film/fichefilm_gen_cfilm=108974.html,tt0486731,23197-u
 /film/fichefilm_gen_cfilm=109607.html,tt0792978,21735-mia-et-le-migou
 /film/fichefilm_gen_cfilm=109680.html,tt0498399,3492-we-own-the-night
+/film/fichefilm_gen_cfilm=109815.html,tt0449059,411-little-miss-sunshine
 /film/fichefilm_gen_cfilm=109886.html,tt0052923,88768-india-matri-bhumi
+/film/fichefilm_gen_cfilm=110204.html,tt0808417,3450-persepolis
 /film/fichefilm_gen_cfilm=110254.html,tt0485601,3467-the-secret-of-kells
 /film/fichefilm_gen_cfilm=111153.html,tt0795493,7732-cassandras-dream
 /film/fichefilm_gen_cfilm=111258.html,tt0825241,29735-daratt
@@ -642,6 +657,7 @@
 /film/fichefilm_gen_cfilm=125562.html,tt0795421,4262-mamma-mia
 /film/fichefilm_gen_cfilm=126148.html,tt0497465,3589-vicky-cristina-barcelona
 /film/fichefilm_gen_cfilm=127194.html,tt0876563,3434-ponyo
+/film/fichefilm_gen_cfilm=127225.html,tt0827517,19424-reprise
 /film/fichefilm_gen_cfilm=128108.html,tt1257562,2659-hadewijch
 /film/fichefilm_gen_cfilm=128515.html,tt1152836,2857-public-enemies
 /film/fichefilm_gen_cfilm=128742.html,tt0983946,70333-fantasy-island
@@ -711,6 +727,7 @@
 /film/fichefilm_gen_cfilm=183006.html,tt1679335,27596-trolls
 /film/fichefilm_gen_cfilm=184006.html,tt1123373,1721-detective-dee-and-the-mystery-of-the-phantom-flame
 /film/fichefilm_gen_cfilm=185542.html,tt1588170,254-i-saw-the-devil
+/film/fichefilm_gen_cfilm=185687.html,tt1618447,1559-un-amour-de-jeunesse
 /film/fichefilm_gen_cfilm=185719.html,tt1727824,51062-bohemian-rhapsody
 /film/fichefilm_gen_cfilm=186452.html,tt2872732,19056-lucy
 /film/fichefilm_gen_cfilm=187864.html,tt1748122,724-moonrise-kingdom
@@ -732,6 +749,7 @@
 /film/fichefilm_gen_cfilm=195370.html,tt1979320,7830-rush
 /film/fichefilm_gen_cfilm=195834.html,tt1798188,1237-from-up-on-poppy-hill
 /film/fichefilm_gen_cfilm=196004.html,tt1854513,4586-blancanieves
+/film/fichefilm_gen_cfilm=197088.html,tt2043933,19001-night-moves
 /film/fichefilm_gen_cfilm=197189.html,tt2054790,12182-michael-kohlhaas
 /film/fichefilm_gen_cfilm=197309.html,tt2397521,116-der-mondmann
 /film/fichefilm_gen_cfilm=197810.html,tt2066051,65434-rocketman
@@ -793,6 +811,7 @@
 /film/fichefilm_gen_cfilm=225958.html,tt3521164,24553-moana
 /film/fichefilm_gen_cfilm=226004.html,tt1865505,24141-song-of-the-sea
 /film/fichefilm_gen_cfilm=226005.html,tt3526408,25545-gus-petit-oiseau-grand-voyage
+/film/fichefilm_gen_cfilm=226616.html,tt3480886,32454-ma-ma
 /film/fichefilm_gen_cfilm=227066.html,tt3470600,31766-sing
 /film/fichefilm_gen_cfilm=227206.html,tt2404425,24594-woman-in-gold
 /film/fichefilm_gen_cfilm=227624.html,tt3183630,22439-o-menino-e-o-mundo
@@ -810,6 +829,7 @@
 /film/fichefilm_gen_cfilm=230571.html,tt3900530,31660-les-filles-au-moyen-age
 /film/fichefilm_gen_cfilm=230783.html,tt3480822,68025-black-widow
 /film/fichefilm_gen_cfilm=230868.html,tt5215952,32246-the-wailing
+/film/fichefilm_gen_cfilm=231299.html,tt4016934,33044-the-handmaiden
 /film/fichefilm_gen_cfilm=231520.html,tt4944620,noBetaseriesId
 /film/fichefilm_gen_cfilm=231601.html,tt3011816,29027-adama
 /film/fichefilm_gen_cfilm=231700.html,tt5336614,54882-prick-och-flack-pa-flacken
@@ -824,6 +844,7 @@
 /film/fichefilm_gen_cfilm=235632.html,tt6217926,41327-annette
 /film/fichefilm_gen_cfilm=235874.html,tt3689910,28089-miss-hokusai
 /film/fichefilm_gen_cfilm=236231.html,tt3411432,28085-ooops-noah-is-gone
+/film/fichefilm_gen_cfilm=236367.html,tt5061360,39707-la-promesse-de-laube
 /film/fichefilm_gen_cfilm=236414.html,tt5804946,51226-prendre-le-large
 /film/fichefilm_gen_cfilm=236415.html,tt2321405,33469-ma-vie-de-courgette
 /film/fichefilm_gen_cfilm=236671.html,tt4130944,28525-lamb
@@ -851,6 +872,7 @@
 /film/fichefilm_gen_cfilm=243350.html,tt5435740,34045-le-potager-de-mon-grand-pere
 /film/fichefilm_gen_cfilm=243534.html,tt6972372,59808-place-publique
 /film/fichefilm_gen_cfilm=243574.html,tt2304637,90727-flag-day
+/film/fichefilm_gen_cfilm=243648.html,tt4468634,31018-certain-women
 /film/fichefilm_gen_cfilm=243780.html,tt3666024,30989-la-tortue-rouge
 /film/fichefilm_gen_cfilm=243835.html,tt7169514,51067-dilili-a-paris
 /film/fichefilm_gen_cfilm=244414.html,tt4954522,35918-grave
@@ -862,6 +884,7 @@
 /film/fichefilm_gen_cfilm=245617.html,tt5598102,50611-visages-villages
 /film/fichefilm_gen_cfilm=246702.html,tt5700672,33693-train-to-busan
 /film/fichefilm_gen_cfilm=247833.html,tt6242262,39854-la-vallee-des-loups
+/film/fichefilm_gen_cfilm=248128.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=248130.html,noImdbId,73996-ferda-la-fourmi
 /film/fichefilm_gen_cfilm=248191.html,tt9844322,67572-kaamelott-premier-volet
 /film/fichefilm_gen_cfilm=248196.html,tt4532038,39763-the-war-with-grandpa
@@ -904,6 +927,7 @@
 /film/fichefilm_gen_cfilm=254043.html,tt6017756,71542-radioactive
 /film/fichefilm_gen_cfilm=254171.html,tt3892172,63791-leave-no-trace
 /film/fichefilm_gen_cfilm=254263.html,tt7336470,69727-bunuel-en-el-laberinto-de-las-tortugas
+/film/fichefilm_gen_cfilm=254359.html,tt5198068,79957-wolfwalkers
 /film/fichefilm_gen_cfilm=254612.html,tt6644200,50569-a-quiet-place
 /film/fichefilm_gen_cfilm=254755.html,tt6673612,51060-dolittle
 /film/fichefilm_gen_cfilm=254951.html,tt6704302,73175-derniers-jours-a-shibati
@@ -919,6 +943,7 @@
 /film/fichefilm_gen_cfilm=255756.html,tt4540384,51044-a-fabrica-de-nada
 /film/fichefilm_gen_cfilm=255795.html,tt6823148,50274-benedetta
 /film/fichefilm_gen_cfilm=255829.html,tt7523386,78892-freres-darme
+/film/fichefilm_gen_cfilm=255961.html,tt12615474,82081-two-by-two-overboard
 /film/fichefilm_gen_cfilm=256092.html,tt2274648,58918-hellboy
 /film/fichefilm_gen_cfilm=256312.html,tt2197936,89274-fatima
 /film/fichefilm_gen_cfilm=256330.html,tt6910282,79335-bergman-island
@@ -958,6 +983,7 @@
 /film/fichefilm_gen_cfilm=259479.html,tt8908542,64979-le-quatuor-a-cornes
 /film/fichefilm_gen_cfilm=259495.html,tt5966350,79838-nabospionen
 /film/fichefilm_gen_cfilm=259606.html,tt9844938,90289-onoda-10000-nuits-dans-la-jungle
+/film/fichefilm_gen_cfilm=259756.html,tt7504818,80830-rons-gone-wrong
 /film/fichefilm_gen_cfilm=259759.html,tt7504726,73035-the-call-of-the-wild
 /film/fichefilm_gen_cfilm=260048.html,tt7549996,60467-judy
 /film/fichefilm_gen_cfilm=260397.html,tt8241000,78633-extinct
@@ -975,6 +1001,7 @@
 /film/fichefilm_gen_cfilm=261793.html,tt7888964,72235-nobody
 /film/fichefilm_gen_cfilm=261860.html,tt7784604,61132-hereditary
 /film/fichefilm_gen_cfilm=261925.html,tt13841708,91767-a-primeira-morte-de-joana
+/film/fichefilm_gen_cfilm=262097.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=262099.html,tt9647768,69540-the-wild-goose-lake
 /film/fichefilm_gen_cfilm=262124.html,tt7975244,63792-jumanji-the-next-level
 /film/fichefilm_gen_cfilm=262182.html,tt7766886,72949-la-fille-au-bracelet
@@ -996,6 +1023,7 @@
 /film/fichefilm_gen_cfilm=263810.html,tt9625632,77384-mes-jours-de-gloire
 /film/fichefilm_gen_cfilm=263846.html,tt10603466,71927-a-febre
 /film/fichefilm_gen_cfilm=263848.html,tt6396074,69082-la-misericorde-de-la-jungle
+/film/fichefilm_gen_cfilm=263850.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=264002.html,tt7112154,62465-asako-i-ii
 /film/fichefilm_gen_cfilm=264011.html,tt5501104,62831-grans
 /film/fichefilm_gen_cfilm=264054.html,tt10132976,78756-le-sel-des-larmes
@@ -1045,6 +1073,7 @@
 /film/fichefilm_gen_cfilm=267336.html,tt8453986,91193-el-cuento-de-las-comadrejas
 /film/fichefilm_gen_cfilm=267514.html,tt8399690,72986-anthropocene-the-human-epoch
 /film/fichefilm_gen_cfilm=267546.html,tt8946378,65981-knives-out
+/film/fichefilm_gen_cfilm=267591.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=267615.html,tt9828918,75098-jesuisla
 /film/fichefilm_gen_cfilm=267671.html,tt9347730,76096-candyman
 /film/fichefilm_gen_cfilm=267703.html,tt10965792,78891-belle-fille
@@ -1065,9 +1094,11 @@
 /film/fichefilm_gen_cfilm=268684.html,tt9143112,76937-falling
 /film/fichefilm_gen_cfilm=268932.html,tt9162090,78755-cest-la-vie
 /film/fichefilm_gen_cfilm=268934.html,tt9204164,79965-bigfoot-family
+/film/fichefilm_gen_cfilm=268969.html,tt10665338,70579-halloween-kills
 /film/fichefilm_gen_cfilm=268974.html,tt10327252,75103-the-forever-purge
 /film/fichefilm_gen_cfilm=269023.html,tt11748354,77513-les-parfums
 /film/fichefilm_gen_cfilm=269031.html,tt8236398,69251-in-search-of-greatness
+/film/fichefilm_gen_cfilm=269258.html,tt9231040,78355-first-cow
 /film/fichefilm_gen_cfilm=269279.html,tt7531096,76680-stardog-and-turbocat
 /film/fichefilm_gen_cfilm=269293.html,tt9890060,68168-maguy-marin-lurgence-dagir
 /film/fichefilm_gen_cfilm=269320.html,tt9262952,72916-la-nuit-venue
@@ -1075,6 +1106,7 @@
 /film/fichefilm_gen_cfilm=269514.html,tt11229766,84021-lenfant-reve
 /film/fichefilm_gen_cfilm=269515.html,tt12440750,85734-la-terre-des-hommes
 /film/fichefilm_gen_cfilm=269704.html,tt9665968,75698-petit-pays
+/film/fichefilm_gen_cfilm=269758.html,tt7097896,68023-venom-let-there-be-carnage
 /film/fichefilm_gen_cfilm=269942.html,tt8804304,67645-a-thousand-girls-like-me
 /film/fichefilm_gen_cfilm=269946.html,tt7014378,91945-le-sommet-des-dieux
 /film/fichefilm_gen_cfilm=269968.html,tt4935462,68889-amazing-grace
@@ -1097,6 +1129,8 @@
 /film/fichefilm_gen_cfilm=271453.html,tt10868508,85426-letreinte
 /film/fichefilm_gen_cfilm=271482.html,tt9658178,74974-talking-about-trees
 /film/fichefilm_gen_cfilm=271546.html,tt9731534,76930-the-night-house
+/film/fichefilm_gen_cfilm=271566.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=271587.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=271602.html,tt11018048,81184-le-bonheur-des-uns
 /film/fichefilm_gen_cfilm=271607.html,tt9719864,79954-calamity-une-enfance-de-martha-jane-cannary
 /film/fichefilm_gen_cfilm=271613.html,tt10223552,69106-litigante
@@ -1109,11 +1143,14 @@
 /film/fichefilm_gen_cfilm=271838.html,tt13137576,90761-serre-moi-fort
 /film/fichefilm_gen_cfilm=271917.html,tt9340860,70636-let-him-go
 /film/fichefilm_gen_cfilm=271953.html,tt11617052,77445-undine
+/film/fichefilm_gen_cfilm=272012.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=272014.html,tt11060092,80981-poly
 /film/fichefilm_gen_cfilm=272034.html,tt9844522,75650-escape-room-tournament-of-champions
 /film/fichefilm_gen_cfilm=272059.html,tt7575778,75353-every-day-a-good-day
 /film/fichefilm_gen_cfilm=272061.html,tt9861288,81202-boutchou
+/film/fichefilm_gen_cfilm=272131.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=272217.html,tt11013434,80860-antoinette-dans-les-cevennes
+/film/fichefilm_gen_cfilm=272219.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=272220.html,tt12545582,81106-the-last-hillbilly
 /film/fichefilm_gen_cfilm=272249.html,tt10117768,92666-schwesterlein
 /film/fichefilm_gen_cfilm=272355.html,tt11032374,72597-demon-slayer-kimetsu-no-yaiba-the-movie-mugen-train
@@ -1121,12 +1158,15 @@
 /film/fichefilm_gen_cfilm=272523.html,tt10307922,80979-des-hommes
 /film/fichefilm_gen_cfilm=272586.html,tt9883996,76939-dream-horse
 /film/fichefilm_gen_cfilm=272698.html,tt10213380,84457-malmkrog
+/film/fichefilm_gen_cfilm=272765.html,tt10143308,78811-tout-nous-sourit
 /film/fichefilm_gen_cfilm=272974.html,tt7533756,71111-manelyst-i-flaklypa
+/film/fichefilm_gen_cfilm=272977.html,tt11967484,91714-das-madchen-und-die-spinne
 /film/fichefilm_gen_cfilm=273085.html,tt13373802,86526-terra-libre
 /film/fichefilm_gen_cfilm=273120.html,tt9620292,74861-promising-young-woman
 /film/fichefilm_gen_cfilm=273138.html,tt9665786,89925-un-tour-chez-ma-fille
 /film/fichefilm_gen_cfilm=273162.html,tt8462814,86522-sluzobnici
 /film/fichefilm_gen_cfilm=273168.html,tt9451096,81199-mano-de-obra
+/film/fichefilm_gen_cfilm=273171.html,tt5373766,85619-le-milieu-de-lhorizon
 /film/fichefilm_gen_cfilm=273179.html,tt9817070,88681-just-65
 /film/fichefilm_gen_cfilm=273261.html,tt9675786,78578-les-apparences
 /film/fichefilm_gen_cfilm=273263.html,tt6028620,90142-sarlatan
@@ -1134,6 +1174,7 @@
 /film/fichefilm_gen_cfilm=273335.html,tt10183674,70681-daniel-darc-pieces-of-my-life
 /film/fichefilm_gen_cfilm=273345.html,tt9234450,75738-madre
 /film/fichefilm_gen_cfilm=273346.html,tt9078936,80268-vers-la-bataille
+/film/fichefilm_gen_cfilm=273348.html,tt8550054,91774-pleasure
 /film/fichefilm_gen_cfilm=273483.html,tt8314390,78733-camino-skies
 /film/fichefilm_gen_cfilm=273487.html,tt7772582,78692-never-rarely-sometimes-always
 /film/fichefilm_gen_cfilm=273488.html,tt10039344,71787-countdown
@@ -1146,6 +1187,7 @@
 /film/fichefilm_gen_cfilm=273589.html,tt10208192,69034-que-sea-ley
 /film/fichefilm_gen_cfilm=273591.html,tt10208194,79944-family-romance-llc
 /film/fichefilm_gen_cfilm=273593.html,tt8356200,70243-la-grand-messe
+/film/fichefilm_gen_cfilm=273621.html,tt10505316,80592-illusions-perdues
 /film/fichefilm_gen_cfilm=273635.html,tt10052290,84419-mio-i-miosierdzie
 /film/fichefilm_gen_cfilm=273643.html,tt10219406,69132-ceniza-negra
 /film/fichefilm_gen_cfilm=273662.html,tt10307922,80979-des-hommes
@@ -1239,6 +1281,7 @@
 /film/fichefilm_gen_cfilm=277724.html,noImdbId,77278-lequipe-de-secours-en-route-pour-laventure
 /film/fichefilm_gen_cfilm=277725.html,tt11107990,74239-le-prince-serpent
 /film/fichefilm_gen_cfilm=277729.html,tt11967116,84892-medecin-de-nuit
+/film/fichefilm_gen_cfilm=277756.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=277764.html,tt10661314,89235-143-rue-du-desert
 /film/fichefilm_gen_cfilm=277803.html,tt12792532,86214-la-troisieme-guerre
 /film/fichefilm_gen_cfilm=277935.html,tt11093134,82946-garcon-chiffon
@@ -1251,6 +1294,7 @@
 /film/fichefilm_gen_cfilm=278122.html,tt11125620,84038-the-addams-family-2
 /film/fichefilm_gen_cfilm=278190.html,tt10644690,90646-fendas
 /film/fichefilm_gen_cfilm=278230.html,tt11187986,81300-spaccapietre
+/film/fichefilm_gen_cfilm=278489.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=278579.html,tt11422136,88074-messe-basse
 /film/fichefilm_gen_cfilm=278650.html,tt4761112,84962-the-mauritanian
 /film/fichefilm_gen_cfilm=278845.html,tt12444430,85425-vaurien
@@ -1265,6 +1309,7 @@
 /film/fichefilm_gen_cfilm=279149.html,tt12444432,79877-9-jours-a-raqqa
 /film/fichefilm_gen_cfilm=279214.html,tt10370710,90736-verdens-verste-menneske
 /film/fichefilm_gen_cfilm=279282.html,tt5752192,87146-meandre
+/film/fichefilm_gen_cfilm=279324.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=279380.html,tt11338144,91301-de-bas-etage
 /film/fichefilm_gen_cfilm=279457.html,tt10584908,70871-paris-stalingrad
 /film/fichefilm_gen_cfilm=279488.html,tt11892046,91598-cigare-au-miel
@@ -1285,6 +1330,7 @@
 /film/fichefilm_gen_cfilm=280192.html,tt10579952,86484-master
 /film/fichefilm_gen_cfilm=280202.html,tt13845736,91604-tom-medina
 /film/fichefilm_gen_cfilm=280205.html,tt13142240,91757-les-amours-danais
+/film/fichefilm_gen_cfilm=280209.html,tt3198638,27890-a-la-vie
 /film/fichefilm_gen_cfilm=280240.html,tt8351520,80696-white-riot
 /film/fichefilm_gen_cfilm=280247.html,tt9023136,78337-haingosoa
 /film/fichefilm_gen_cfilm=280255.html,tt11028768,82943-sentimental
@@ -1320,6 +1366,7 @@
 /film/fichefilm_gen_cfilm=282008.html,tt12594018,82204-les-mechants
 /film/fichefilm_gen_cfilm=282026.html,tt8652818,68138-violet-evergarden-the-movie
 /film/fichefilm_gen_cfilm=282031.html,tt9747594,74920-beasts-clawing-at-straws
+/film/fichefilm_gen_cfilm=282213.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=282238.html,tt11832046,80814-paw-patrol-the-movie
 /film/fichefilm_gen_cfilm=282391.html,tt11384824,84439-pas-en-mon-nom
 /film/fichefilm_gen_cfilm=282488.html,tt9278312,91754-spiral
@@ -1333,22 +1380,29 @@
 /film/fichefilm_gen_cfilm=283743.html,tt11385336,90184-el-olvido-que-seremos
 /film/fichefilm_gen_cfilm=283748.html,tt12439508,82548-nadia-butterfly
 /film/fichefilm_gen_cfilm=283762.html,tt12444576,85609-the-death-of-cinema-and-my-father-too
+/film/fichefilm_gen_cfilm=283763.html,tt10676042,93120-downstream-to-kinshasa
 /film/fichefilm_gen_cfilm=283785.html,tt12094720,83836-city-hall
 /film/fichefilm_gen_cfilm=283805.html,noImdbId,81195-balades-sous-les-etoiles
 /film/fichefilm_gen_cfilm=283811.html,tt9303756,84235-the-snail-and-the-whale
 /film/fichefilm_gen_cfilm=283820.html,tt12200444,84423-il-mio-corpo
+/film/fichefilm_gen_cfilm=283854.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=283952.html,noImdbId,81194-les-mal-aimes
 /film/fichefilm_gen_cfilm=283953.html,noImdbId,84444-la-chouette-en-toque
 /film/fichefilm_gen_cfilm=284467.html,tt12656656,80905-un-soupcon-damour
+/film/fichefilm_gen_cfilm=284565.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=284566.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=284810.html,tt8486464,81206-schapenheld
 /film/fichefilm_gen_cfilm=284822.html,tt12847022,91196-cest-quoi-ce-papy
 /film/fichefilm_gen_cfilm=284945.html,tt9270362,90133-the-amusement-park
+/film/fichefilm_gen_cfilm=285001.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=285126.html,tt7490358,83819-ordem-moral
 /film/fichefilm_gen_cfilm=285481.html,tt12285864,84891-douce-france
 /film/fichefilm_gen_cfilm=285490.html,tt12716170,81979-laila-in-haifa
 /film/fichefilm_gen_cfilm=285495.html,tt10796286,81189-dear-comrades
 /film/fichefilm_gen_cfilm=285499.html,tt0071487,3283-le-fantome-de-la-liberte
 /film/fichefilm_gen_cfilm=285624.html,tt8132778,81298-la-nuit-des-rois
+/film/fichefilm_gen_cfilm=285904.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=286013.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=286016.html,tt13230944,84031-les-sept-vies-de-madeleine-riffaud
 /film/fichefilm_gen_cfilm=286017.html,tt10106564,84446-les-petites-fievres
 /film/fichefilm_gen_cfilm=286132.html,tt11723916,83123-semina-il-vento
@@ -1368,6 +1422,7 @@
 /film/fichefilm_gen_cfilm=287060.html,tt13846372,92635-lhomme-de-la-cave
 /film/fichefilm_gen_cfilm=287251.html,tt13303648,87145-louloute
 /film/fichefilm_gen_cfilm=287908.html,tt12093860,78854-detective-conan-the-scarlet-bullet
+/film/fichefilm_gen_cfilm=288281.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=288454.html,tt11081050,82959-shorta
 /film/fichefilm_gen_cfilm=288882.html,tt10265034,87798-land
 /film/fichefilm_gen_cfilm=289116.html,tt13845180,90642-les-sorcieres-de-lorient
@@ -1377,11 +1432,21 @@
 /film/fichefilm_gen_cfilm=290619.html,tt11146570,92673-one-more-jump
 /film/fichefilm_gen_cfilm=291357.html,tt13029316,80831-apstjarnan
 /film/fichefilm_gen_cfilm=291429.html,tt11581174,88538-karnan
+/film/fichefilm_gen_cfilm=291791.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=291824.html,tt14812778,90641-diarios-de-otsoga
 /film/fichefilm_gen_cfilm=291857.html,tt12879624,78480-josee-the-tiger-and-the-fish
+/film/fichefilm_gen_cfilm=292378.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=292429.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=292563.html,tt15242370,92632-guermantes
 /film/fichefilm_gen_cfilm=293106.html,tt14039582,90726-drive-my-car
 /film/fichefilm_gen_cfilm=293309.html,tt14775496,90740-freda
+/film/fichefilm_gen_cfilm=293568.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=293569.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=293760.html,tt10302826,91299-la-metaphysique-du-berger
 /film/fichefilm_gen_cfilm=293996.html,tt0079041,45076-demon-pond
+/film/fichefilm_gen_cfilm=294002.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=294030.html,tt0056898,91804-el-camino
+/film/fichefilm_gen_cfilm=295225.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=296494.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=296588.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=297172.html,noImdbId,noBetaseriesId

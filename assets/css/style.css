@@ -200,6 +200,7 @@ iframe {
 }
 
 #inputToggle,
+#inputToggle2,
 .criticButton input,
 .networkButton input,
 .nationalityButton input,
@@ -212,6 +213,7 @@ iframe {
 }
 
 #inputToggle+label:before,
+#inputToggle2+label:before,
 .criticButton input+label:before,
 .networkButton input+label:before,
 .nationalityButton input+label:before,
@@ -228,6 +230,7 @@ iframe {
 }
 
 #inputToggle:checked+label:before,
+#inputToggle2:checked+label:before,
 .criticButton input:checked+label:before,
 .networkButton input:checked+label:before,
 .nationalityButton input:checked+label:before,
@@ -334,6 +337,7 @@ iframe {
 }
 
 li.mainButtonTitle,
+li.mainButtonTitle2,
 li.networkButtonTitle {
     border-top: 1px solid rgba(var(--green-rgba-color), .25);
 }
@@ -341,12 +345,25 @@ li.networkButtonTitle {
 li.mainButtonTitle a,
 li.networkButtonTitle a {
     font-size: 19px !important;
-    cursor: text !important;
+    cursor: default !important;
 }
 
 li.mainButtonTitle a:hover,
-li.networkButtonTitle a:hover {
+li.networkButtonTitle a:hover,
+li.mainButtonTitle2 span:hover {
     background: transparent !important;
+}
+
+li.mainButtonTitle2 span {
+    position: unset !important;
+    right: unset !important;
+    cursor: default;
+}
+
+li.mainButtonTitle2 label {
+    position: absolute;
+    right: 5px;
+    cursor: pointer;
 }
 
 #overlay>button {
@@ -820,6 +837,27 @@ strong {
 #result a,
 #result a:hover {
     padding: 10px;
+}
+
+.movieSeen {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+
+.movieSeenIcon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5em;
+    opacity: 1;
+}
+
+.movieSeenIconSmall {
+    cursor: default;
 }
 
 /* Darkmode overwrite css */
