@@ -165,8 +165,8 @@ var DOMLoaded = function() {
             .then(function(response) {
                 if (response.status === 404) {
                     endURLFirstPart = '[d-0/][p-';
-                    return endURLFirstPart;
                 }
+                return endURLFirstPart;
             });
     }
 
@@ -543,11 +543,11 @@ var DOMLoaded = function() {
 
             ratingTempTotal += parseFloat(betaseriesRating);
 
-            betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs Betaseries<span class="criticNumber">1</span>';
+            betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs BetaSeries<span class="criticNumber">1</span>';
         } else {
             betaseriesDetails = '/';
             userBetaseriesInput.children[0].children[0].children[0].children[0].removeAttribute('checked');
-            betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs Betaseries<span class="criticNumber criticNumberZero">0</span>';
+            betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs BetaSeries<span class="criticNumber criticNumberZero">0</span>';
         }
 
         ratingTemp = ratingTempTotal / divisionNumber;
@@ -1613,11 +1613,11 @@ var DOMLoaded = function() {
             }
         } else if (classListName == 'usersBetaseries') {
             if (classListNameActive == 'true') {
-                betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs Betaseries<span class="criticNumber criticNumberZero">0</span>';
+                betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs BetaSeries<span class="criticNumber criticNumberZero">0</span>';
                 item.currentTarget.children[0].children[0].removeAttribute('checked');
                 localStorage.setItem('yqac_critic.' + classListName, 'false');
             } else {
-                betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs Betaseries<span class="criticNumber">1</span>';
+                betaseriesUserRatingLi.children[1].children[0].innerHTML = '<i class="icon-betaseries"></i> Spectateurs BetaSeries<span class="criticNumber">1</span>';
                 item.currentTarget.children[0].children[0].setAttribute('checked', 'checked');
                 localStorage.setItem('yqac_critic.' + classListName, 'true');
             }
