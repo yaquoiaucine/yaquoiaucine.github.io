@@ -20,8 +20,8 @@ main:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
-    - node node_script.js
+    - node node_script.js schedule
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
   script:
-    - node node_script.js forceupdate
+    - node node_script.js web

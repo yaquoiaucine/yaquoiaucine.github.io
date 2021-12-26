@@ -30,7 +30,7 @@ abord_script () {
 remove_files
 
 # Main variables
-testing=$1
+source=$1
 baseUrl=$2
 if [[ -z $baseUrl ]]; then
   baseUrl=https://www.allocine.fr/film/aucinema/
@@ -58,8 +58,8 @@ thirdfilm=$(cat temp | grep "/film/fichefilm_gen_cfilm" | head -3 | tail -1 | cu
 fourthfilm=$(cat temp | grep "/film/fichefilm_gen_cfilm" | head -4 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1)
 fifthfilm=$(cat temp | grep "/film/fichefilm_gen_cfilm" | head -5 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1)
 firstfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f1)
-if [[ ! -z $testing ]]; then
-  firstfilmFromFile="testing"
+if [[ $source != 'schedule' ]]; then
+  firstfilmFromFile="forceupdate"
 fi
 secondfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f2)
 thirdfilmFromFile=$(cat ./assets/sh/checkingFile.txt | cut -d',' -f3)
@@ -80,12 +80,7 @@ else
 fi
 
 # Remove lines with no data
-curl -s https://yaquoiaucine.fr/assets/sh/filmsIds.txt > ./assets/sh/filmsIds.txt
-if [[ ! -z $testing ]]; then
-  sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
-else
-  sed -i "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
-fi
+sed -i '' "/noImdbId,noBetaseriesId/d" ./assets/sh/filmsIds.txt
 
 # Sort dataset file
 cat ./assets/sh/filmsIds.txt | sort -V > ./assets/sh/filmsIdsTemp.txt
@@ -197,16 +192,13 @@ do
 
     # Check if missing shows
     filmsIdsFile="./assets/sh/filmsIds.txt"
-    while IFS= read -r filmsIdsLine <&3; do
-      allocineLineUrl=$(echo $filmsIdsLine | cut -d',' -f1)
+    allocineLineUrl=$(cat $filmsIdsFile | grep $url | cut -d',' -f1)
 
-      if [[ $url == $allocineLineUrl ]]; then
-        found=1
-        break
-      else
-        found=0
-      fi
-    done 3<$filmsIdsFile
+    if [[ $url == $allocineLineUrl ]]; then
+      found=1
+    else
+      found=0
+    fi
 
     if [[ -z $checkMissingShows ]] || [[ $found -eq 0 ]]; then
       urlFile="./assets/sh/urlTemp.txt"
@@ -281,7 +273,7 @@ do
           for nationalityNumberIndex in $( eval echo {1..$nationalityNumber} )
           do
             nationalityNameTemp=$(cat temp2 | grep " nationality" | head -$nationalityNumberIndex | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//')
-            if [[ ! -z $testing ]]; then
+            if [[ $source == 'home' ]]; then
               nationalityName=$(echo $nationalityNameTemp | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')
             else
               nationalityName=$(echo "${nationalityNameTemp^}")
