@@ -87,44 +87,6 @@ cat ./assets/sh/filmsIds.txt | sort -V > ./assets/sh/filmsIdsTemp.txt
 cat ./assets/sh/filmsIdsTemp.txt > ./assets/sh/filmsIds.txt
 rm -f ./assets/sh/filmsIdsTemp.txt
 
-echo "----------------------------------------------------------------------------------------------------"
-betaseriesIdNotFoundNumber=$(cat assets/sh/filmsIds.txt | grep "[0-9],noBetaseriesId" | wc -l | awk '{print $1}')
-echo "betaseriesIdNotFoundNumber: $betaseriesIdNotFoundNumber"
-for betaseriesIdNotFoundNumberIndex in $( eval echo {1..$betaseriesIdNotFoundNumber} )
-do
-  imdbIdFound=$(cat assets/sh/filmsIds.txt | grep "[0-9],noBetaseriesId" | head -$betaseriesIdNotFoundNumberIndex | tail -1 | cut -d',' -f2)
-  echo "imdbIdFound: $imdbIdFound"
-  betaseriesCode=$(curl -s https://api.betaseries.com/movies/movie\?key\=7f7fef35706f\&imdb_id\=$imdbIdFound | jq '.errors[0].code')
-  if [[ $betaseriesCode != "4001" ]]; then
-    echo "----------------------------------------------------------------------------------------------------"
-    echo "betaseriesCode: $betaseriesCode"
-    echo "imdbIdFound: $imdbIdFound"
-    exit 0
-  fi
-done
-
-echo "----------------------------------------------------------------------------------------------------"
-imdbIdNotFoundNumber=$(cat assets/sh/filmsIds.txt | grep "noImdbId,[[:alnum:]]" | wc -l | awk '{print $1}')
-echo "imdbIdNotFoundNumber: $imdbIdNotFoundNumber"
-for imdbIdNotFoundNumberIndex in $( eval echo {1..$imdbIdNotFoundNumber} )
-do
-  betaseriesIdFound=$(cat assets/sh/filmsIds.txt | grep "noImdbId,[[:alnum:]]" | head -$imdbIdNotFoundNumberIndex | tail -1 | cut -d',' -f3)
-  echo "betaseriesIdFound: $betaseriesIdFound"
-  if [[ $betaseriesIdFound == serie* ]]; then
-    betaseriesIdFoundNew=$(echo $betaseriesIdFound | cut -d'/' -f2)
-    imdbRes=$(curl -s https://api.betaseries.com/shows/display\?key\=7f7fef35706f\&url\=$betaseriesIdFoundNew | jq '.show.imdb_id')
-  else
-    betaseriesIdFoundNew=$(echo $betaseriesIdFound | grep -Eo "[0-9]+")
-    imdbRes=$(curl -s https://api.betaseries.com/movies/movie\?key\=7f7fef35706f\&id\=$betaseriesIdFoundNew | jq '.movie.imdb_id')
-  fi
-  if [[ $imdbRes != "\"\"" ]]; then
-    echo "----------------------------------------------------------------------------------------------------"
-    echo "imdbRes: $imdbRes"
-    echo "betaseriesIdFound: $betaseriesIdFound"
-    exit 0
-  fi
-done
-
 # Add criticName first list
 cat ./assets/sh/criticName.txt | cut -d',' -f1 | sort | uniq >> ./assets/sh/criticNameTemp.txt
 
@@ -532,7 +494,8 @@ do
         echo "\"imdbData\":{" >> ./assets/js/data.json
 
         # Get IMDb rating
-        imdbRating=$(cat temp6 | grep -Eo "AggregateRatingButton__RatingScore.{1,50}>" | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
+        imdbRating=$(cat temp6 | grep -Eo "\"ratingCount\".{1,100}" | grep -Eo "ratingValue.{1,10}" | cut -d':' -f2 | cut -d'}' -f1)
+        echo "imdbRating: $imdbRating"
 
         # Get IMDb rating number
         curl -s "https://www.imdb.com/title/$imdbId/ratings" > temp7

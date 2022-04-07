@@ -55,6 +55,7 @@ Filmsactu,de Filmsactu,Fi
 Fluctuat.net,de Fluctuat.net,Fl
 France Soir,de France Soir,FS
 France-Observateur,de France-Observateur,FO
+Franceinfo Culture,de Franceinfo Culture,FC
 GQ,de GQ,GQ
 Gala,de Gala,Ga
 Hitfix,de Hitfix,Hi
@@ -72,6 +73,7 @@ L&#039;Express,de L'Express Contre,Ex2
 L&#039;Express,de L'Express,Ex
 L&#039;Humanité,de L'Humanité Contre,LH2
 L&#039;Humanité,de L'Humanité,LH
+L&#039;Obs,de l'Obs,Ob
 L&#039;Observateur d&#039;aujourd&#039;hui,L'Observateur d'aujourd'hui,Oa
 LCI,de LCI,LCI
 La Croix,de La Croix Contre,LC2

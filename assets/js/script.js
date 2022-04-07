@@ -1384,6 +1384,17 @@ var DOMLoaded = function() {
 
                 slider.goTo(0);
 
+                slider.events.on('touchStart', function(e) {
+                    e.stopImmediatePropagation();
+                });
+                slider.events.on('touchMove', function(e) {
+                    e.stopImmediatePropagation();
+                });
+
+                slider.events.on('touchEnd', function(e) {
+                    e.stopImmediatePropagation();
+                });
+
                 var filmTrailerId = link.parentNode.parentNode.parentNode.parentNode.getAttribute('data-filmTrailerId');
                 var criticKeys = link.parentNode.parentNode.parentNode.parentNode.getAttribute('data-critic-keys');
                 var criticKeysNew = criticKeys.split(',');
@@ -2187,7 +2198,7 @@ var DOMLoaded = function() {
                             movieIdArray.splice(index, 1);
                         }
                         localStorage.setItem('yqac_movieSeenId', JSON.stringify(movieIdArray));
-                        for (var i = 0; i < elementWithmovieId.children.length; i++) {
+                        for (let i = 0; i < elementWithmovieId.children.length; i++) {
                             elementWithmovieId.childNodes[0].childNodes[1].style.opacity = '1';
                             elementWithmovieId.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0].style.opacity = '1';
                         }
