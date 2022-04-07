@@ -448,7 +448,7 @@ var DOMLoaded = function() {
         var last6Months = ((today4.getMonth() + 1) + '/' + today4.getDate() + '/' + today4.getFullYear());
         var isDateIncludedlast6Months = dateCheck(last6Months, todayNew4, dateFormatted);
 
-        var isDateIncluded2018 = dateCheck('01/01/2018', '12/31/2018', dateFormatted);
+        var isDateIncluded2022 = dateCheck('01/01/2022', '12/31/2022', dateFormatted);
         var isDateIncluded2019 = dateCheck('01/01/2019', '12/31/2019', dateFormatted);
         var isDateIncluded2020 = dateCheck('01/01/2020', '12/31/2020', dateFormatted);
         var isDateIncluded2021 = dateCheck('01/01/2021', '12/31/2021', dateFormatted);
@@ -458,7 +458,7 @@ var DOMLoaded = function() {
             isDateIncludedlast14Days,
             isDateIncludedlast30Days,
             isDateIncludedlast6Months,
-            isDateIncluded2018,
+            isDateIncluded2022,
             isDateIncluded2019,
             isDateIncluded2020,
             isDateIncluded2021);
@@ -828,7 +828,7 @@ var DOMLoaded = function() {
         isDateIncludedlast14Days,
         isDateIncludedlast30Days,
         isDateIncludedlast6Months,
-        isDateIncluded2018,
+        isDateIncluded2022,
         isDateIncluded2019,
         isDateIncluded2020,
         isDateIncluded2021) {
@@ -853,8 +853,8 @@ var DOMLoaded = function() {
             text2 = 'En 2020';
         } else if (isDateIncluded2019) {
             text2 = 'En 2019';
-        } else if (isDateIncluded2018) {
-            text2 = 'En 2018';
+        } else if (isDateIncluded2022) {
+            text2 = 'En 2022';
         } else {
             text2 = '';
         }
@@ -1160,8 +1160,8 @@ var DOMLoaded = function() {
             activePeriod = 'En 2020';
         } else if (activePeriod == 'en_2019' || activePeriod == '2019') {
             activePeriod = 'En 2019';
-        } else if (activePeriod == 'en_2018' || activePeriod == '2018') {
-            activePeriod = 'En 2018';
+        } else if (activePeriod == 'en_2022' || activePeriod == '2022') {
+            activePeriod = 'En 2022';
         } else {
             activePeriod = localStorage.getItem('yqac_period.' + 'activePeriod');
             if (activePeriod == null) {

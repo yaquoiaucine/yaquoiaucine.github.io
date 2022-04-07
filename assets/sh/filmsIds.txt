@@ -637,6 +637,7 @@
 /film/fichefilm_gen_cfilm=29720.html,tt0037382,21885-to-have-and-have-not
 /film/fichefilm_gen_cfilm=29723.html,tt0049006,5934-beyond-a-reasonable-doubt
 /film/fichefilm_gen_cfilm=29738.html,tt0032138,4279-the-wizard-of-oz
+/film/fichefilm_gen_cfilm=30033.html,tt0235198,9916-audition
 /film/fichefilm_gen_cfilm=30150.html,tt0031309,36270-la-fin-du-jour
 /film/fichefilm_gen_cfilm=30299.html,tt0049537,73791-flowing
 /film/fichefilm_gen_cfilm=30316.html,tt0054144,30312-when-a-woman-ascends-the-stairs
@@ -696,6 +697,7 @@
 /film/fichefilm_gen_cfilm=44648.html,tt0069120,29824-la-prima-notte-di-quiete
 /film/fichefilm_gen_cfilm=44792.html,tt5117670,39851-peter-rabbit
 /film/fichefilm_gen_cfilm=44864.html,tt0050913,9241-le-rouge-est-mis
+/film/fichefilm_gen_cfilm=44982.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=45162.html,tt0056657,2557-la-viaccia
 /film/fichefilm_gen_cfilm=45271.html,tt0301978,26747-ten
 /film/fichefilm_gen_cfilm=45460.html,tt0322289,11455-la-fleur-du-mal
@@ -1937,6 +1939,7 @@
 /film/fichefilm_gen_cfilm=291357.html,tt13029316,80831-apstjarnan
 /film/fichefilm_gen_cfilm=291429.html,tt11581174,88538-karnan
 /film/fichefilm_gen_cfilm=291677.html,tt14331144,90493-jujutsu-kaisen-0
+/film/fichefilm_gen_cfilm=291791.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=291823.html,tt13830148,104647-re-granchio
 /film/fichefilm_gen_cfilm=291824.html,tt14812778,90641-diarios-de-otsoga
 /film/fichefilm_gen_cfilm=291857.html,tt12879624,78480-josee-the-tiger-and-the-fish
