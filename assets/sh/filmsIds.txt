@@ -557,6 +557,7 @@
 /film/fichefilm_gen_cfilm=16591.html,tt0351283,4476-madagascar
 /film/fichefilm_gen_cfilm=16713.html,tt0103935,5464-rebels-of-the-neon-god
 /film/fichefilm_gen_cfilm=17079.html,tt0119177,318-gattaca
+/film/fichefilm_gen_cfilm=18115.html,tt0097757,3737-the-little-mermaid
 /film/fichefilm_gen_cfilm=18217.html,tt0119879,18843-perdita-durango
 /film/fichefilm_gen_cfilm=18446.html,tt0181627,4534-kirikou-et-la-sorciere
 /film/fichefilm_gen_cfilm=18530.html,tt0156887,3027-perfect-blue
@@ -611,6 +612,7 @@
 /film/fichefilm_gen_cfilm=27995.html,tt0075793,3364-ceravamo-tanto-amati
 /film/fichefilm_gen_cfilm=28102.html,tt0070669,52403-sessomatto
 /film/fichefilm_gen_cfilm=28109.html,tt0188030,25449-la-lengua-de-las-mariposas
+/film/fichefilm_gen_cfilm=28201.html,tt0071562,177-the-godfather-part-ii
 /film/fichefilm_gen_cfilm=28229.html,tt0076636,22473-rollercoaster
 /film/fichefilm_gen_cfilm=28251.html,tt0075148,3299-rocky
 /film/fichefilm_gen_cfilm=28388.html,tt0199626,8843-in-the-cut
@@ -1165,6 +1167,7 @@
 /film/fichefilm_gen_cfilm=250469.html,tt6203944,40991-nos-patriotes
 /film/fichefilm_gen_cfilm=250645.html,tt6133466,50608-the-first-purge
 /film/fichefilm_gen_cfilm=250664.html,tt2076298,62727-ip-man-4-the-finale
+/film/fichefilm_gen_cfilm=250709.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=250710.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=251303.html,tt6587640,58149-trolls-world-tour
 /film/fichefilm_gen_cfilm=251315.html,tt6723592,69599-tenet
@@ -1307,7 +1310,6 @@
 /film/fichefilm_gen_cfilm=262617.html,tt7299388,70329-the-man-from-the-sea
 /film/fichefilm_gen_cfilm=262675.html,tt8205028,90725-a-felesegem-tortenete
 /film/fichefilm_gen_cfilm=262696.html,tt7945450,86634-notturno
-/film/fichefilm_gen_cfilm=262751.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=262921.html,tt9038290,73743-latte-igel-und-der-magische-wasserstein
 /film/fichefilm_gen_cfilm=263075.html,tt8079248,67874-yesterday
 /film/fichefilm_gen_cfilm=263100.html,tt6875374,94432-adventures-of-a-mathematician
@@ -1813,6 +1815,7 @@
 /film/fichefilm_gen_cfilm=283794.html,tt9392248,78652-gli-anni-piu-belli
 /film/fichefilm_gen_cfilm=283805.html,noImdbId,81195-balades-sous-les-etoiles
 /film/fichefilm_gen_cfilm=283811.html,tt9303756,84235-the-snail-and-the-whale
+/film/fichefilm_gen_cfilm=283817.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=283818.html,tt12545570,86527-funambules
 /film/fichefilm_gen_cfilm=283819.html,tt12545578,93440-les-graines-que-lon-seme
 /film/fichefilm_gen_cfilm=283820.html,tt12200444,84423-il-mio-corpo
@@ -1984,7 +1987,7 @@
 /film/fichefilm_gen_cfilm=294765.html,tt15108354,102415-el-gran-movimiento
 /film/fichefilm_gen_cfilm=294782.html,tt14369304,98280-ma-nuit
 /film/fichefilm_gen_cfilm=294969.html,tt12440140,97329-aristocrats
-/film/fichefilm_gen_cfilm=295022.html,noImdbId,noBetaseriesId
+/film/fichefilm_gen_cfilm=295022.html,tt18291532,97519-un-peuple
 /film/fichefilm_gen_cfilm=295465.html,tt15688362,97468-graines-despoir
 /film/fichefilm_gen_cfilm=295491.html,tt15153996,101779-la-disparition
 /film/fichefilm_gen_cfilm=296060.html,tt15738560,93439-les-mots-de-taj
