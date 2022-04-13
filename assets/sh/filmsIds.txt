@@ -1160,7 +1160,6 @@
 /film/fichefilm_gen_cfilm=248291.html,tt6193408,71298-a-shaun-the-sheep-movie-farmageddon
 /film/fichefilm_gen_cfilm=248437.html,tt5834426,41314-moonfall
 /film/fichefilm_gen_cfilm=248482.html,tt7434928,65358-amin
-/film/fichefilm_gen_cfilm=248487.html,noImdbId,noBetaseriesId
 /film/fichefilm_gen_cfilm=248582.html,tt4587656,33358-the-star
 /film/fichefilm_gen_cfilm=248714.html,tt8099236,67650-el-silencio-de-otros
 /film/fichefilm_gen_cfilm=248850.html,tt5937296,41257-slava
