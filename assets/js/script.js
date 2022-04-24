@@ -158,7 +158,7 @@ var DOMLoaded = function() {
         });
 
     function check404TheatersLink(cinemaIdParam) {
-        var baseURL = 'https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-';
+        var baseURL = 'https://cors.eu.org/https://www.allocine.fr/_/showtimes/theater-';
         var endURLFirstPart = 'd-0/p-';
         var URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}1/`;
         return fetch(URL)
@@ -176,7 +176,7 @@ var DOMLoaded = function() {
             if (endURLFirstPart === '[d-0/][p-') {
                 endURLLastPart = ']';
             }
-            var baseURL = 'https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/showtimes/theater-';
+            var baseURL = 'https://cors.eu.org/https://www.allocine.fr/_/showtimes/theater-';
             var URL = `${baseURL}${cinemaIdParam}/${endURLFirstPart}1/${endURLLastPart}`;
             return fetch(URL)
                 .then(function(response) {
@@ -2120,7 +2120,7 @@ var DOMLoaded = function() {
     // Send search input to AlloCiné theaters search
     function theatersRes(input) {
         var inputSearch = encodeURI(input.target.value);
-        return fetch(`https://cors-anywhere.herokuapp.com/https://www.allocine.fr/_/localization_city/${inputSearch}`)
+        return fetch(`https://cors.eu.org/https://www.allocine.fr/_/localization_city/${inputSearch}`)
             .then(function(response) {
                 return response.json();
             })
