@@ -78,6 +78,7 @@ L&#039;Observateur d&#039;aujourd&#039;hui,L'Observateur d'aujourd'hui,Oa
 LCI,de LCI,LCI
 La Croix,de La Croix Contre,LC2
 La Croix,de La Croix,LC
+La Parisien,de La Parisien,Par
 La Septième Obsession,de La Septième Obsession,LS
 La Voix du Nord,de La Voix du Nord,VN
 Las Vegas Weekly,de Las Vegas Weekly,LV

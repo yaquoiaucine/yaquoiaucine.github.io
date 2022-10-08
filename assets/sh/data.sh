@@ -237,6 +237,10 @@ do
             nationalityNameTemp=$(cat temp2 | grep " nationality" | head -$nationalityNumberIndex | tail -1 | cut -d'>' -f2 | cut -d'<' -f1 | sed 's/^[[:blank:]]*//;s/[[:blank:]]*$//')
             if [[ $source == 'home' ]]; then
               nationalityName=$(echo $nationalityNameTemp | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')
+              if [[ $nationalityName == 'U.s.a.' ]] || [[ $nationalityName == 'U.S.A.' ]]; then
+                nationalityName="U.S.A."
+              fi
+              echo "nationalityName: $nationalityName"
             else
               nationalityName=$(echo "${nationalityNameTemp^}")
             fi
