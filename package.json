@@ -7,27 +7,33 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fs": "*",
     "get-json": "^1.0.1",
-    "got": "^11.8.3",
-    "jsdom": "^16.7.0",
-    "jshint": "^2.12.0",
-    "link-check": "^4.5.4",
-    "minimist": "^1.2.5",
-    "puppeteer": "^8.0.0",
+    "prettier": "^2.7.1",
+    "puppeteer": "^18.2.1",
     "shelljs": "^0.8.5",
-    "slash": "^4.0.0",
-    "surge": "^0.21.7",
-    "uglify-js": "^3.13.5",
-    "uglifycss": "^0.0.29"
-  },
-  "resolutions": {
-    "minimist": "^1.2.5"
-  },
-  "devDependencies": {
-    "check-html-links": "^0.2.2"
+    "surge": "^0.21.7"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write \"**/*.*\""
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "embeddedLanguageFormatting": "auto",
+    "htmlWhitespaceSensitivity": "css",
+    "insertPragma": false,
+    "jsxSingleQuote": false,
+    "printWidth": 500,
+    "proseWrap": "preserve",
+    "quoteProps": "as-needed",
+    "requirePragma": false,
+    "semi": true,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "vueIndentScriptAndStyle": false
   }
 }
