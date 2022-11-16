@@ -5,6 +5,3 @@ deploytogithub.sh
 package-lock*.json
 commit.sh
 screenshot.js
-assets/css/hc-offcanvas-nav.carbon.css
-assets/css/style.css
-assets/js/script.js
