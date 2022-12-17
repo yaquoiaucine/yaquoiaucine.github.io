@@ -291,11 +291,11 @@ iframe {
 }
 
 .overlayInfos a:nth-child(1n) {
-  margin: 0 0 0 15px;
+  margin: 0 0 0 10px;
 }
 
 .overlayInfos a:nth-child(2n) {
-  margin: 0 15px 0 0;
+  margin: 0 10px 0 0;
 }
 
 .overlayMoreInfos {

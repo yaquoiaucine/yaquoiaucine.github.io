@@ -2274,7 +2274,7 @@ img.picture-item__blur {
 
 .picture-item__title {
   white-space: nowrap;
-  width: 150px;
+  width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 0;
@@ -2356,10 +2356,6 @@ img.picture-item__blur {
 }
 
 @media screen and (max-width: 767px) {
-  .picture-item__title {
-    width: 120px;
-  }
-
   .picture-item {
     height: auto;
     margin-top: 20px;
