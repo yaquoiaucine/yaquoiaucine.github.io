@@ -400,7 +400,7 @@ li.mainButtonTitle2 label {
 
 .tns-controls button:active,
 #overlay > button:active {
-  box-shadow: 0 0;
+  box-shadow: 0;
   background-color: rgba(var(--green-rgba-color), 0.25);
 }
 
