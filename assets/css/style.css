@@ -1069,7 +1069,7 @@ strong {
 
 .darkmode--activated .overlayMoreInfos {
   background-color: var(--dark-color);
-  opacity: 0.9;
+  opacity: 0.99;
 }
 
 .darkmode--activated .overlayMoreInfos .read-more {
