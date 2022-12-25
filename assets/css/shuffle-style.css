@@ -403,7 +403,7 @@ code:not([class*="language"]):before {
 }
 
 .aspect--16x9 {
-  padding-bottom: 56.25%;
+  padding-bottom: 102.272727273%;
 }
 
 .aspect--9x16 {
@@ -532,7 +532,7 @@ code:not([class*="language"]):before {
 }
 
 .aspect--16x9\@xs {
-  padding-bottom: 56.25%;
+  padding-bottom: 102.272727273%;
 }
 
 .aspect--9x16\@xs {
@@ -706,7 +706,7 @@ code:not([class*="language"]):before {
   }
 
   .aspect--16x9\@sm {
-    padding-bottom: 56.25%;
+    padding-bottom: 102.272727273%;
   }
 
   .aspect--9x16\@sm {
@@ -986,7 +986,7 @@ code:not([class*="language"]):before {
   }
 
   .aspect--16x9\@md {
-    padding-bottom: 56.25%;
+    padding-bottom: 102.272727273%;
   }
 
   .aspect--9x16\@md {
@@ -2225,7 +2225,7 @@ span.demo-link-container:before {
 }
 
 .picture-item {
-  height: 220px;
+  height: 400px;
   margin-left: 0;
   margin-top: 24px;
 }
@@ -2343,7 +2343,7 @@ img.picture-item__blur {
 
 .shuffle--animatein .picture-item__inner {
   opacity: 0;
-  transform: translateY(220px);
+  transform: translateY(400px);
 }
 
 .shuffle--animatein .picture-item__inner--transition {

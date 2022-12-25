@@ -1021,111 +1021,36 @@ var DOMLoaded = function () {
 
   // Add or remove active class for sort change
   function handleSortChange(evt) {
-    var buttons = Array.from(evt.currentTarget.children);
-    buttons.forEach(function (button) {
-      if (button.querySelector("input").value === evt.target.value) {
-        button.classList.add("active");
-      } else {
-        button.classList.remove("active");
-      }
-    });
-
-    var value = evt.target.value;
     var options = {};
+    var critic = localStorage.getItem("yqac_sort." + "critic");
 
-    function sortByPopularity(element) {
-      return parseInt(element.getAttribute("data-popularity"));
-    }
+    if (critic === "true") {
+      options = {
+        reverse: false,
+        by: sortCritic,
+      };
 
-    function sortByCreationDate(element) {
-      return Date.parse(splitDate(element.getAttribute("data-creationdate")));
-    }
+      localStorage.setItem("yqac_sort." + "critic", "false");
+      localStorage.removeItem("yqac_sort." + "popularity");
+      localStorage.removeItem("yqac_sort." + "creationdate");
+      localStorage.setItem("yqac_sort." + "defaultInput", "critic");
+    } else {
+      options = {
+        reverse: true,
+        by: sortCritic,
+      };
 
-    function sortCritic(element) {
-      return element.getAttribute("data-critic");
-    }
-
-    if (value === "popularity") {
-      var popularity = localStorage.getItem("yqac_sort." + "popularity");
-
-      if (popularity === "true") {
-        options = {
-          reverse: true,
-          by: sortByPopularity,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputpopularity" type="radio" name="sort-value" value="popularity"> Popularité <i class="fas fa-arrow-up"></i>';
-        localStorage.setItem("yqac_sort." + "popularity", "false");
-        localStorage.removeItem("yqac_sort." + "creationdate");
-        localStorage.removeItem("yqac_sort." + "critic");
-        localStorage.setItem("yqac_sort." + "defaultInput", "popularity");
-      } else {
-        options = {
-          reverse: false,
-          by: sortByPopularity,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputpopularity" type="radio" name="sort-value" value="popularity"> Popularité <i class="fas fa-arrow-down"></i>';
-        localStorage.setItem("yqac_sort." + "popularity", "true");
-        localStorage.removeItem("yqac_sort." + "creationdate");
-        localStorage.removeItem("yqac_sort." + "critic");
-        localStorage.setItem("yqac_sort." + "defaultInput", "popularity");
-      }
-    } else if (value === "creationdate") {
-      var creationdate = localStorage.getItem("yqac_sort." + "creationdate");
-
-      if (creationdate === "true") {
-        options = {
-          reverse: false,
-          by: sortByCreationDate,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date <i class="fas fa-arrow-up"></i>';
-        localStorage.setItem("yqac_sort." + "creationdate", "false");
-        localStorage.removeItem("yqac_sort." + "popularity");
-        localStorage.removeItem("yqac_sort." + "critic");
-        localStorage.setItem("yqac_sort." + "defaultInput", "creationdate");
-      } else {
-        options = {
-          reverse: true,
-          by: sortByCreationDate,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputcreationdate" type="radio" name="sort-value" value="creationdate"> Date <i class="fas fa-arrow-down"></i>';
-        localStorage.setItem("yqac_sort." + "creationdate", "true");
-        localStorage.removeItem("yqac_sort." + "popularity");
-        localStorage.removeItem("yqac_sort." + "critic");
-        localStorage.setItem("yqac_sort." + "defaultInput", "creationdate");
-      }
-    } else if (value === "critic") {
-      var critic = localStorage.getItem("yqac_sort." + "critic");
-
-      if (critic === "true") {
-        options = {
-          reverse: false,
-          by: sortCritic,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputcritic" type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-up"></i>';
-        localStorage.setItem("yqac_sort." + "critic", "false");
-        localStorage.removeItem("yqac_sort." + "popularity");
-        localStorage.removeItem("yqac_sort." + "creationdate");
-        localStorage.setItem("yqac_sort." + "defaultInput", "critic");
-      } else {
-        options = {
-          reverse: true,
-          by: sortCritic,
-        };
-
-        evt.target.parentNode.innerHTML = '<input id="defaultInputcritic" type="radio" name="sort-value" value="critic"> Note <i class="fas fa-arrow-down"></i>';
-        localStorage.setItem("yqac_sort." + "critic", "true");
-        localStorage.removeItem("yqac_sort." + "popularity");
-        localStorage.removeItem("yqac_sort." + "creationdate");
-        localStorage.setItem("yqac_sort." + "defaultInput", "critic");
-      }
+      localStorage.setItem("yqac_sort." + "critic", "true");
+      localStorage.removeItem("yqac_sort." + "popularity");
+      localStorage.removeItem("yqac_sort." + "creationdate");
+      localStorage.setItem("yqac_sort." + "defaultInput", "critic");
     }
 
     shuffleInstance.sort(options);
+  }
+
+  function sortCritic(element) {
+    return element.getAttribute("data-critic");
   }
 
   // Set active period filter

@@ -561,7 +561,7 @@ li.mainButtonTitle2 label {
 }
 
 .sortFilter {
-  margin-right: 0;
+  display: none;
 }
 
 .period-options {
@@ -1069,6 +1069,7 @@ strong {
 
 .darkmode--activated .overlayMoreInfos {
   background-color: var(--dark-color);
+  opacity: 0.9;
 }
 
 .darkmode--activated .overlayMoreInfos .read-more {
